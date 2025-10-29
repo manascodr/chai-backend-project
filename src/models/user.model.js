@@ -61,6 +61,7 @@ userSchema.methods.isPasswordCorrect = async function (password) {
   // Compare given password with hashed password
   return await bcrypt.compare(password, this.password); // Returns true if match, else false
 };
+
 userSchema.methods.generateAccessToken = function () {
   // Generate JWT access token
   return jwt.sign(
@@ -74,6 +75,7 @@ userSchema.methods.generateAccessToken = function () {
     { expiresIn: process.env.ACCESS_TOKEN_EXPIRES_IN }
   );
 };
+
 userSchema.methods.generateRefreshToken = function () {
   // Generate JWT refresh token
   return jwt.sign(
@@ -88,5 +90,6 @@ userSchema.methods.generateRefreshToken = function () {
 };
 
 const User = mongoose.model("User", userSchema);
+
 
 export default User;
