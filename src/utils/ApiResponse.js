@@ -1,8 +1,9 @@
 class ApiResponse {
-    constructor(status, message = "success" , data,){
-        this.status = status;
-        this.message = message;
+    // Standard signature: (statusCode, data, message)
+    constructor(statusCode, data = null, message = "success") {
+        this.statusCode = statusCode;
         this.data = data;
+        this.message = message;
         this.success = statusCode < 400;
     }
 }
