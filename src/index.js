@@ -5,6 +5,10 @@ import connectDB from "./db/index.js";
 
 connectDB()
   .then(() => { 
+    app.on("error",(error)=>{ // Added error event listener 
+        console.log("ERROR:", error);
+    })
+    
     app.listen(process.env.PORT || 8000, () => {
       console.log(`⚙️  Server is running on port ${process.env.PORT}`);
     });
@@ -12,8 +16,6 @@ connectDB()
   .catch((error) => {
     console.log("MONGO db connection failed !!!", error);
   });
-
-
 
 
 
