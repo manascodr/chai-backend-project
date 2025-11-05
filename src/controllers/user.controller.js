@@ -1,9 +1,9 @@
 import asyncHandler from "../utils/asyncHandler.js";
-import ApiError from "../utils/apiError.js";
+import ApiError from "../utils/ApiError.js";
 import User from "../models/user.model.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/apiResponse.js";
-import User from "./../models/user.model";
+
 
 const generateAccessAndRefreshToken = async (userId) => {
   try {
@@ -106,7 +106,7 @@ const loginUser = asyncHandler(async (req, res) => {
 
   const { email, username, password } = req.body;
 
-  if (!username || email) {
+  if (!(username || email)) {
     throw new ApiError(400, "username or password is required");
   }
   //  username or error
@@ -126,10 +126,10 @@ const loginUser = asyncHandler(async (req, res) => {
   const { accessToken, refreshToken } = await generateAccessAndRefreshToken(
     user._id
   );
-  // again query to get tokens in the user object without password and refresh token
-  const loggedInUser = user
-    .findById(user._id)
-    .select("-password -refreshToken");
+  // fetch fresh user without sensitive fields (use Model, not instance)
+  const loggedInUser = await User.findById(user._id)
+    .select("-password -refreshToken")
+    .lean();
 
   // store refresh token in httpOnly cookie
   const options = {
@@ -150,7 +150,7 @@ const loginUser = asyncHandler(async (req, res) => {
 });
 
 const logoutUser = asyncHandler(async (req, res) => {
-  User.findByIdAndUpdate(
+  await User.findByIdAndUpdate(
     req.user._id,
     {
       $set: {
