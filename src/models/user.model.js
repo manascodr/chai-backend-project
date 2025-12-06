@@ -49,9 +49,9 @@ const userSchema = new Schema(
   { timestamps: true }
 );
 
-userSchema.pre("save", async function (next) {
+userSchema.pre("save", async function (next) { // .pre middleware to run before saving a user
   // Hash password before saving a user
-  if (!this.isModified("password")) return next(); // Only hash if password is new or modified
+  if (!this.isModified("password")) return next(); // Only hash if password is new or modified to avoid re-hashing 
 
   this.password = await bcrypt.hash(this.password, 10);
   next();

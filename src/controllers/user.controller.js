@@ -36,10 +36,15 @@ const registerUser = asyncHandler(async (req, res) => {
 
   // Validation
   if (
-    [fullname, username, email, password].some((field) => field?.trim() === "") // check for empty fields
+    [fullname, username, email, password].some((field) => field?.trim() === "") // returns true if any field is empty
   ) {
     throw new ApiError(400, "All fields are required");
   }
+  //  if(!fullname || !username || !email || !password){
+  //   throw new ApiError(400, "All fields are required");
+  //  }
+
+  // email format validation
   if (!email.includes("@")) {
     throw new ApiError(400, "Invalid email address");
   }
@@ -97,7 +102,7 @@ const registerUser = asyncHandler(async (req, res) => {
     .status(201)
     .json(new ApiResponse(200, createdUser, "User registered successfully"));
 });
-
+ 
 const loginUser = asyncHandler(async (req, res) => {
   // data from req.body
   // username or email
@@ -111,7 +116,7 @@ const loginUser = asyncHandler(async (req, res) => {
   if (!(username || email)) {
     throw new ApiError(400, "username or password is required");
   }
-  //  username or error
+  //  username or email
   const user = await User.findOne({
     $or: [{ username }, { email }],
   });
@@ -120,7 +125,7 @@ const loginUser = asyncHandler(async (req, res) => {
     throw new ApiError(404, "user does not exist");
   }
   // password verification
-  const isPasswordValid = await user.isPasswordCorrect(password); // compare password
+  const isPasswordValid = await user.isPasswordCorrect(password); // user instead of User instance method 
   if (!isPasswordValid) {
     throw new ApiError(401, "Invalid user credentials");
   }
@@ -128,14 +133,14 @@ const loginUser = asyncHandler(async (req, res) => {
   const { accessToken, refreshToken } = await generateAccessAndRefreshToken(
     user._id
   );
-  // fetch fresh user without sensitive fields (use Model, not instance)
+  // again db call to get updated user with refresh token  
   const loggedInUser = await User.findById(user._id)
     .select("-password -refreshToken")
-    .lean();
+    .lean(); // lean to get plain JS object
 
   // store refresh token in httpOnly cookie
   const options = {
-    httpOnly: true,
+    httpOnly: true, // prevent client-side JS access
     secure: true, // set to true if using HTTPS
   };
   return res
@@ -155,7 +160,7 @@ const logoutUser = asyncHandler(async (req, res) => {
   await User.findByIdAndUpdate(
     req.user._id,
     {
-      $unset: {
+      $unset: { // unset operator to remove fields from db 
         refreshToken: 1, // remove refresh token on logout
       },
     },
@@ -209,7 +214,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
       .cookie("accessToken", accessToken)
       .cookie("refreshToken", newRefreshToken)
       .json(
-        new ApiResponse(200, { accessToken, refreshToken: newRefreshToken })
+        new ApiResponse(200, { accessToken, refreshToken: newRefreshToken }, "Access token refreshed successfully")
       );
   } catch (error) {
     throw new ApiError(401, error?.message || "Invalid refresh token");
