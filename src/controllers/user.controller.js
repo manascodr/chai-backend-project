@@ -2,7 +2,7 @@ import asyncHandler from "../utils/asyncHandler.js";
 import ApiError from "../utils/ApiError.js";
 import User from "../models/user.model.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
-import { ApiResponse } from "../utils/apiResponse.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 
@@ -22,7 +22,7 @@ const generateAccessAndRefreshToken = async (userId) => {
 };
 
 const registerUser = asyncHandler(async (req, res) => {
-  // get user details form frontend
+  // get user details from frontend
   // validation - not empty
   // check if user already exists: username, email
   // check for images, avatar
@@ -228,7 +228,7 @@ const changeCurrentPassword = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Both old and new passwords are required");
   }
 
-  const user = await User.findById(req.user?._id);
+  const user = await User.findById(req.user?._id); // req.user is set in auth middleware
   const isPasswordCorrect = await user.isPasswordCorrect(oldPassword);
 
   if (!isPasswordCorrect) {
@@ -280,10 +280,12 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
   }
   const avatar = await uploadOnCloudinary(avatarLocalPath);
 
-  if (!avatar) {
+  if (!avatar.url) {
     throw new ApiError(500, "Avatar upload failed");
   }
 
+  //? TODO write code delete old avatar from cloudinary after updated successfully
+   
   const user = await User.findByIdAndUpdate(
     req.user?._id,
     {
@@ -291,6 +293,7 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
     },
     { new: true }
   ).select("-password");
+
   return res
     .status(200)
     .json(new ApiResponse(200, user, "User avatar updated successfully"));
@@ -338,7 +341,7 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
     {
       $lookup: {
         // join with subscriptions collection and get subscriber count
-        form: "subscriptions",
+        from: "subscriptions",
         localField: "_id",
         foreignField: "channel",
         as: "subscribers",
@@ -347,7 +350,7 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
     {
       $lookup: {
         // join with subscriptions collection and get subscribed channels
-        form: "subscriptions",
+        from: "subscriptions",
         localField: "_id",
         foreignField: "subscriber",
         as: "subscribedTo",
@@ -355,7 +358,7 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
     },
     {
       $addFields: {
-        // add subscriberCount and subscribedToCount fields
+        // add subscriberCount and subscribedToCount fields to the user document
         subscribersCount: { $size: "$subscribers" },
         channelsSubscribedToCount: { $size: "$subscribedTo" },
         isSubscribed: {
