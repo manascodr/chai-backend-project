@@ -3,6 +3,7 @@ import { Comment } from "../models/comment.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
+import { Video } from "../models/video.model.js";
 
 const getVideoComments = asyncHandler(async (req, res) => {
   //TODO: get all comments for a video
@@ -10,17 +11,17 @@ const getVideoComments = asyncHandler(async (req, res) => {
   const { page = 1, limit = 10 } = req.query;
 
   if (!mongoose.Types.ObjectId.isValid(videoId)) {
-    // check if videoId is a valid ObjectId and exists in the database
+    // check if videoId is a valid ObjectId 
     throw new ApiError(400, "Invalid video ID");
   }
 
-  const comment = await Comment.find({ video: videoId });
-  if (!comment || comment.length === 0) {
+  const comments = await Comment.find({ video: videoId }).lean();
+  if (!comments || comments.length === 0) {
     throw new ApiError(404, "Comments not found");
   }
   return res
     .status(200)
-    .json(new ApiResponse(200, comment, "Comments fetched successfully"));
+    .json(new ApiResponse(200, comments, "Comments fetched successfully"));
 });
 
 const addComment = asyncHandler(async (req, res) => {
@@ -29,7 +30,7 @@ const addComment = asyncHandler(async (req, res) => {
   const { content } = req.body;
 
   if (!mongoose.Types.ObjectId.isValid(videoId)) {
-    // check if videoId is a valid ObjectId and exists in the database
+    // check if videoId is a valid ObjectId
     throw new ApiError(400, "Invalid video ID");
   }
   const isVideoExist = await Video.exists({ _id: videoId });
@@ -78,6 +79,7 @@ const updateComment = asyncHandler(async (req, res) => {
   // update fields
   comment.content = content.trim();
   await comment.save();
+  await comment.populate("owner", "username avatar"); // will fetch the owner details(username,avatar)
   return res
     .status(200)
     .json(new ApiResponse(200, comment, "Comment updated successfully"));
