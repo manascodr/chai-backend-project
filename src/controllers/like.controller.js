@@ -141,41 +141,89 @@ const toggleTweetLike = asyncHandler(async (req, res) => {
 });
 
 const getLikedVideos = asyncHandler(async (req, res) => {
-  //TODO: get all liked videos
-  // fetch liked videos for the authenticated user
-  // this will return Like documents where likedBy is the current user and video field is not null
-  //   const likedVideos = await Like.find({likedBy:req.user._id, video: { $ne: null } }) // only likes with video field not null. $ne means "not equal"
-  //     .populate('video') // populate video details
-  //     .lean();
-  //     // example of likedVideos:
-  //     //   { _id: ..., video: { _id: ..., title: 'Video 1', ... }, likedBy: ... },
+  // ensure req.user exists (verifyJWT should set this)
+  if (!req.user?._id) {
+    throw new ApiError(401, "Authentication required");
+  }
 
-  //   const videos = likedVideos.map(like => like.video); // extract video details
-
-  // another approach using aggregation
-  const likedVideosAgg = await Like.aggregate([
+  const pipeline = [
     {
       $match: {
-        likedBy: new mongoose.Types.ObjectId(req.user._id),
-        video: { $ne: null }, // only likes with video field not null
+        likedBy: mongoose.Types.ObjectId(req.user._id),
+        video: { $ne: null }, // only likes that reference videos
       },
-    },{
-        $lookup:{
-            from:"videos",
-            localField:"video",
-            foreignField:"_id",
-            as:"videoDetails"
-        }
-    },{
-        $addFields:{
-            videoDetails: { $arrayElemAt: ["$videoDetails", 0] } // get the first element from the array
-        }
-    }
-  ]);
+    },
+    { $sort: { createdAt: -1 } }, // most recent likes first
+    {
+      $lookup: {
+        from: "videos", // collection to join with
+        localField: "video", // field from Like documents
+        foreignField: "_id", // `_id` field from Video documents
+        as: "videoDetails", // output array field
+        
+        // further pipeline to run on Video collection
+        pipeline: [ 
+          // Optionally you can match only published videos here:
+          { $match: { isPublished: true } },
+
+          // lookup owner details for each video
+          {
+            $lookup: {
+              from: "users",
+              localField: "owner",
+              foreignField: "_id",
+              as: "ownerDetails",
+              pipeline: [{ $project: { username: 1, fullname: 1, avatar: 1 } }],
+            },
+          },
+
+          // convert ownerDetails array -> single object
+          {
+            $addFields: {
+              owner: { $arrayElemAt: ["$ownerDetails", 0] }, // get first element from ownerDetails array as owner
+            },
+          },
+
+          // project only the fields we want to return to client
+          {
+            $project: {
+              ownerDetails: 0, // remove ownerDetails array
+              description: 0, // remove heavy fields if you want; keep what you need
+            },
+          },
+        ],
+      },
+    },
+
+    // transform videoDetails array into single object
+    {
+      $addFields: {
+        videoDetails: { $arrayElemAt: ["$videoDetails", 0] },
+      },
+    },
+
+    // Optionally remove likes where videoDetails is null (video deleted)
+    {
+      $match: {
+        videoDetails: { $ne: null },
+      },
+    },
+  ];
+
+  const likedDocs = await Like.aggregate(pipeline);
+  // Map to video objects for response (extract videoDetails)
+  const videos = likedDocs.map((d) => d.videoDetails).filter(Boolean); // filter out any nulls (if any)
+  const total = videos.length;
 
   return res
     .status(200)
-    .json(new ApiResponse(200, videos, "Liked videos fetched successfully"));
+    .json(
+      new ApiResponse(
+        200,
+        { videos, total },
+        "Liked videos fetched successfully"
+      )
+    );
 });
 
 export { toggleCommentLike, toggleTweetLike, toggleVideoLike, getLikedVideos };
