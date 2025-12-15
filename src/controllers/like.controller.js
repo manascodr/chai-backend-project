@@ -1,10 +1,9 @@
 import mongoose, { isValidObjectId } from "mongoose";
-import Like from "../models/like.model.js";
+import { Like } from "../models/like.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { Video } from "../models/video.model.js";
-import { like } from "./../models/like.model";
 import { Tweet } from "../models/tweet.model.js";
 
 const toggleVideoLike = asyncHandler(async (req, res) => {
@@ -100,7 +99,7 @@ const toggleTweetLike = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Invalid tweet ID");
 
   // check if tweet exists if not throw new Error if exist then proceed
-  const isTweetExist = await Tweet.exits({ _id: tweetId });
+  const isTweetExist = await Tweet.exists({ _id: tweetId });
   if (!isTweetExist) throw new ApiError(404, "Tweet not found");
 
   // check if tweet is liked by the user if yes remove like else add like
@@ -149,7 +148,7 @@ const getLikedVideos = asyncHandler(async (req, res) => {
   const pipeline = [
     {
       $match: {
-        likedBy: mongoose.Types.ObjectId.isValid(req.user._id),
+        likedBy: new mongoose.Types.ObjectId(req.user._id),
         video: { $ne: null }, // only likes that reference videos
       },
     },

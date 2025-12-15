@@ -1,11 +1,10 @@
-import asyncHandler from "../utils/asyncHandler.js";
-import ApiError from "../utils/ApiError.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
+import { ApiError } from "../utils/ApiError.js";
 import User from "../models/user.model.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
-
 
 const generateAccessAndRefreshToken = async (userId) => {
   try {
@@ -102,7 +101,7 @@ const registerUser = asyncHandler(async (req, res) => {
     .status(201)
     .json(new ApiResponse(200, createdUser, "User registered successfully"));
 });
- 
+
 const loginUser = asyncHandler(async (req, res) => {
   // data from req.body
   // username or email
@@ -125,7 +124,7 @@ const loginUser = asyncHandler(async (req, res) => {
     throw new ApiError(404, "user does not exist");
   }
   // password verification
-  const isPasswordValid = await user.isPasswordCorrect(password); // user instead of User instance method 
+  const isPasswordValid = await user.isPasswordCorrect(password); // user instead of User instance method
   if (!isPasswordValid) {
     throw new ApiError(401, "Invalid user credentials");
   }
@@ -133,7 +132,7 @@ const loginUser = asyncHandler(async (req, res) => {
   const { accessToken, refreshToken } = await generateAccessAndRefreshToken(
     user._id
   );
-  // again db call to get updated user with refresh token  
+  // again db call to get updated user with refresh token
   const loggedInUser = await User.findById(user._id)
     .select("-password -refreshToken")
     .lean(); // lean to get plain JS object
@@ -160,7 +159,8 @@ const logoutUser = asyncHandler(async (req, res) => {
   await User.findByIdAndUpdate(
     req.user._id,
     {
-      $unset: { // unset operator to remove fields from db 
+      $unset: {
+        // unset operator to remove fields from db
         refreshToken: 1, // remove refresh token on logout
       },
     },
@@ -214,7 +214,11 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
       .cookie("accessToken", accessToken)
       .cookie("refreshToken", newRefreshToken)
       .json(
-        new ApiResponse(200, { accessToken, refreshToken: newRefreshToken }, "Access token refreshed successfully")
+        new ApiResponse(
+          200,
+          { accessToken, refreshToken: newRefreshToken },
+          "Access token refreshed successfully"
+        )
       );
   } catch (error) {
     throw new ApiError(401, error?.message || "Invalid refresh token");
@@ -285,7 +289,7 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
   }
 
   //? TODO write code delete old avatar from cloudinary after updated successfully
-   
+
   const user = await User.findByIdAndUpdate(
     req.user?._id,
     {
@@ -436,7 +440,13 @@ const getWatchHistory = asyncHandler(async (req, res) => {
     },
   ]);
 
-  return res.json(new ApiResponse(200, user[0].watchHistory, "Watch history fetched successfully"));
+  return res.json(
+    new ApiResponse(
+      200,
+      user[0].watchHistory,
+      "Watch history fetched successfully"
+    )
+  );
 });
 
 export {

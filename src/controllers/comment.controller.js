@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { Comment } from "../models/comment.model.js";
+import { comment as Comment } from "../models/comment.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
@@ -11,7 +11,7 @@ const getVideoComments = asyncHandler(async (req, res) => {
   const { page = 1, limit = 10 } = req.query;
 
   if (!mongoose.Types.ObjectId.isValid(videoId)) {
-    // check if videoId is a valid ObjectId 
+    // check if videoId is a valid ObjectId
     throw new ApiError(400, "Invalid video ID");
   }
 
