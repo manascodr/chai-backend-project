@@ -149,7 +149,7 @@ const getLikedVideos = asyncHandler(async (req, res) => {
   const pipeline = [
     {
       $match: {
-        likedBy: mongoose.Types.ObjectId(req.user._id),
+        likedBy: mongoose.Types.ObjectId.isValid(req.user._id),
         video: { $ne: null }, // only likes that reference videos
       },
     },
