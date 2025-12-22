@@ -7,9 +7,72 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 
 const getAllVideos = asyncHandler(async (req, res) => {
-  const { page = 1, limit = 10, query, sortBy, sortType, userId } = req.query;
-  //TODO: get all videos based on query, sort, pagination
+  let {
+    page = 1,
+    limit = 10,
+    query,
+    sortBy = "createdAt",
+    sortType = "desc",
+    userId,
+  } = req.query;
+
+  // convert page & limit to numbers and clamp them
+  page = Math.max(1, parseInt(page));
+  limit = Math.min(50, parseInt(limit)); // prevent huge payloads
+  const skip = (page - 1) * limit; // calculate skip for pagination
+
+  // base filter: only published videos
+  const filter = {
+    isPublished: true,
+  };
+
+  // optional: filter by user
+  if (userId) {
+    if (!mongoose.isValidObjectId(userId)) {
+      throw new ApiError(400, "Invalid userId");
+    }
+    filter.owner = userId;
+  }
+
+  // optional: search by title or description
+  if (query) {
+    filter.$or = [
+      { title: { $regex: query, $options: "i" } },
+      { description: { $regex: query, $options: "i" } },
+    ];
+  }
+
+  // whitelist sortable fields
+  const allowedSortFields = ["createdAt", "views"];
+  if (!allowedSortFields.includes(sortBy)) {
+    sortBy = "createdAt";
+  }
+
+  const sortOrder = sortType === "asc" ? 1 : -1;
+  const sort = { [sortBy]: sortOrder };
+
+  // fetch videos
+  const videos = await Video.find(filter)
+    .sort(sort) // .sort function => sorts the documents based on the sort object
+    .skip(skip) // .skip function => skips the first 'n' documents
+    .limit(limit) // .limit function => limits the result to 'n' documents
+    .populate("owner", "fullname avatar") // populate owner details
+    .lean();
+
+  // total count for pagination
+  const totalVideos = await Video.countDocuments(filter);
+
+  return res.status(200).json(
+    new ApiResponse(200, {
+      videos,
+      page,
+      limit,
+      totalVideos,
+      totalPages: Math.ceil(totalVideos / limit),
+    }, "Videos fetched successfully")
+  );
 });
+
 
 const publishAVideo = asyncHandler(async (req, res) => {
   const { title, description } = req.body;
