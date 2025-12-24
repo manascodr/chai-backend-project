@@ -8,14 +8,22 @@ import { Video } from "../models/video.model.js";
 const getVideoComments = asyncHandler(async (req, res) => {
   //TODO: get all comments for a video
   const { videoId } = req.params;
-  const { page = 1, limit = 10 } = req.query;
+  let { page = 1, limit = 10 } = req.query;
+
+  page = Math.max(1, parseInt(page));
+  limit = Math.min(50, Math.max(1, parseInt(limit)));
+  const skip = (page - 1) * limit;
 
   if (!mongoose.Types.ObjectId.isValid(videoId)) {
     // check if videoId is a valid ObjectId
     throw new ApiError(400, "Invalid video ID");
   }
 
-  const comments = await Comment.find({ video: videoId }).lean();
+  const comments = await Comment.find({ video: videoId })
+    .sort({ createdAt: -1 })
+    .skip(skip)
+    .limit(limit)
+    .lean();
   if (!comments || comments.length === 0) {
     throw new ApiError(404, "Comments not found");
   }
@@ -43,7 +51,7 @@ const addComment = asyncHandler(async (req, res) => {
   }
 
   const newComment = await Comment.create({
-    content,
+    content: content.trim(),
     video: videoId,
     owner: req.user._id, // from the auth middleware
   });
@@ -63,8 +71,8 @@ const updateComment = asyncHandler(async (req, res) => {
   if (!mongoose.Types.ObjectId.isValid(commentId)) {
     throw new ApiError(400, "Invalid comment ID");
   }
-  if (!content.trim()) {
-    throw new ApiError(400, "Content not found");
+  if (!content || !content.trim()) {
+    throw new ApiError(400, "Content is required");
   }
 
   const comment = await Comment.findById(commentId);

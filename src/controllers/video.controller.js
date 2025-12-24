@@ -37,8 +37,9 @@ const getAllVideos = asyncHandler(async (req, res) => {
   // optional: search by title or description
   if (query) {
     filter.$or = [
-      { title: { $regex: query, $options: "i" } },
-      { description: { $regex: query, $options: "i" } },
+      // $or operator for multiple conditions either title or description
+      { title: { $regex: query, $options: "i" } }, // case-insensitive search
+      { description: { $regex: query, $options: "i" } }, // regex search in description
     ];
   }
 
@@ -63,16 +64,19 @@ const getAllVideos = asyncHandler(async (req, res) => {
   const totalVideos = await Video.countDocuments(filter);
 
   return res.status(200).json(
-    new ApiResponse(200, {
-      videos,
-      page,
-      limit,
-      totalVideos,
-      totalPages: Math.ceil(totalVideos / limit),
-    }, "Videos fetched successfully")
+    new ApiResponse(
+      200,
+      {
+        videos,
+        page,
+        limit,
+        totalVideos,
+        totalPages: Math.ceil(totalVideos / limit),
+      },
+      "Videos fetched successfully"
+    )
   );
 });
-
 
 const publishAVideo = asyncHandler(async (req, res) => {
   const { title, description } = req.body;
@@ -131,27 +135,38 @@ const getVideoById = asyncHandler(async (req, res) => {
   if (!mongoose.isValidObjectId(videoId)) {
     throw new ApiError(400, "Invalid video ID");
   }
-  const video = await Video.findById(videoId).populate(
+  const isAuthenticated = !!req.user?._id; 
+
+  let video = await Video.findById(videoId).populate(
     "owner",
     "fullname avatar"
   );
   if (!video) {
     throw new ApiError(404, "Video not found");
   }
-  // If the requester is the owner, return the video without incrementing views
-  if (req.user._id.equals(video.owner._id)) {
-    return res
-      .status(200)
-      .json(new ApiResponse(200, video, "Video fetched successfully"));
-  }
-  // Check if the video is published
-  if (video.isPublished === false) {
+
+  const isOwner =
+    isAuthenticated &&
+    video.owner?._id &&
+    mongoose.Types.ObjectId.isValid(req.user._id) &&
+    req.user._id.equals(video.owner._id);
+
+  // If the video is not published, only the owner can view it.
+  if (video.isPublished === false && !isOwner) {
     return res
       .status(403)
       .json(new ApiResponse(403, null, "This video is not published yet"));
   }
-  // Increment view count
-  await video.updateOne({ $inc: { views: 1 } }); // atomic increment of views
+
+  // Increment view count for non-owner viewers (including unauthenticated)
+  if (!isOwner) {
+    video = await Video.findByIdAndUpdate(
+      videoId,
+      { $inc: { views: 1 } },
+      { new: true }
+    ).populate("owner", "fullname avatar");
+  }
+
   return res
     .status(200)
     .json(new ApiResponse(200, video, "Video fetched successfully"));
@@ -206,7 +221,13 @@ const updateVideo = asyncHandler(async (req, res) => {
   if (!mongoose.isValidObjectId(videoId)) {
     throw new ApiError(400, "Invalid video ID");
   }
-  if (!title && !description && !localThumbnailPath) {
+
+  const hasTitle = typeof title === "string" && title.trim() !== "";
+  const hasDescription =
+    typeof description === "string" && description.trim() !== "";
+  const hasThumbnail = !!localThumbnail;
+
+  if (!hasTitle && !hasDescription && !hasThumbnail) {
     throw new ApiError(
       400,
       "At least one field (title, description, thumbnail) must be provided for update"
@@ -222,15 +243,11 @@ const updateVideo = asyncHandler(async (req, res) => {
     throw new ApiError(403, "You are not authorized to perform this action");
   }
   // Update fields if provided
-  if (title && title !== video.title && title.trim() !== "") {
-    video.title = title;
+  if (hasTitle && title.trim() !== video.title) {
+    video.title = title.trim();
   }
-  if (
-    description &&
-    description !== video.description &&
-    description.trim() !== ""
-  ) {
-    video.description = description;
+  if (hasDescription && description.trim() !== video.description) {
+    video.description = description.trim();
   }
   if (localThumbnail) {
     // Upload new thumbnail to Cloudinary

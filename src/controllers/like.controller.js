@@ -5,6 +5,7 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { Video } from "../models/video.model.js";
 import { Tweet } from "../models/tweet.model.js";
+import { comment as Comment } from "../models/comment.model.js";
 
 const toggleVideoLike = asyncHandler(async (req, res) => {
   const { videoId } = req.params;
@@ -53,7 +54,11 @@ const toggleCommentLike = asyncHandler(async (req, res) => {
   //TODO: toggle like on comment
   if (!mongoose.isValidObjectId(commentId))
     throw new ApiError(400, "Invalid comment ID"); // Validate commentId
-  //check if comment exists.. if not throw error if exist then proceed
+
+  // check if comment exists
+  const commentExists = await Comment.exists({ _id: commentId });
+  if (!commentExists) throw new ApiError(404, "Comment not found");
+
   const isCommentliked = await Like.exists({
     comment: commentId,
     likedBy: req.user._id,
