@@ -314,6 +314,7 @@ const updateUserCoverImage = asyncHandler(async (req, res) => {
   if (!coverImage) {
     throw new ApiError(500, "Avatar upload failed");
   }
+  //? TODO write code delete old avatar from cloudinary after updated successfully
 
   const user = await User.findByIdAndUpdate(
     req.user?._id,

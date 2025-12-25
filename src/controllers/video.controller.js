@@ -135,7 +135,7 @@ const getVideoById = asyncHandler(async (req, res) => {
   if (!mongoose.isValidObjectId(videoId)) {
     throw new ApiError(400, "Invalid video ID");
   }
-  const isAuthenticated = !!req.user?._id; 
+  const isAuthenticated = !!req.user?._id;
 
   let video = await Video.findById(videoId).populate(
     "owner",
@@ -166,6 +166,20 @@ const getVideoById = asyncHandler(async (req, res) => {
       { new: true }
     ).populate("owner", "fullname avatar");
   }
+
+  // Record watch history for authenticated viewers.
+  // Keep most-recent-first, prevent duplicates, and cap list length.
+
+  await User.findByIdAndUpdate(req.user._id, {
+    $pull: { watchHistory: video._id },
+    $push: {
+      watchHistory: {
+        $each: [video._id], // $each => add multiple values to an array field 
+        $position: 0, // $position: 0 => add to the start of the array
+        $slice: 50, // $slice: 50 => keep only the latest 50 entries
+      },
+    },
+  });
 
   return res
     .status(200)
