@@ -1,7 +1,11 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import User from "../models/user.model.js";
-import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import {
+  deleteFromCloudinary,
+  getCloudinaryPublicIdFromUrl,
+  uploadOnCloudinary,
+} from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
@@ -180,7 +184,10 @@ const logoutUser = asyncHandler(async (req, res) => {
 
 const refreshAccessToken = asyncHandler(async (req, res) => {
   const incomingRefreshToken =
-    req.cookies.refreshToken || req.body.refreshToken;
+    req.cookies?.refreshToken ||
+    req.cookies?.refreshtoken ||
+    req.body?.refreshToken ||
+    req.body?.refreshtoken;
 
   if (!incomingRefreshToken) {
     throw new ApiError(401, "Unauthorized request");
@@ -192,7 +199,8 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
       process.env.REFRESH_TOKEN_SECRET
     );
 
-    const user = await User.findById(decodedToken?._id);
+    const userId = decodedToken?._id || decodedToken?.userId;
+    const user = await User.findById(userId);
 
     if (!user) {
       throw new ApiError(401, "Invalid refresh token");
@@ -206,13 +214,13 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
       httpOnly: true,
       secure: true,
     };
-    const { accessToken, newRefreshToken } =
+    const { accessToken, refreshToken: newRefreshToken } =
       await generateAccessAndRefreshToken(user._id);
 
     return res
       .status(200)
-      .cookie("accessToken", accessToken)
-      .cookie("refreshToken", newRefreshToken)
+      .cookie("accesstoken", accessToken, options)
+      .cookie("refreshtoken", newRefreshToken, options)
       .json(
         new ApiResponse(
           200,
@@ -278,17 +286,19 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
 
 const updateUserAvatar = asyncHandler(async (req, res) => {
   // Implementation for updating user avatar goes here
-  const avatarLocalPath = req.files?.path;
+  const avatarLocalPath = req.file?.path;
   if (!avatarLocalPath) {
     throw new ApiError(400, "Avatar file is missing");
   }
+
+  const existingUser = await User.findById(req.user?._id).select("avatar");
+  const oldAvatarUrl = existingUser?.avatar;
+
   const avatar = await uploadOnCloudinary(avatarLocalPath);
 
   if (!avatar.url) {
     throw new ApiError(500, "Avatar upload failed");
   }
-
-  //? TODO write code delete old avatar from cloudinary after updated successfully
 
   const user = await User.findByIdAndUpdate(
     req.user?._id,
@@ -298,6 +308,15 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
     { new: true }
   ).select("-password");
 
+  // delete old avatar from cloudinary
+
+  if (oldAvatarUrl && typeof oldAvatarUrl === "string") {
+    const publicId = getCloudinaryPublicIdFromUrl(oldAvatarUrl);
+    if (publicId) {
+      await deleteFromCloudinary(publicId, "image");
+    }
+  }
+
   return res
     .status(200)
     .json(new ApiResponse(200, user, "User avatar updated successfully"));
@@ -305,16 +324,19 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
 
 const updateUserCoverImage = asyncHandler(async (req, res) => {
   // Implementation for updating user avatar goes here
-  const coverImageLocalPath = req.files?.path;
+  const coverImageLocalPath = req.file?.path;
   if (!coverImageLocalPath) {
     throw new ApiError(400, "coverImage file is missing");
   }
-  const coverImage = await uploadOnCloudinary(avatarLocalPath);
 
-  if (!coverImage) {
-    throw new ApiError(500, "Avatar upload failed");
+  const existingUser = await User.findById(req.user?._id).select("coverImage");
+  const oldCoverUrl = existingUser?.coverImage;
+
+  const coverImage = await uploadOnCloudinary(coverImageLocalPath);
+
+  if (!coverImage?.url) {
+    throw new ApiError(500, "Cover image upload failed");
   }
-  //? TODO write code delete old avatar from cloudinary after updated successfully
 
   const user = await User.findByIdAndUpdate(
     req.user?._id,
@@ -323,6 +345,14 @@ const updateUserCoverImage = asyncHandler(async (req, res) => {
     },
     { new: true }
   ).select("-password");
+
+  if (oldCoverUrl && typeof oldCoverUrl === "string") {
+    const publicId = getCloudinaryPublicIdFromUrl(oldCoverUrl);
+    if (publicId) {
+      await deleteFromCloudinary(publicId, "image");
+    }
+  }
+
   return res
     .status(200)
     .json(new ApiResponse(200, user, "User cover image updated successfully"));

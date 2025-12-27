@@ -10,6 +10,41 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET 
 });
 
+const getCloudinaryPublicIdFromUrl = (urlString) => {
+    try {
+        if (!urlString || typeof urlString !== "string") return null;
+        const url = new URL(urlString);
+
+        // Typical pattern:
+        // /<resource_type>/upload/<transformations?>/v<version>/<public_id>.<ext>
+        const [_, afterUpload] = url.pathname.split("/upload/");
+        if (!afterUpload) return null;
+
+        const segments = afterUpload.split("/").filter(Boolean);
+        const versionIndex = segments.findIndex((s) => /^v\d+$/.test(s));
+        const publicIdSegments = versionIndex >= 0 ? segments.slice(versionIndex + 1) : segments;
+        if (publicIdSegments.length === 0) return null;
+
+        const withExt = publicIdSegments.join("/");
+        const withoutExt = withExt.replace(/\.[^/.]+$/, "");
+        return decodeURIComponent(withoutExt);
+    } catch {
+        return null;
+    }
+}
+
+const deleteFromCloudinary = async (publicId, resourceType = "image") => {
+    try {
+        if (!publicId) return null;
+        return await cloudinary.uploader.destroy(publicId, {
+            resource_type: resourceType,
+            invalidate: true,
+        });
+    } catch {
+        return null;
+    }
+}
+
 const uploadOnCloudinary = async (localFilePath) => {
     try {
         if (!localFilePath) return null
@@ -29,5 +64,4 @@ const uploadOnCloudinary = async (localFilePath) => {
 }
 
 
-
-export {uploadOnCloudinary}
+export {uploadOnCloudinary, deleteFromCloudinary, getCloudinaryPublicIdFromUrl}
