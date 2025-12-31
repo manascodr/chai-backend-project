@@ -1,35 +1,36 @@
 import { useForm } from "react-hook-form";
 import { login } from "../api/auth.api";
-import { toast } from "react-toastify";
+import { useAuthStore } from "../stores/auth.store.js";
+import { ToastContainer,toast } from 'react-toastify';
 
-const Login = ({ user, setUser }) => {
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm();
+const Login = () => {
+  const { register, handleSubmit } = useForm();
+  const setUser = useAuthStore((s) => s.setUser); // get setUser from store
 
   const onSubmit = async (data) => {
     try {
       const response = await login(data);
       setUser(response.data.data.user);
       toast.success("Login successful");
-    } catch (error) {
-      console.error(error);
-      toast.error("Login failed");
+    } catch (err) {
+      console.error(err);
+      ToastContainer.error("Login failed");
     }
   };
 
   return (
-    <div className="main-container">
+    <>
+      <h1>Login</h1>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <h2>Login</h2>
-        <input {...register("email")} type="email" />
-        <input {...register("password")} type="password" />
-        <button type="submit">Submit</button>
+        <input {...register("email")} type="email" placeholder="email" />
+        <input
+          {...register("password")}
+          type="password"
+          placeholder="password"
+        />
+        <button type="submit">Login</button>
       </form>
-    </div>
+    </>
   );
 };
 
