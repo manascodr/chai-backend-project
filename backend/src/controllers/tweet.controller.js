@@ -34,7 +34,7 @@ const getUserTweets = asyncHandler(async (req, res) => {
   const tweets = await Tweet.find({ owner: userId }).sort({ createdAt: -1 });
   res
     .status(200)
-    .json(new ApiResponse(200,tweets ,"User tweets fetched successfully"));
+    .json(new ApiResponse(200, tweets, "User tweets fetched successfully"));
 });
 
 const updateTweet = asyncHandler(async (req, res) => {

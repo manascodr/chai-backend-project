@@ -36,9 +36,11 @@ const getChannelStats = asyncHandler(async (req, res) => {
 
 const getChannelVideos = asyncHandler(async (req, res) => {
   // TODO: Get all the videos uploaded by the channel
-  const allVideos = await Video.find({ owner: req.user._id }).sort({
-    createdAt: -1,
-  }).lean();
+  const allVideos = await Video.find({ owner: req.user._id })
+    .sort({
+      createdAt: -1,
+    })
+    .lean();
   res
     .status(200)
     .json(

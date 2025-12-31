@@ -174,7 +174,7 @@ const getVideoById = asyncHandler(async (req, res) => {
     $pull: { watchHistory: video._id },
     $push: {
       watchHistory: {
-        $each: [video._id], // $each => add multiple values to an array field 
+        $each: [video._id], // $each => add multiple values to an array field
         $position: 0, // $position: 0 => add to the start of the array
         $slice: 50, // $slice: 50 => keep only the latest 50 entries
       },

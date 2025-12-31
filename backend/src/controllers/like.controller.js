@@ -164,9 +164,9 @@ const getLikedVideos = asyncHandler(async (req, res) => {
         localField: "video", // field from Like documents
         foreignField: "_id", // `_id` field from Video documents
         as: "videoDetails", // output array field
-        
+
         // further pipeline to run on Video collection
-        pipeline: [ 
+        pipeline: [
           // Optionally you can match only published videos here:
           { $match: { isPublished: true } },
 

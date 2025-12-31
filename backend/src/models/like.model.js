@@ -36,10 +36,10 @@ likeSchema.path("video").validate(function () {
 // Prevent duplicate likes per (target, user).
 // Partial unique indexes allow other targets to be null without colliding.
 likeSchema.index(
-  { video: 1, likedBy: 1 },
+  { video: 1, likedBy: 1 }, // means create an index on video and likedBy fields that is unique which only applies when video is not null
   {
     unique: true,
-    partialFilterExpression: { video: { $exists: true, $ne: null } },
+    partialFilterExpression: { video: { $exists: true, $ne: null } }, // only index documents where video is not null
   }
 );
 likeSchema.index(

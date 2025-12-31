@@ -16,28 +16,33 @@ Base path: `/api/v1`
 ## Features
 
 ### Authentication
+
 - User registration & login
 - JWT-based authentication
 - Protected routes (JWT verified via cookie or `Authorization` header)
 
 ### Video Management
+
 - Upload videos with thumbnails
 - Publish / unpublish videos
 - Get videos with pagination & sorting
 - View count tracking
 
 ### User Interaction
+
 - Like / unlike videos
 - Comment on videos
 - Subscribe / unsubscribe to channels
 - Watch history tracking
 
 ### Playlists
+
 - Create playlists
 - Add/remove videos
 - Fetch user playlists
 
 ### Dashboard
+
 - Total views
 - Total videos
 - Subscribers count
@@ -124,8 +129,8 @@ All routes are mounted under `/api/v1` in [src/app.js](src/app.js).
 ### Users (`/api/v1/users`)
 
 - `POST /register` (multipart/form-data)
-	- Fields: `fullname`, `username`, `email`, `password`
-	- Files: `avatar` (required), `coverImage` (optional)
+  - Fields: `fullname`, `username`, `email`, `password`
+  - Files: `avatar` (required), `coverImage` (optional)
 - `POST /login`
 - `POST /logout` (protected)
 - `POST /refresh-token`
@@ -133,9 +138,9 @@ All routes are mounted under `/api/v1` in [src/app.js](src/app.js).
 - `GET /current-user` (protected)
 - `PATCH /update-account` (protected)
 - `PATCH /avatar` (protected, multipart/form-data)
-	- File: `avatar`
+  - File: `avatar`
 - `PATCH /cover-image` (protected, multipart/form-data)
-	- File: `coverImage`
+  - File: `coverImage`
 - `GET /c/:username` (protected)
 - `GET /history` (protected)
 
@@ -144,14 +149,14 @@ All routes are mounted under `/api/v1` in [src/app.js](src/app.js).
 Note: [src/routes/video.routes.js](src/routes/video.routes.js) applies `verifyJWT` to the whole router.
 
 - `GET /` (pagination + search)
-	- Query: `page`, `limit`, `query`, `sortBy` (`createdAt|views`), `sortType` (`asc|desc`), `userId`
+  - Query: `page`, `limit`, `query`, `sortBy` (`createdAt|views`), `sortType` (`asc|desc`), `userId`
 - `POST /` (multipart/form-data)
-	- Files: `videoFile`, `thumbnail`
-	- Fields: `title`, `description`
+  - Files: `videoFile`, `thumbnail`
+  - Fields: `title`, `description`
 - `GET /:videoId`
 - `PATCH /:videoId` (multipart/form-data)
-	- File: `thumbnail` (optional)
-	- Fields: `title` (optional), `description` (optional)
+  - File: `thumbnail` (optional)
+  - Fields: `title` (optional), `description` (optional)
 - `DELETE /:videoId`
 - `PATCH /toggle/publish/:videoId`
 
@@ -173,4 +178,4 @@ Note: [src/routes/video.routes.js](src/routes/video.routes.js) applies `verifyJW
 ## Known Gaps / TODOs
 
 - When updating avatar/coverImage/thumbnail, old Cloudinary assets are not deleted yet.
-	- See TODO in the user controller and the video update flow.
+  - See TODO in the user controller and the video update flow.

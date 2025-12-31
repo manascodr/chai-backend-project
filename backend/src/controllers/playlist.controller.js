@@ -133,15 +133,15 @@ const deletePlaylist = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Invalid playlist ID");
   }
   //fetch playlist
-    const playlist = await Playlist.findById(playlistId);
-    if (!playlist) {
-        throw new ApiError(404, "Playlist not found");
-    }
-    // check playlist owner
-    if(!playlist.owner.equals(req.user._id)){
-        throw new ApiError(403, "You are not authorized to delete this playlist");
-    }
-    await playlist.deleteOne({_id: playlistId});
+  const playlist = await Playlist.findById(playlistId);
+  if (!playlist) {
+    throw new ApiError(404, "Playlist not found");
+  }
+  // check playlist owner
+  if (!playlist.owner.equals(req.user._id)) {
+    throw new ApiError(403, "You are not authorized to delete this playlist");
+  }
+  await playlist.deleteOne({ _id: playlistId });
   res
     .status(200)
     .json(new ApiResponse(200, null, "Playlist deleted successfully"));
