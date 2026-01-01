@@ -1,30 +1,45 @@
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import Login from "./pages/Login";
 import { getCurrentUser } from "./api/auth.api";
 import { useAuthStore } from "./stores/auth.store";
+import Home from "./pages/Home";
+
+import Login from "./pages/Login";
+import ProtectedRoute from "./routes/ProtectedRoute";
+
 
 const App = () => {
-  const user = useAuthStore((s) => s.user); // get user from store
   const setUser = useAuthStore((s) => s.setUser);
-
+  const user = useAuthStore((s) => s.user);
   const [loading, setLoading] = useState(true);
 
-  // check if already logged in (on refresh)
   useEffect(() => {
     getCurrentUser()
       .then((res) => setUser(res.data.data))
       .catch(() => setUser(null))
-      .finally(() => setLoading(false)); // .finally is called regardless of success or failure
+      .finally(() => setLoading(false));
   }, [setUser]);
 
   if (loading) return <div>Loading...</div>;
 
-  if (!user) return <Login setUser={setUser} />;
-
   return (
-    <>
-      <div>Welcome, {user.username}!</div>
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route
+          path="/login"
+          element={user ? <Navigate to="/" replace /> : <Login />} // replace to prevent going back to login after redirect
+        />
+
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <Home />
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
+    </BrowserRouter>
   );
 };
 
