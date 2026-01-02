@@ -140,7 +140,7 @@ const getVideoById = asyncHandler(async (req, res) => {
   let video = await Video.findById(videoId).populate(
     "owner",
     "fullname avatar"
-  );
+  ); 
   if (!video) {
     throw new ApiError(404, "Video not found");
   }
@@ -170,16 +170,29 @@ const getVideoById = asyncHandler(async (req, res) => {
   // Record watch history for authenticated viewers.
   // Keep most-recent-first, prevent duplicates, and cap list length.
 
-  await User.findByIdAndUpdate(req.user._id, {
-    $pull: { watchHistory: video._id },
-    $push: {
-      watchHistory: {
-        $each: [video._id], // $each => add multiple values to an array field
-        $position: 0, // $position: 0 => add to the start of the array
-        $slice: 50, // $slice: 50 => keep only the latest 50 entries
+  await User.findByIdAndUpdate(req.user._id, [
+    {
+      $set: {
+        watchHistory: {
+          $slice: [
+            {
+              $concatArrays: [
+                [video._id],
+                {
+                  $filter: {
+                    input: "$watchHistory",
+                    as: "vid",
+                    cond: { $ne: ["$$vid", video._id] },
+                  },
+                },
+              ],
+            },
+            50,
+          ],
+        },
       },
     },
-  });
+  ]);
 
   return res
     .status(200)

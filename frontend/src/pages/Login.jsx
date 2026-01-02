@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { login } from "../api/auth.api";
 import { useAuthStore } from "../stores/auth.store.js";
-import { ToastContainer,toast } from 'react-toastify';
+import { toast } from "react-toastify";
 
 const Login = () => {
   const { register, handleSubmit } = useForm();
@@ -14,7 +14,7 @@ const Login = () => {
       toast.success("Login successful");
     } catch (err) {
       console.error(err);
-      ToastContainer.error("Login failed");
+      toast.error("Login failed");
     }
   };
 

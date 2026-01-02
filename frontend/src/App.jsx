@@ -6,7 +6,7 @@ import Home from "./pages/Home";
 
 import Login from "./pages/Login";
 import ProtectedRoute from "./routes/ProtectedRoute";
-
+import VideoDetails from "./pages/videoDetails";
 
 const App = () => {
   const setUser = useAuthStore((s) => s.setUser);
@@ -38,6 +38,8 @@ const App = () => {
             </ProtectedRoute>
           }
         />
+
+        <Route path="/watch/:videoId" element={<VideoDetails />} />
       </Routes>
     </BrowserRouter>
   );

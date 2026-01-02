@@ -3,6 +3,7 @@ import { logout } from "../api/auth.api";
 import { useAuthStore } from "../stores/auth.store";
 import { useEffect, useState } from "react";
 import { getAllVideos } from "../api/video.api";
+import VideoCard from "../components/video/VideoCard";
 
 const Home = () => {
   // Access the clearUser action from the auth store
@@ -18,7 +19,7 @@ const Home = () => {
       .catch((err) => setError(err.message || "Failed to load videos"))
       .finally(() => setLoading(false));
   }, []);
-  console.log(videos);
+  // console.log(videos);
 
   const handleLogout = async () => {
     try {
@@ -39,12 +40,8 @@ const Home = () => {
       {!loading && !error && (
         <div className="video-list">
           {videos.map((video) => (
-            <div key={video._id} className="video-container">
-              <video width="320" height="240" controls>
-                <source src={video.videoFile} type="video/mp4" />
-              </video>
-              <h4>{video.title}</h4>
-            </div>
+            // console.log(video),
+            <VideoCard key={video._id} video={video} />
           ))}
         </div>
       )}
