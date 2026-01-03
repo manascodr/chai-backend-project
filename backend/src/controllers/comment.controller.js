@@ -24,9 +24,7 @@ const getVideoComments = asyncHandler(async (req, res) => {
     .skip(skip)
     .limit(limit)
     .lean();
-  if (!comments || comments.length === 0) {
-    throw new ApiError(404, "Comments not found");
-  }
+
   return res
     .status(200)
     .json(new ApiResponse(200, comments, "Comments fetched successfully"));
