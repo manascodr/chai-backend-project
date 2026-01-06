@@ -38,7 +38,6 @@ const App = () => {
             </ProtectedRoute>
           }
         />
-
         <Route path="/watch/:videoId" element={<VideoDetails />} />
       </Routes>
     </BrowserRouter>

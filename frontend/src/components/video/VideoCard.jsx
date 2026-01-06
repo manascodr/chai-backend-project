@@ -9,11 +9,6 @@ const VideoCard = ({video}) => {
   return (
     <div
       className="video-card"
-      style={{
-        border: "1px solid black",
-        width: "fit-content",
-        margin: "1rem",
-      }}
       onClick={()=> navigate(`/watch/${video._id}`)}
     >
       <h4>{title}</h4>

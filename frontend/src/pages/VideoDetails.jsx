@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { likeVideo } from "../api/like.api";
 import CommentsSection from "./../components/CommentsSection";
 import { toggleSubscription } from "../api/subscriptions.auth";
+import VideoPlayer from "../components/video/VideoPlayer";
 
 const VideoDetails = () => {
   const { videoId } = useParams();
@@ -55,37 +56,48 @@ const VideoDetails = () => {
 
   return (
     <>
-      <div className="video-container">
+      <div className="video-details">
         {loading && <p>Loading video...</p>}
         {error && <p>Error loading video: {error}</p>}
+
         {!loading && !error && video && (
-          <div>
-            <h2>{video.title}</h2>
-            <video width="600" controls>
-              <source src={video.videoFile} type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
-            <p>
-              {video.views} views | Uploaded on{" "}
+          <>
+            <div className="video-player">
+              <VideoPlayer videoFile={video.videoFile} />
+            </div>
+
+            <div className="video-info">
+              <h2 className="video-title">{video.title}</h2>
+
+              <div className="video-actions">
+                <button disabled={!video} onClick={handleSubscribe}>
+                  {subscribed ? "Subscribed" : "Subscribe"}
+                </button>
+
+                <button onClick={likeHandler}>
+                  {liked ? "Unlike" : "Like"} ({likesCount})
+                </button>
+              </div>
+            </div>
+
+            <div className="video-meta">
+              {video.views} views ·{" "}
               {new Date(video.createdAt).toLocaleDateString()}
-            </p>
-            <h4>{video.title}</h4>
-            <button disabled={!video} onClick={() => handleSubscribe()}>
-              {subscribed ? "Subscribed" : "Subscribe"}
-            </button>
-            <p>{`${likesCount} likes`}</p>
-            <button onClick={() => likeHandler()}>
-              {liked ? "Unlike" : "Like"}
-            </button>
+            </div>
+
             <div className="channel-info">
               <img src={video.owner.avatar} alt="" />
-              <p>{video.owner.fullname}</p>
-              <p>{`${subscriberCount} subscribers`} </p>
+              <div>
+                <p>{video.owner.fullname}</p>
+                <p>{subscriberCount} subscribers</p>
+              </div>
             </div>
-            <p>{video.description}</p>
-          </div>
+
+            <p className="video-description">{video.description}</p>
+          </>
         )}
       </div>
+
       <CommentsSection videoId={videoId} />
     </>
   );

@@ -1,0 +1,44 @@
+@use "./variables" as *;
+
+h1, h2, h3, h4 {
+  margin: 0 0 0.5rem 0;
+  color: $text;
+}
+
+p {
+  margin: 0.25rem 0;
+  color: $muted;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-width: 420px;
+}
+
+input,
+textarea,
+select {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  border-radius: $radius;
+  border: 1px solid $border;
+  background: transparent;
+  color: $text;
+  outline: none;
+  transition: $transition;
+
+  &::placeholder {
+    color: $muted;
+  }
+
+  &:focus {
+    border-color: $text;
+  }
+}

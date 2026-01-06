@@ -1,0 +1,118 @@
+@use "../base/variables" as *;
+
+.video-details {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 78%;
+
+  .video-title {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 1.25;
+    color: $text;
+  }
+
+  .video-player {
+    overflow: hidden;
+    border: 1px solid $border;
+    border-radius: $radius;
+
+    > * {
+      display: block;
+      width: 100%;
+      max-width: 100%;
+    }
+  }
+
+  .video-meta {
+    font-size: 0.9rem;
+    color: $muted;
+  }
+
+
+  .video-info{
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .video-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+
+    button {
+      appearance: none;
+      border: 1px solid $border;
+      border-radius: $radius;
+      background: transparent;
+      color: $text;
+      padding: 0.55rem 0.9rem;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: $transition;
+
+      &:hover {
+        border-color: $text;
+      }
+
+      &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+    }
+
+    button:nth-child(1) {
+      background: $primary;
+      border-color: $primary;
+
+      &:hover {
+        filter: brightness(1.05);
+      }
+    }
+  }
+
+  .channel-info {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    border: 1px solid $border;
+    border-radius: $radius;
+
+    img {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      object-fit: cover;
+      flex: 0 0 48px;
+    }
+
+    p {
+      margin: 0;
+    }
+
+    p:first-child {
+      font-weight: 600;
+      color: $text;
+    }
+
+    p:last-child {
+      margin-top: 0.2rem;
+      font-size: 0.9rem;
+      color: $muted;
+    }
+  }
+
+  .video-description {
+    margin: 0;
+    padding: 0.9rem 1rem;
+    border: 1px solid $border;
+    border-radius: $radius;
+    line-height: 1.6;
+    color: $text;
+    white-space: pre-wrap;
+  }
+}

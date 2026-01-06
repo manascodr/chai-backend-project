@@ -1,0 +1,23 @@
+@use "../base/variables" as *;
+
+button {
+  appearance: none;
+  border: 1px solid $border;
+  border-radius: $radius;
+  background: transparent;
+  color: $text;
+  padding: 0.55rem 0.9rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: $transition;
+
+  &:hover {
+    background: $border;
+    border-color: $text;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}

@@ -1,0 +1,13 @@
+/* main.scss */
+
+@use "./base/reset";
+@use "./base/variables";
+@use "./base/typography.scss";
+
+@use "./layout/page";
+@use "./layout/container";
+
+@use "./components/video-card";
+@use "./components/video-details";
+@use "./components/comments";
+@use "./components/buttons";
