@@ -3,30 +3,54 @@ import { getVideoById } from "../api/video.api";
 import { useEffect, useState } from "react";
 import { likeVideo } from "../api/like.api";
 import CommentsSection from "./../components/CommentsSection";
+import { toggleSubscription } from "../api/subscriptions.auth";
 
 const VideoDetails = () => {
   const { videoId } = useParams();
   const [loading, setLoading] = useState(true);
   const [video, setVideo] = useState(null);
   const [error, setError] = useState(null);
-  const [liked, setLiked] = useState(false);
 
+  const [liked, setLiked] = useState(false);
+  const [subscribed, setSubscribed] = useState(false);
+
+  const [subscriberCount, setSubscriberCount] = useState(0);
+  const [likesCount, setLikesCount] = useState(0);
+
+  // Fetch video details on component mount
   useEffect(() => {
     getVideoById(videoId)
-      .then((res) => setVideo(res.data.data))
+      .then((res) => {
+        const { video, isLiked, isSubscribed, subscriberCount, likesCount } =
+          res.data.data;
+
+        setVideo(video);
+        setLiked(isLiked);
+        setSubscribed(isSubscribed);
+        setSubscriberCount(subscriberCount);
+        setLikesCount(likesCount);
+      })
       .catch((err) => setError(err.message || "Failed to load video"))
       .finally(() => setLoading(false));
   }, [videoId]);
-  //   console.log(video);
+  // console.log(video);
 
-  const likeHandler = async (videoId) => {
-    try {
-      const res = await likeVideo(videoId);
-      setLiked(res.data.data.liked);
-      console.log(res);
-    } catch (err) {
-      console.error("Error liking the video:", err);
-    }
+  // Like video handler
+  const likeHandler = async () => {
+    const res = await likeVideo(videoId);
+    const liked = res.data.data.liked;
+
+    setLiked(liked);
+    setLikesCount((prev) => (liked ? prev + 1 : prev - 1));
+  };
+
+  // Subscribe handler
+  const handleSubscribe = async () => {
+    const res = await toggleSubscription(video?.owner._id);
+    const subscribed = res.data.data.subscribed;
+
+    setSubscribed(subscribed);
+    setSubscriberCount((prev) => (subscribed ? prev + 1 : prev - 1));
   };
 
   return (
@@ -46,13 +70,17 @@ const VideoDetails = () => {
               {new Date(video.createdAt).toLocaleDateString()}
             </p>
             <h4>{video.title}</h4>
-            <button onClick={() => likeHandler(videoId)}>
+            <button disabled={!video} onClick={() => handleSubscribe()}>
+              {subscribed ? "Subscribed" : "Subscribe"}
+            </button>
+            <p>{`${likesCount} likes`}</p>
+            <button onClick={() => likeHandler()}>
               {liked ? "Unlike" : "Like"}
             </button>
             <div className="channel-info">
               <img src={video.owner.avatar} alt="" />
               <p>{video.owner.fullname}</p>
-              <p>100M subscribers</p>
+              <p>{`${subscriberCount} subscribers`} </p>
             </div>
             <p>{video.description}</p>
           </div>

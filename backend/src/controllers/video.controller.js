@@ -5,6 +5,8 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import { Like } from "../models/like.model.js";
+import { Subscription } from "../models/subscription.model.js";
 
 const getAllVideos = asyncHandler(async (req, res) => {
   let {
@@ -140,7 +142,7 @@ const getVideoById = asyncHandler(async (req, res) => {
   let video = await Video.findById(videoId).populate(
     "owner",
     "fullname avatar"
-  ); 
+  );
   if (!video) {
     throw new ApiError(404, "Video not found");
   }
@@ -194,9 +196,45 @@ const getVideoById = asyncHandler(async (req, res) => {
     },
   ]);
 
-  return res
-    .status(200)
-    .json(new ApiResponse(200, video, "Video fetched successfully"));
+  // Check if the authenticated user has liked the video
+  let isLiked = false;
+  let isSubscribed = false;
+
+  if (req.user) {
+    // Check if the authenticated user has liked the video
+    isLiked = await Like.exists({
+      video: video._id,
+      likedBy: req.user._id,
+    });
+    // Check if the authenticated user is subscribed to the video's owner
+    isSubscribed = await Subscription.exists({
+      subscriber: req.user._id,
+      channel: video.owner._id,
+    });
+  }
+
+  // Get subscriber count for the video's owner
+  const subscriberCount = await Subscription.countDocuments({
+    channel: video.owner._id,
+  });
+
+  const likesCount = await Like.countDocuments({
+    video: video._id,
+  });
+
+  return res.status(200).json(
+    new ApiResponse(
+      200,
+      {
+        video,
+        isLiked: Boolean(isLiked),
+        isSubscribed: Boolean(isSubscribed),
+        subscriberCount,
+        likesCount,
+      },
+      "Video fetched successfully"
+    )
+  );
 });
 const togglePublishStatus = asyncHandler(async (req, res) => {
   const { videoId } = req.params;
