@@ -166,7 +166,7 @@ const getVideoById = asyncHandler(async (req, res) => {
       videoId,
       { $inc: { views: 1 } },
       { new: true }
-    ).populate("owner", "fullname avatar");
+    ).populate("owner", "username fullname avatar");
   }
 
   // Record watch history for authenticated viewers.

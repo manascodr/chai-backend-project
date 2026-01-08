@@ -7,6 +7,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import VideoDetails from "./pages/videoDetails";
+import ChannelPage from "./pages/ChannelPage";
 
 const App = () => {
   const setUser = useAuthStore((s) => s.setUser);
@@ -23,24 +24,32 @@ const App = () => {
   if (loading) return <div>Loading...</div>;
 
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route
-          path="/login"
-          element={user ? <Navigate to="/" replace /> : <Login />} // replace to prevent going back to login after redirect
-        />
+    <Routes>
+      <Route
+        path="/login"
+        element={user ? <Navigate to="/" replace /> : <Login />} // replace to prevent going back to login after redirect
+      />
 
-        <Route
-          path="/"
-          element={
-            <ProtectedRoute>
-              <Home />
-            </ProtectedRoute>
-          }
-        />
-        <Route path="/watch/:videoId" element={<VideoDetails />} />
-      </Routes>
-    </BrowserRouter>
+      <Route
+        path="/"
+        element={
+          <ProtectedRoute>
+            <Home />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/c/:username"
+        element={
+          <ProtectedRoute>
+            <ChannelPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route path="/watch/:videoId" element={<VideoDetails />} />
+      
+    </Routes>
   );
 };
 

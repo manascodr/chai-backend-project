@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { getVideoById } from "../api/video.api";
 import { useEffect, useState } from "react";
 import { likeVideo } from "../api/like.api";
@@ -54,6 +54,12 @@ const VideoDetails = () => {
     setSubscriberCount((prev) => (subscribed ? prev + 1 : prev - 1));
   };
 
+  const navigate = useNavigate();
+
+  const handleChannelProfile = () => {
+    navigate(`/c/${video.owner.fullname}`);
+  };
+
   return (
     <>
       <div className="video-details">
@@ -66,8 +72,16 @@ const VideoDetails = () => {
               <VideoPlayer videoFile={video.videoFile} />
             </div>
 
+            <h2 className="video-title">{video.title}</h2>
+
             <div className="video-info">
-              <h2 className="video-title">{video.title}</h2>
+              <div onClick={handleChannelProfile} className="channel-info">
+                <img src={video.owner.avatar} alt="" />
+                <div>
+                  <p>{video.owner.fullname}</p>
+                  <p>{subscriberCount} subscribers</p>
+                </div>
+              </div>
 
               <div className="video-actions">
                 <button disabled={!video} onClick={handleSubscribe}>
@@ -80,20 +94,14 @@ const VideoDetails = () => {
               </div>
             </div>
 
-            <div className="video-meta">
-              {video.views} views ·{" "}
-              {new Date(video.createdAt).toLocaleDateString()}
-            </div>
-
-            <div className="channel-info">
-              <img src={video.owner.avatar} alt="" />
-              <div>
-                <p>{video.owner.fullname}</p>
-                <p>{subscriberCount} subscribers</p>
+            <div className="channel-section">
+              <div className="video-meta">
+                {video.views} views ·{" "}
+                {new Date(video.createdAt).toLocaleDateString()}
               </div>
-            </div>
 
-            <p className="video-description">{video.description}</p>
+              <p className="video-description">{video.description}</p>
+            </div>
           </>
         )}
       </div>

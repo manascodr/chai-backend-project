@@ -1,0 +1,303 @@
+@use "../base/variables" as *;
+
+.channel-header {
+  width: 100%;
+  background-color: $bg;
+
+  // Banner Section
+  &__banner {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    border-radius: 12px;
+    margin-bottom: 16px;
+
+    @media (min-width: 768px) {
+      height: 250px;
+    }
+
+    @media (min-width: 1200px) {
+      height: 300px;
+    }
+  }
+
+  &__banner-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &__banner-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, $bg-secondary 0%, darken($bg-secondary, 5%) 100%);
+  }
+
+  // Content Section
+  &__content {
+    padding: 0 16px;
+    max-width: 1284px;
+    margin: 0 auto;
+
+    @media (min-width: 768px) {
+      padding: 0 24px;
+    }
+  }
+
+  // Info Section (Avatar + Details + Subscribe)
+  &__info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding-bottom: 16px;
+
+    @media (min-width: 768px) {
+      flex-direction: row;
+      align-items: flex-start;
+      gap: 24px;
+    }
+  }
+
+  // Avatar
+  &__avatar {
+    flex-shrink: 0;
+    margin-top: -40px;
+
+    @media (min-width: 768px) {
+      margin-top: -50px;
+    }
+  }
+
+  &__avatar-img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 4px solid $bg;
+    object-fit: cover;
+    background-color: $bg-secondary;
+
+    @media (min-width: 768px) {
+      width: 128px;
+      height: 128px;
+    }
+
+    @media (min-width: 1200px) {
+      width: 160px;
+      height: 160px;
+    }
+  }
+
+  // Details
+  &__details {
+    flex: 1;
+    text-align: center;
+    min-width: 0;
+
+    @media (min-width: 768px) {
+      text-align: left;
+      padding-top: 8px;
+    }
+  }
+
+  &__name {
+    font-size: 24px;
+    font-weight: 600;
+    color: $text;
+    margin: 0 0 4px 0;
+    line-height: 1.2;
+
+    @media (min-width: 768px) {
+      font-size: 28px;
+    }
+
+    @media (min-width: 1200px) {
+      font-size: 36px;
+    }
+  }
+
+  &__meta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 8px;
+    color: $muted;
+    font-size: 14px;
+
+    @media (min-width: 768px) {
+      justify-content: flex-start;
+    }
+  }
+
+  &__username {
+    color: $muted;
+  }
+
+  &__separator {
+    margin: 0 4px;
+  }
+
+  &__subscribers {
+    color: $muted;
+  }
+
+  &__description {
+    color: $muted;
+    font-size: 14px;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    max-width: 600px;
+
+    @media (min-width: 768px) {
+      margin-right: auto;
+    }
+  }
+
+  // Actions (Subscribe Button)
+  &__actions {
+    flex-shrink: 0;
+
+    @media (min-width: 768px) {
+      padding-top: 8px;
+      margin-left: auto;
+    }
+  }
+
+  &__subscribe-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: $transition;
+    background-color: $text;
+    color: $bg;
+
+    &:hover {
+      background-color: darken($text, 10%);
+    }
+
+    &--subscribed {
+      background-color: $bg-secondary;
+      color: $text;
+
+      &:hover {
+        background-color: lighten($bg-secondary, 5%);
+      }
+    }
+  }
+
+  &__bell-icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  // Navigation Tabs
+  &__tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid $border;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  &__tab {
+    flex-shrink: 0;
+    padding: 12px 24px;
+    font-size: 14px;
+    font-weight: 500;
+    color: $muted;
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    cursor: pointer;
+    transition: $transition;
+    white-space: nowrap;
+
+    &:hover {
+      color: $text;
+      background-color: rgba($text, 0.05);
+    }
+
+    &--active {
+      color: $text;
+      border-bottom-color: $text;
+    }
+  }
+
+  // Loading State
+  &--loading {
+    .channel-header__banner-skeleton {
+      width: 100%;
+      height: 200px;
+      background: linear-gradient(90deg, $bg-secondary 25%, lighten($bg-secondary, 5%) 50%, $bg-secondary 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: 12px;
+      margin-bottom: 16px;
+
+      @media (min-width: 768px) {
+        height: 250px;
+      }
+    }
+
+    .channel-header__info-skeleton {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      padding: 16px 24px;
+
+      .skeleton-avatar {
+        width: 128px;
+        height: 128px;
+        border-radius: 50%;
+        background: linear-gradient(90deg, $bg-secondary 25%, lighten($bg-secondary, 5%) 50%, $bg-secondary 75%);
+        background-size: 200% 100%;
+        animation: shimmer 1.5s infinite;
+      }
+
+      .skeleton-text {
+        width: 200px;
+        height: 24px;
+        border-radius: 4px;
+        background: linear-gradient(90deg, $bg-secondary 25%, lighten($bg-secondary, 5%) 50%, $bg-secondary 75%);
+        background-size: 200% 100%;
+        animation: shimmer 1.5s infinite;
+      }
+    }
+  }
+
+  // Error State
+  &--error {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 300px;
+    color: $muted;
+    font-size: 16px;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}

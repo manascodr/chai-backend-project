@@ -20,6 +20,7 @@ const getVideoComments = asyncHandler(async (req, res) => {
   }
 
   const comments = await Comment.find({ video: videoId })
+    .populate("owner", "username avatar")
     .sort({ createdAt: -1 })
     .skip(skip)
     .limit(limit)
