@@ -1,0 +1,93 @@
+@use "../base/variables" as *;
+@use "sass:color"; 
+
+.channel-page {
+  width: 100%;
+}
+
+.channel-page-content {
+  max-width: 1284px;
+  margin: 0 auto;
+  padding: 16px;
+
+  @media (min-width: 768px) {
+    padding: 24px;
+  }
+}
+
+.channel-page-error {
+  max-width: 1284px;
+  margin: 0 auto;
+  padding: 24px 16px;
+  color: $text;
+}
+
+.channel-page-error-text {
+  color: $muted;
+}
+
+.channel-page-header-skeleton {
+  max-width: 1284px;
+  margin: 0 auto;
+  padding: 16px;
+
+  @media (min-width: 768px) {
+    padding: 24px;
+  }
+}
+
+.channel-page-banner-skeleton {
+  width: 100%;
+  height: 200px;
+  background: linear-gradient(90deg, $bg-secondary 25%, color.adjust($bg-secondary, $lightness: 5%) 50%, $bg-secondary 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 12px;
+  margin-bottom: 16px;
+
+  @media (min-width: 768px) {
+    height: 250px;
+  }
+
+  @media (min-width: 1200px) {
+    height: 300px;
+  }
+}
+
+.channel-page-header-row-skeleton {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.channel-page-avatar-skeleton {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: linear-gradient(90deg, $bg-secondary 25%, color.adjust($bg-secondary, $lightness: 5%) 50%, $bg-secondary 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+
+  @media (min-width: 768px) {
+    width: 128px;
+    height: 128px;
+  }
+}
+
+.channel-page-text-skeleton {
+  flex: 1;
+  height: 20px;
+  border-radius: 8px;
+  background: linear-gradient(90deg, $bg-secondary 25%, color.adjust($bg-secondary, $lightness: 5%) 50%, $bg-secondary 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
