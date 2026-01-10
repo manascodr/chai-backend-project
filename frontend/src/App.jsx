@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getCurrentUser } from "./api/auth.api";
 import { useAuthStore } from "./stores/auth.store";
@@ -6,8 +6,9 @@ import Home from "./pages/Home";
 
 import Login from "./pages/Login";
 import ProtectedRoute from "./routes/ProtectedRoute";
-import VideoDetails from "./pages/videoDetails";
+import VideoDetails from "./pages/VideoDetails";
 import ChannelPage from "./pages/ChannelPage";
+import WatchHistory from "./pages/watchHistory";
 
 const App = () => {
   const setUser = useAuthStore((s) => s.setUser);
@@ -47,8 +48,16 @@ const App = () => {
           </ProtectedRoute>
         }
       />
+      <Route
+        path="/watch-history"
+        element={
+          <ProtectedRoute>
+            <WatchHistory />
+          </ProtectedRoute>
+        }
+      />
+
       <Route path="/watch/:videoId" element={<VideoDetails />} />
-      
     </Routes>
   );
 };
