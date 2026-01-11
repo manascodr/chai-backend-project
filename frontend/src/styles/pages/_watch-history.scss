@@ -1,0 +1,71 @@
+@use "../base/variables" as *;
+
+.watch-history {
+	max-width: 1100px;
+	margin: 0 auto;
+	padding: 1rem;
+}
+
+.watch-history h1 {
+	margin: 0;
+	font-size: 1.5rem;
+	letter-spacing: 0.2px;
+}
+
+.watch-history .video-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+	gap: 1rem;
+	margin-top: 1rem;
+}
+
+.watch-history.loading,
+.watch-history.error,
+.watch-history.empty {
+	max-width: 1100px;
+	margin: 0 auto;
+	padding: 2rem 1rem;
+	border-radius: $radius;
+}
+
+.watch-history.loading {
+	color: $muted;
+	text-align: center;
+	border: 1px dashed $border;
+}
+
+.watch-history.error {
+	padding: 0.85rem 1rem;
+	border: 1px solid $border;
+	border-left: 3px solid $primary;
+	background: rgba(255, 0, 0, 0.08);
+}
+
+.watch-history.empty {
+	text-align: center;
+	border: 1px dashed $border;
+}
+
+.watch-history.empty h2 {
+	margin: 0;
+	font-size: 1.2rem;
+}
+
+.watch-history.empty a {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	margin-top: 0.9rem;
+	padding: 0.55rem 0.9rem;
+	border-radius: 999px;
+	text-decoration: none;
+	border: 1px solid $border;
+	color: $text;
+	background: $bg-secondary;
+	transition: $transition;
+
+	&:hover {
+		border-color: $text;
+		background: $bg-hover;
+	}
+}

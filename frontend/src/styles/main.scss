@@ -8,9 +8,10 @@
 @use "./layout/container";
 
 @use "./components/video-card";
-@use "./components/video-details";
 @use "./components/comments";
 @use "./components/buttons";
 @use "./components/channel-header";
-@use "./components/channel-page";
-@use "./components/watch-history";
+
+@use "./pages/video-details";
+@use "./pages/channel-page";
+@use "./pages/watch-history";

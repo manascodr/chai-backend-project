@@ -59,7 +59,7 @@ const getAllVideos = asyncHandler(async (req, res) => {
     .sort(sort) // .sort function => sorts the documents based on the sort object
     .skip(skip) // .skip function => skips the first 'n' documents
     .limit(limit) // .limit function => limits the result to 'n' documents
-    .populate("owner", "fullname avatar") // populate owner details
+    .populate("owner", "fullname avatar username") // populate owner details
     .lean();
 
   // total count for pagination
@@ -141,7 +141,7 @@ const getVideoById = asyncHandler(async (req, res) => {
 
   let video = await Video.findById(videoId).populate(
     "owner",
-    "fullname avatar"
+    "fullname avatar username"
   );
   if (!video) {
     throw new ApiError(404, "Video not found");
