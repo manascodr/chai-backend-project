@@ -4,6 +4,8 @@ import { useAuthStore } from "../stores/auth.store";
 import { useEffect, useState } from "react";
 import { getAllVideos } from "../api/video.api";
 import VideoCard from "../components/video/VideoCard";
+import { Link } from "react-router-dom";
+import HomeSidebar from "../components/layout/HomeSidebar";
 
 const Home = () => {
   // Access the clearUser action from the auth store
@@ -21,6 +23,7 @@ const Home = () => {
   }, []);
   // console.log(videos);
 
+  // Handle user logout
   const handleLogout = async () => {
     try {
       await logout(); // Call the logout API
@@ -32,20 +35,46 @@ const Home = () => {
   };
 
   return (
-    <>
-      <h1>Home (protected)</h1>
-      <button onClick={handleLogout}>Logout</button>
-      {loading && <p>Loading videos...</p>}
-      {error && <p>Error loading videos: {error}</p>}
-      {!loading && !error && (
-        <div className="video-list">
-          {videos.map((video) => (
-            // console.log(video),
-            <VideoCard key={video._id} video={video} />
-          ))}
+    <div className="home">
+      <header className="home__topbar">
+        <Link to="/" className="home__brand" aria-label="Home">
+          <span className="home__logo" aria-hidden="true">
+            ▶
+          </span>
+          <span className="home__brand-text">ChaiTube</span>
+        </Link>
+
+        <div className="home__actions">
+          <button onClick={handleLogout}>Logout</button>
         </div>
-      )}
-    </>
+      </header>
+
+      <div className="home__layout">
+        <HomeSidebar />
+
+        <main className="home__main">
+          <div className="home__meta">
+            {!loading && !error && (
+              <p>Showing {videos.length}</p>
+            )}
+          </div>
+
+          {loading && (
+            <p aria-busy="true" aria-live="polite">Loading videos…</p>
+          )}
+
+          {error && <p>Error loading videos: {error}</p>}
+
+          {!loading && !error && (
+            <div className="video-list">
+              {videos.map((video) => (
+                <VideoCard key={video._id} video={video} />
+              ))}
+            </div>
+          )}
+        </main>
+      </div>
+    </div>
   );
 };
 

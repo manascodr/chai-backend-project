@@ -1,0 +1,198 @@
+@use "../base/variables" as *;
+
+.home {
+	min-height: calc(100vh - 2rem);
+
+	&__topbar {
+		position: sticky;
+		top: 0;
+		z-index: 10;
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+		padding: 0.75rem 0;
+		background: $bg;
+		border-bottom: 1px solid $border;
+	}
+
+	&__brand {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		font-weight: 700;
+	}
+
+	&__logo {
+		display: grid;
+		place-items: center;
+		width: 32px;
+		height: 24px;
+		border-radius: 6px;
+		background: $primary;
+		color: #fff;
+		font-size: 0.85rem;
+		line-height: 1;
+	}
+
+	&__brand-text {
+		letter-spacing: 0.2px;
+	}
+
+	&__search {
+		flex: 1;
+		display: flex;
+		flex-direction: row;
+		gap: 0.6rem;
+		max-width: 720px;
+		margin: 0 auto;
+
+		input {
+			flex: 1;
+			min-width: 120px;
+			background: $bg;
+		}
+	}
+
+	&__actions {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+	}
+
+	&__layout {
+		display: grid;
+		grid-template-columns: 220px 1fr;
+		gap: 1.25rem;
+		padding-top: 1rem;
+	}
+
+	&__sidebar {
+		position: sticky;
+		top: 64px;
+		height: fit-content;
+		padding-right: 0.5rem;
+	}
+
+	&__nav {
+		display: flex;
+		flex-direction: column;
+		gap: 0.35rem;
+	}
+
+	&__nav-item {
+		padding: 0.6rem 0.75rem;
+		border-radius: $radius;
+		border: 1px solid transparent;
+		color: $text;
+		background: transparent;
+		transition: $transition;
+
+		&:hover {
+			background: $bg-secondary;
+			border-color: $border;
+		}
+	}
+
+	&__nav-item--active {
+		background: $bg-secondary;
+		border-color: $border;
+	}
+
+	&__main {
+		min-width: 0;
+	}
+
+	&__chips {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		overflow-x: auto;
+		padding-bottom: 0.5rem;
+		margin-bottom: 0.5rem;
+
+		&::-webkit-scrollbar {
+			height: 6px;
+		}
+		&::-webkit-scrollbar-thumb {
+			background: $border;
+			border-radius: 999px;
+		}
+	}
+
+	&__chip {
+		border-radius: 999px;
+		padding: 0.45rem 0.8rem;
+		background: $bg-secondary;
+		border-color: transparent;
+		white-space: nowrap;
+		font-size: 0.9rem;
+
+		&:hover {
+			border-color: $text;
+		}
+	}
+
+	&__chip--active {
+		background: $text;
+		color: $bg;
+		border-color: $text;
+	}
+
+	&__meta {
+		margin: 0.25rem 0 0.75rem;
+	}
+
+	.video-list {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+		gap: 1rem;
+	}
+
+	&__skeleton {
+		height: 240px;
+		border-radius: $radius;
+		border: 1px solid $border;
+		background: linear-gradient(
+			90deg,
+			rgba(255, 255, 255, 0.03),
+			rgba(255, 255, 255, 0.06),
+			rgba(255, 255, 255, 0.03)
+		);
+		background-size: 200% 100%;
+		animation: home-shimmer 1.1s ease-in-out infinite;
+	}
+}
+
+@keyframes home-shimmer {
+	0% {
+		background-position: 200% 0;
+	}
+	100% {
+		background-position: -200% 0;
+	}
+}
+
+@media (max-width: 520px) {
+	.home {
+		&__layout {
+			grid-template-columns: 1fr;
+		}
+
+		&__sidebar {
+			display: none;
+		}
+
+		&__topbar {
+			gap: 0.6rem;
+		}
+
+		&__search {
+			max-width: 100%;
+			margin: 0;
+		}
+
+		.video-list {
+			grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+		}
+	}
+}

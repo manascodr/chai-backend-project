@@ -1,6 +1,5 @@
 @use "../base/variables" as *;
 
-.video-list,
 .video-grid {
 	display: grid;
 	grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -18,6 +17,27 @@
 	transition: $transition;
 	outline: none;
 	user-select: none;
+	display: flex;
+	flex-direction: column;
+	gap: 0.6rem;
+
+	.video-card__link {
+		display: block;
+		color: inherit;
+	}
+
+	.video-card__thumb {
+		border-radius: $radius;
+		overflow: hidden;
+	}
+
+	.video-card__title {
+		margin: 0;
+	}
+
+	.video-card__owner-link {
+		color: inherit;
+	}
 
 	&:hover {
 		border-color: $text;
@@ -80,7 +100,6 @@
 }
 
 @media (max-width: 520px) {
-	.video-list,
 	.video-grid {
 		grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
 	}
