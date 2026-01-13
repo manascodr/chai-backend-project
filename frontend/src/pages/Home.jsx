@@ -1,73 +1,83 @@
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+
+import { getAllVideos } from "../api/video.api";
 import { logout } from "../api/auth.api";
 import { useAuthStore } from "../stores/auth.store";
-import { useEffect, useState } from "react";
-import { getAllVideos } from "../api/video.api";
 import VideoCard from "../components/video/VideoCard";
-import { Link } from "react-router-dom";
-import HomeSidebar from "../components/layout/HomeSidebar";
 
 const Home = () => {
-  // Access the clearUser action from the auth store
   const clearUser = useAuthStore((s) => s.clearUser);
 
   const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState("");
+  const [query, setQuery] = useState("");
 
   useEffect(() => {
     getAllVideos()
-      .then((res) => setVideos(res.data.data.videos))
-      .catch((err) => setError(err.message || "Failed to load videos"))
+      .then((res) => setVideos(res.data.data.videos || []))
+      .catch(() => setError("Failed to load videos"))
       .finally(() => setLoading(false));
   }, []);
-  // console.log(videos);
 
-  // Handle user logout
   const handleLogout = async () => {
     try {
-      await logout(); // Call the logout API
-      clearUser(); // Clear user from the store
-      toast.success("Logged out successfully");
-    } catch (err) {
-      toast.error("Error logging out", err?.message);
+      await logout();
+      clearUser();
+      toast.success("Logged out");
+    } catch {
+      toast.error("Failed to logout");
     }
   };
 
+  const normalizedQuery = query.trim().toLowerCase();
+  const filteredVideos = videos.filter((v) =>
+    (v?.title || "").toLowerCase().includes(normalizedQuery)
+  );
+
   return (
     <div className="home">
-      <header className="home__topbar">
-        <Link to="/" className="home__brand" aria-label="Home">
-          <span className="home__logo" aria-hidden="true">
-            ▶
-          </span>
-          <span className="home__brand-text">ChaiTube</span>
+      {/* Top Navigation */}
+      <header className="home__nav">
+        <Link to="/" className="home__brand">
+          <span>▶</span> ChaiTube
         </Link>
 
-        <div className="home__actions">
-          <button onClick={handleLogout}>Logout</button>
+        <div className="home__search">
+          <input
+            placeholder="Search"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+          />
         </div>
+
+        <button className="home__logout" onClick={handleLogout}>
+          Logout
+        </button>
       </header>
 
-      <div className="home__layout">
-        <HomeSidebar />
+      {/* Main Layout */}
+      <div className="home__content">
+        {/* Sidebar */}
+        <aside className="home__sidebar">
+          <Link to="/" className="home__link home__link--active">
+            Home
+          </Link>
+          <Link to="/watch-history" className="home__link">
+            Watch History
+          </Link>
+        </aside>
 
-        <main className="home__main">
-          <div className="home__meta">
-            {!loading && !error && (
-              <p>Showing {videos.length}</p>
-            )}
-          </div>
-
-          {loading && (
-            <p aria-busy="true" aria-live="polite">Loading videos…</p>
-          )}
-
-          {error && <p>Error loading videos: {error}</p>}
+        {/* Main Video Feed */}
+        <main className="home__feed">
+          {loading && <p>Loading videos...</p>}
+          {error && <p>{error}</p>}
 
           {!loading && !error && (
-            <div className="video-list">
-              {videos.map((video) => (
+            <div className="video-grid">
+              {filteredVideos.map((video) => (
                 <VideoCard key={video._id} video={video} />
               ))}
             </div>
