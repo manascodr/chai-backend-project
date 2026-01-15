@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getCurrentUser } from "./api/auth.api";
 import { useAuthStore } from "./stores/auth.store";
@@ -13,6 +13,8 @@ import AppLayout from "./components/layout/AppLayout";
 
 const App = () => {
   const setUser = useAuthStore((s) => s.setUser);
+  const user = useAuthStore((s) => s.user);
+
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -27,7 +29,10 @@ const App = () => {
   return (
     <Routes>
       {/* Public */}
-      <Route path="/login" element={<Login />} />
+      <Route
+        path="/login"
+        element={user ? <Navigate to="/" replace /> : <Login />}
+      />
 
       {/* Protected Layout */}
       <Route
