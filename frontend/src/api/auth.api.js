@@ -1,4 +1,3 @@
-import axios from "axios";
 import api from "./axios.js";
 
 const login = (data) => api.post("/users/login", data);

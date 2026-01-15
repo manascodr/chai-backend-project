@@ -1,0 +1,106 @@
+@use "../base/variables" as *;
+
+.app-layout {
+	min-height: calc(100vh - 2rem);
+	border: 1px solid $border;
+	border-radius: $radius;
+	background: rgba(255, 255, 255, 0.01);
+	overflow: hidden;
+}
+
+.app-layout__topbar {
+	position: sticky;
+	top: 0;
+	z-index: 10;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	padding: 0.75rem 1rem;
+	background: $bg-secondary;
+	border-bottom: 1px solid $border;
+}
+
+.app-layout__brand {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	font-weight: 800;
+	letter-spacing: 0.2px;
+	color: $text;
+}
+
+.app-layout__brand span {
+	color: $primary;
+}
+
+.app-layout__logout {
+	appearance: none;
+	border: 1px solid $border;
+	background: $bg;
+	color: $text;
+	border-radius: 999px;
+	padding: 0.5rem 0.9rem;
+	cursor: pointer;
+	transition: $transition;
+}
+
+.app-layout__logout:hover {
+	border-color: $text;
+	background: $bg-hover;
+}
+
+.app-layout__body {
+	display: grid;
+	grid-template-columns: 220px 1fr;
+	min-height: 0;
+}
+
+.app-layout__sidebar {
+	padding: 0.75rem;
+	background: $bg;
+	border-right: 1px solid $border;
+	display: flex;
+	flex-direction: column;
+	gap: 0.25rem;
+}
+
+.app-layout__link {
+	display: flex;
+	align-items: center;
+	padding: 0.6rem 0.75rem;
+	border-radius: $radius;
+	color: $text;
+	border: 1px solid transparent;
+	transition: $transition;
+}
+
+.app-layout__link:hover {
+	background: $bg-secondary;
+	border-color: $border;
+}
+
+.app-layout__content {
+	padding: 1rem;
+	min-width: 0;
+}
+
+@media (max-width: 900px) {
+	.app-layout__body {
+		grid-template-columns: 190px 1fr;
+	}
+}
+
+@media (max-width: 720px) {
+	.app-layout__body {
+		grid-template-columns: 1fr;
+	}
+
+	.app-layout__sidebar {
+		flex-direction: row;
+		align-items: center;
+		border-right: none;
+		border-bottom: 1px solid $border;
+		gap: 0.5rem;
+	}
+}

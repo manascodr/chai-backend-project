@@ -1,7 +1,6 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const VideoCard = ({ video }) => {
-  const navigate = useNavigate();
   if (!video) return null;
 
   const {
@@ -9,7 +8,6 @@ const VideoCard = ({ video }) => {
     title = "Untitled video",
     thumbnail,
     views,
-    createdAt,
     owner = {},
   } = video;
 

@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getCurrentUser } from "./api/auth.api";
 import { useAuthStore } from "./stores/auth.store";
@@ -9,10 +9,10 @@ import ProtectedRoute from "./routes/ProtectedRoute";
 import VideoDetails from "./pages/VideoDetails";
 import ChannelPage from "./pages/ChannelPage";
 import WatchHistory from "./pages/watchHistory";
+import AppLayout from "./components/layout/AppLayout";
 
 const App = () => {
   const setUser = useAuthStore((s) => s.setUser);
-  const user = useAuthStore((s) => s.user);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -26,38 +26,22 @@ const App = () => {
 
   return (
     <Routes>
-      <Route
-        path="/login"
-        element={user ? <Navigate to="/" replace /> : <Login />} // replace to prevent going back to login after redirect
-      />
+      {/* Public */}
+      <Route path="/login" element={<Login />} />
 
+      {/* Protected Layout */}
       <Route
-        path="/"
         element={
           <ProtectedRoute>
-            <Home />
+            <AppLayout />
           </ProtectedRoute>
         }
-      />
-
-      <Route
-        path="/c/:username"
-        element={
-          <ProtectedRoute>
-            <ChannelPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/watch-history"
-        element={
-          <ProtectedRoute>
-            <WatchHistory />
-          </ProtectedRoute>
-        }
-      />
-
-      <Route path="/watch/:videoId" element={<VideoDetails />} />
+      >
+        <Route path="/" element={<Home />} />
+        <Route path="/watch/:videoId" element={<VideoDetails />} />
+        <Route path="/c/:username" element={<ChannelPage />} />
+        <Route path="/history" element={<WatchHistory />} />
+      </Route>
     </Routes>
   );
 };
