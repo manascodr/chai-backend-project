@@ -67,12 +67,16 @@ const ChannelPage = () => {
       await toggleSubscription(channel._id);
       setIsSubscribed((prev) => {
         const next = !prev;
-        setSubscriberCount((countPrev) => (next ? countPrev + 1 : countPrev - 1));
+        setSubscriberCount((countPrev) =>
+          next ? countPrev + 1 : countPrev - 1
+        );
         toast.success(next ? "Subscribed" : "Unsubscribed");
         return next;
       });
     } catch (err) {
-      toast.error(err.response?.data?.message || "Failed to update subscription");
+      toast.error(
+        err.response?.data?.message || "Failed to update subscription"
+      );
     } finally {
       setIsSubscribeLoading(false);
     }
@@ -97,19 +101,19 @@ const ChannelPage = () => {
   }
 
   return (
-    <main className="channel-page">
-      <ChannelHeader
-        channel={channel}
-        isSubscribed={isSubscribed}
-        subscriberCount={subscriberCount}
-        onToggleSubscribe={handleToggleSubscribe}
-        isSubscribeLoading={isSubscribeLoading}
-      />
+    <>
+        <ChannelHeader
+          channel={channel}
+          isSubscribed={isSubscribed}
+          subscriberCount={subscriberCount}
+          onToggleSubscribe={handleToggleSubscribe}
+          isSubscribeLoading={isSubscribeLoading}
+        />
 
-      <section className="channel-page-content">
-        <ChannelVideos />
-      </section>
-    </main>
+        <section className="channel-page-content">
+          <ChannelVideos />
+        </section>
+    </>
   );
 };
 

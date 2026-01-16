@@ -36,6 +36,7 @@ const AppLayout = () => {
         <aside className="app-layout__sidebar">
           <Link to="/" className="app-layout__link">Home</Link>
           <Link to="/history" className="app-layout__link">History</Link>
+          <Link to="/liked-videos" className="app-layout__link">Liked Videos</Link>
         </aside>
 
         <main className="app-layout__content">

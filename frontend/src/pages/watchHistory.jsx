@@ -33,7 +33,7 @@ const WatchHistory = () => {
   }
 
   return (
-    <main className="watch-history app-container">
+    <>
       <h1>Watch History</h1>
 
       <div className="video-grid">
@@ -41,7 +41,7 @@ const WatchHistory = () => {
           <VideoCard key={video._id} video={video} />
         ))}
       </div>
-    </main>
+    </>
   );
 };
 

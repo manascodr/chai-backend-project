@@ -17,21 +17,20 @@ const Home = () => {
   const filteredVideos = videos;
 
   return (
-    <div className="home">
-        {/* Main Video Feed */}
-        <main className="home__feed">
-          {loading && <p>Loading videos...</p>}
-          {error && <p>{error}</p>}
+    <>
+      {/* Main Video Feed */}
 
-          {!loading && !error && (
-            <div className="video-grid">
-              {filteredVideos.map((video) => (
-                <VideoCard key={video._id} video={video} />
-              ))}
-            </div>
-          )}
-        </main>
-      </div>
+      {loading && <p>Loading videos...</p>}
+      {error && <p>{error}</p>}
+
+      {!loading && !error && (
+        <div className="video-grid">
+          {filteredVideos.map((video) => (
+            <VideoCard key={video._id} video={video} />
+          ))}
+        </div>
+      )}
+    </>
   );
 };
 
