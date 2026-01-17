@@ -1,110 +1,110 @@
 @use "../base/variables" as *;
 
 .video-grid {
-	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-	gap: 1rem;
-	margin-top: 1rem;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);;
+  gap: 1rem;
+  margin-top: 1rem;
 }
 
 .video-card {
-	border: 1px solid $border;
-	border-radius: $radius;
-	overflow: hidden;
-	background: $bg;
-	padding: 0.85rem;
-	cursor: pointer;
-	transition: $transition;
-	outline: none;
-	user-select: none;
-	display: flex;
-	flex-direction: column;
-	gap: 0.6rem;
+  border: 1px solid $border;
+  border-radius: $radius;
+  overflow: hidden;
+  background: $bg;
+  padding: 0.85rem;
+  cursor: pointer;
+  transition: $transition;
+  outline: none;
+  user-select: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
 
-	.video-card__link {
-		display: block;
-		color: inherit;
-	}
+  .video-card__link {
+    display: block;
+    color: inherit;
+  }
 
-	.video-card__thumb {
-		border-radius: $radius;
-		overflow: hidden;
-	}
+  .video-card__thumb {
+    border-radius: $radius;
+    overflow: hidden;
+  }
 
-	.video-card__title {
-		margin: 0;
-	}
+  .video-card__title {
+    margin: 0;
+  }
 
-	.video-card__owner-link {
-		color: inherit;
-	}
+  .video-card__owner-link {
+    color: inherit;
+  }
 
-	&:hover {
-		border-color: $text;
-		background: rgba(255, 255, 255, 0.02);
-	}
+  &:hover {
+    box-shadow: 0 0 0 1px $text;
+    background: rgba(255, 255, 255, 0.02);
+  }
 
-	&:active {
-		transform: translateY(1px);
-	}
+  &:active {
+    transform: translateY(1px);
+  }
 
-	h4 {
-		margin: 0 0 0.4rem 0;
-		color: $text;
-		font-weight: 600;
-		line-height: 1.3;
-		font-size: 0.98rem;
-		display: -webkit-box;
-		-webkit-line-clamp: 2;
-		-webkit-box-orient: vertical;
-		overflow: hidden;
-	}
+  h4 {
+    margin: 0 0 0.4rem 0;
+    color: $text;
+    font-weight: 600;
+    line-height: 1.3;
+    font-size: 0.98rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
 
-	.video-card__owner {
-		display: flex;
-		align-items: center;
-		gap: 0.55rem;
-		color: $muted;
-		font-size: 0.9rem;
-	}
+  .video-card__owner {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    color: $muted;
+    font-size: 0.9rem;
+  }
 
-	.video-card__avatar {
-		width: 28px;
-		height: 28px;
-		border-radius: 999px;
-		object-fit: cover;
-		border: 1px solid $border;
-		flex: 0 0 auto;
-	}
+  .video-card__avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 999px;
+    object-fit: cover;
+    border: 1px solid $border;
+    flex: 0 0 auto;
+  }
 
-	.video-card__avatar--placeholder {
-		background: $bg-secondary;
-	}
+  .video-card__avatar--placeholder {
+    background: $bg-secondary;
+  }
 
-	.video-card__owner-name {
-		min-width: 0;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		white-space: nowrap;
-	}
+  .video-card__owner-name {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 
-	img {
-		width: 100%;
-		height: 140px;
-		object-fit: cover;
-		border-radius: $radius;
-		border: 1px solid $border;
-		display: block;
-		background: $bg-secondary;
-	}
+  img {
+    width: 100%;
+    height: 317px;
+    object-fit: cover;
+    border-radius: $radius;
+    border: 1px solid $border;
+    display: block;
+    background: $bg-secondary;
+  }
 }
 
 @media (max-width: 520px) {
-	.video-grid {
-		grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
-	}
+  .video-grid {
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  }
 
-	.video-card img {
-		height: 120px;
-	}
+  .video-card img {
+    height: 120px;
+  }
 }

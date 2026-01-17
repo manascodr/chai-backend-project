@@ -18,27 +18,54 @@ const UploadVideo = () => {
 
   const submitHandler = async (data) => {
     if (uploading) return;
-
     setUploading(true);
+
+    const video = data.videoFile[0];
+    const thumbnail = data.thumbnail[0];
+
+    // Video validation
+    if (!["video/mp4", "video/webm"].includes(video.type)) {
+      toast.error("Only MP4 or WebM videos are allowed");
+      setUploading(false);
+      return;
+    }
+
+    // Video size check
+    if (video.size > 100 * 1024 * 1024) {
+      toast.error("Video must be under 100MB");
+      setUploading(false);
+      return;
+    }
+
+    // Thumbnail validation
+    if (!["image/jpeg", "image/png", "image/webp"].includes(thumbnail.type)) {
+      toast.error("Thumbnail must be JPG, PNG, or WebP");
+      setUploading(false);
+      return;
+    }
+
+    // Thumbnail size check
+    if (thumbnail.size > 5 * 1024 * 1024) {
+      toast.error("Thumbnail must be under 5MB");
+      setUploading(false);
+      return;
+    }
 
     const formData = new FormData();
     formData.append("title", data.title);
     formData.append("description", data.description);
-    formData.append("videoFile", data.videoFile[0]);
-    formData.append("thumbnail", data.thumbnail[0]);
+    formData.append("videoFile", video);
+    formData.append("thumbnail", thumbnail);
 
     try {
       const res = await uploadVideo(formData);
       toast.success("Video uploaded successfully!");
-
-      const videoId = res?.data?.data?._id;
       reset();
 
-      if (videoId) {
-        navigate(`/watch/${videoId}`);
-      }
+      const videoId = res?.data?.data?._id;
+      if (videoId) navigate(`/watch/${videoId}`);
     } catch (err) {
-      toast.error(err?.response?.data?.message || "Video upload failed");
+      toast.error(err?.response?.data?.message || "Upload failed");
     } finally {
       setUploading(false);
     }
