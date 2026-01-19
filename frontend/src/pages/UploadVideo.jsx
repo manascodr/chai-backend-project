@@ -69,6 +69,7 @@ const UploadVideo = () => {
     } finally {
       setUploading(false);
     }
+    reset();
   };
 
   return (

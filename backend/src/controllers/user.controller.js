@@ -9,10 +9,16 @@ import {
 import { ApiResponse } from "../utils/ApiResponse.js";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
+import { Video } from "../models/video.model.js";
 
 const generateAccessAndRefreshToken = async (userId) => {
   try {
     const user = await User.findById(userId);
+
+    if (!user) {
+      throw new ApiError(404, "User not found");
+    }
+
     const accessToken = user.generateAccessToken();
     const refreshToken = user.generateRefreshToken();
 
@@ -20,7 +26,10 @@ const generateAccessAndRefreshToken = async (userId) => {
     await user.save({ validateBeforeSave: false }); // Save refresh token to DB without validation
     return { accessToken, refreshToken };
   } catch (error) {
-    throw new ApiError(500, "Token generation failed");
+    throw new ApiError(
+      error?.statusCode || 500,
+      error?.message || "Token generation failed"
+    );
   }
 };
 
@@ -78,7 +87,9 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 
   const avatar = await uploadOnCloudinary(avatarLocalPath);
-  const coverImage = await uploadOnCloudinary(coverImageLocalPath);
+  const coverImage = coverImageLocalPath
+    ? await uploadOnCloudinary(coverImageLocalPath)
+    : null;
 
   if (!avatar) {
     throw new ApiError(400, "Avatar file is required");
@@ -430,6 +441,36 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
     );
 });
 
+const getChannelVideos = asyncHandler(async (req, res) => {
+  // Implementation for fetching channel videos goes here
+  const { username } = req.params;
+
+  if (!username?.trim()) {
+    throw new ApiError(400, "Username is required");
+  }
+
+  const channel = await User.findOne({
+    username: username.toLowerCase(),
+  }).select("_id"); // get channel's user id
+
+  if (!channel) {
+    throw new ApiError(404, "Channel not found");
+  }
+
+  const videos = await Video.find({
+    owner: channel._id,
+    isPublished: true,
+  })
+    .sort({
+      createdAt: -1,
+    })
+    .populate("owner", "fullname username avatar");
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, videos, "Channel videos fetched successfully"));
+});
+
 const getWatchHistory = asyncHandler(async (req, res) => {
   const user = await User.aggregate([
     {
@@ -471,10 +512,14 @@ const getWatchHistory = asyncHandler(async (req, res) => {
     },
   ]);
 
+  if (!user?.length) {
+    throw new ApiError(404, "User not found");
+  }
+
   return res.json(
     new ApiResponse(
       200,
-      user[0].watchHistory,
+      user[0].watchHistory || [],
       "Watch history fetched successfully"
     )
   );
@@ -491,5 +536,6 @@ export {
   updateUserAvatar,
   updateUserCoverImage,
   getUserChannelProfile,
+  getChannelVideos,
   getWatchHistory,
 };

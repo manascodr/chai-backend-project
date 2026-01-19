@@ -856,7 +856,6 @@ button:disabled {
 }
 
 .channel-page-content {
-  max-width: 1284px;
   margin: 0 auto;
   padding: 16px;
 }
