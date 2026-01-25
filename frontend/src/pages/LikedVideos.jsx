@@ -21,24 +21,45 @@ const LikedVideos = () => {
       .finally(() => setLoading(false));
   }, []);
 
-  if (loading) return <p>Loading liked videos…</p>;
-
   return (
-    <div>
-      <h1>
-        Liked Videos <span className="muted">({totalVideos})</span>
-      </h1>
-
-      {!videos.length ? (
-        <p>No liked videos yet.</p>
-      ) : (
-        <div className="video-grid">
-          {videos.map((v) => (
-            <VideoCard key={v._id} video={v} />
-          ))}
+    <section className="page page--liked liked-videos">
+      <header className="page__header">
+        <div>
+          <h1 className="page__title">Liked videos</h1>
+          <p className="page__subtitle">Your liked videos in one place.</p>
         </div>
-      )}
-    </div>
+
+        {!loading && (
+          <div className="page__actions">
+            <span className="muted">{totalVideos} total</span>
+          </div>
+        )}
+      </header>
+
+      <div className="page__content">
+        {loading && (
+          <div className="state">
+            <p className="state__title">Loading</p>
+            <p className="state__text">Fetching liked videos…</p>
+          </div>
+        )}
+
+        {!loading && videos.length === 0 && (
+          <div className="state state--empty">
+            <p className="state__title">No liked videos</p>
+            <p className="state__text">Like a video and it will appear here.</p>
+          </div>
+        )}
+
+        {!loading && videos.length > 0 && (
+          <div className="video-grid">
+            {videos.map((v) => (
+              <VideoCard key={v._id} video={v} />
+            ))}
+          </div>
+        )}
+      </div>
+    </section>
   );
 };
 

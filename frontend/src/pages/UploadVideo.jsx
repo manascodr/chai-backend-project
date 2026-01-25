@@ -73,52 +73,97 @@ const UploadVideo = () => {
   };
 
   return (
-    <section className="upload-video">
-      <h1>Upload Video</h1>
+    <section className="page page--upload upload">
+      <header className="page__header">
+        <div>
+          <h1 className="page__title">Upload video</h1>
+          <p className="page__subtitle">Publish a new video to your channel.</p>
+        </div>
+      </header>
 
-      <form onSubmit={handleSubmit(submitHandler)}>
-        <input
-          placeholder="Title"
-          {...register("title", {
-            required: "Title is required",
-            minLength: { value: 3, message: "Title too short" },
-          })}
-        />
-        {errors.title && <span>{errors.title.message}</span>}
+      <div className="page__content upload__panel">
+        <p className="upload__note">
+          Supported: MP4/WebM up to 100MB. Thumbnails: JPG/PNG/WebP up to 5MB.
+        </p>
 
-        <textarea
-          placeholder="Description"
-          {...register("description", {
-            required: "Description is required",
-            minLength: { value: 10, message: "Description too short" },
-          })}
-        />
-        {errors.description && <span>{errors.description.message}</span>}
+        <form className="form upload__form" onSubmit={handleSubmit(submitHandler)}>
+          <div className="field">
+            <label className="field__label" htmlFor="title">
+              Title
+            </label>
+            <input
+              id="title"
+              className="input"
+              placeholder="A clear, searchable title"
+              {...register("title", {
+                required: "Title is required",
+                minLength: { value: 3, message: "Title too short" },
+              })}
+              disabled={uploading}
+            />
+            {errors.title && <span className="field__error">{errors.title.message}</span>}
+          </div>
 
-        <label>
-          Video file
-          <input
-            type="file"
-            accept="video/*"
-            {...register("videoFile", { required: "Video is required" })}
-          />
-        </label>
-        {errors.videoFile && <span>{errors.videoFile.message}</span>}
+          <div className="field">
+            <label className="field__label" htmlFor="description">
+              Description
+            </label>
+            <textarea
+              id="description"
+              className="textarea"
+              placeholder="What is this video about?"
+              {...register("description", {
+                required: "Description is required",
+                minLength: { value: 10, message: "Description too short" },
+              })}
+              disabled={uploading}
+            />
+            {errors.description && (
+              <span className="field__error">{errors.description.message}</span>
+            )}
+          </div>
 
-        <label>
-          Thumbnail
-          <input
-            type="file"
-            accept="image/*"
-            {...register("thumbnail", { required: "Thumbnail is required" })}
-          />
-        </label>
-        {errors.thumbnail && <span>{errors.thumbnail.message}</span>}
+          <div className="field__grid">
+            <div className="field">
+              <label className="field__label" htmlFor="videoFile">
+                Video file
+              </label>
+              <input
+                id="videoFile"
+                type="file"
+                accept="video/*"
+                {...register("videoFile", { required: "Video is required" })}
+                disabled={uploading}
+              />
+              {errors.videoFile && (
+                <span className="field__error">{errors.videoFile.message}</span>
+              )}
+            </div>
 
-        <button type="submit" disabled={uploading}>
-          {uploading ? "Uploading..." : "Upload Video"}
-        </button>
-      </form>
+            <div className="field">
+              <label className="field__label" htmlFor="thumbnail">
+                Thumbnail
+              </label>
+              <input
+                id="thumbnail"
+                type="file"
+                accept="image/*"
+                {...register("thumbnail", { required: "Thumbnail is required" })}
+                disabled={uploading}
+              />
+              {errors.thumbnail && (
+                <span className="field__error">{errors.thumbnail.message}</span>
+              )}
+            </div>
+          </div>
+
+          <div className="upload__actions">
+            <button type="submit" disabled={uploading}>
+              {uploading ? "Uploading..." : "Upload"}
+            </button>
+          </div>
+        </form>
+      </div>
     </section>
   );
 };

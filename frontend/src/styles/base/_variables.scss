@@ -1,10 +1,54 @@
-$bg: #0f0f0f;
-$bg-secondary: #282828;
-$bg-hover: #360a1c;
-$text: #f1f1f1;
-$muted: #aaa;
-$border: #2a2a2a;
-$primary: #ff0000;
+:root {
+	/* Core backgrounds (layered darks; no pure black) */
+	--bg-main: #0b1020;
+	--bg-surface: #101a2b;
+	--bg-surface-2: #15223a;
+	--bg-hover: #1b2c49;
+
+	/* Text */
+	--text-primary: #eaf0ff;
+	--text-secondary: #9fb0d0;
+
+	/* Subtle borders/dividers */
+	--border-subtle: #223456;
+
+	/* Accent (use sparingly) */
+	--accent: #4bc6ff;
+	--accent-hover: #38b3eb;
+	--focus-ring: rgba(75, 198, 255, 0.35);
+
+	/* Semantic */
+	--danger: #e06b7a;
+	--danger-bg: rgba(224, 107, 122, 0.12);
+
+	--success: #45d39b;
+	--success-bg: rgba(69, 211, 155, 0.12);
+
+	--warning: #f0c36a;
+	--warning-bg: rgba(240, 195, 106, 0.14);
+
+	/* Keep shadows subtle */
+	--shadow-1: 0 6px 18px rgba(0, 0, 0, 0.22);
+}
+
+// SCSS aliases used across the app
+$bg: var(--bg-main);
+$bg-secondary: var(--bg-surface);
+$bg-hover: var(--bg-hover);
+
+$text: var(--text-primary);
+$muted: var(--text-secondary);
+$border: var(--border-subtle);
+
+$primary: var(--accent);
+$primary-hover: var(--accent-hover);
+$focus: var(--focus-ring);
+$danger: var(--danger);
+$success: var(--success);
+$warning: var(--warning);
+$shadow-1: var(--shadow-1);
 
 $radius: 6px;
-$transition: all 0.3s ease;
+
+// No animations/motion
+$transition: none;

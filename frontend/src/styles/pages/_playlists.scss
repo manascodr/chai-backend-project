@@ -1,0 +1,271 @@
+@use "../base/variables" as *;
+
+.playlists {
+  padding: 18px;
+
+  &__container {
+    max-width: 1040px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  &__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid $border;
+  }
+
+  &__heading {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  &__title {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 800;
+    color: $text;
+  }
+
+  &__subtitle {
+    margin: 0;
+    color: $muted;
+    font-size: 13px;
+  }
+
+  &__sectionTitle {
+    margin: 0;
+    color: $text;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  &__create {
+    padding: 14px;
+    border: 1px solid $border;
+    border-radius: 12px;
+    background: $bg-secondary;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  &__createForm {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  &__label {
+    display: block;
+    color: $muted;
+    font-size: 13px;
+  }
+
+  &__controls {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  &__input {
+    min-width: 260px;
+    flex: 1;
+    height: 40px;
+    padding: 0 12px;
+    border-radius: 10px;
+    background: $bg;
+    border: 1px solid $border;
+    color: $text;
+
+    &::placeholder {
+      color: $muted;
+    }
+  }
+
+  &__button {
+    height: 40px;
+    padding: 0 14px;
+    border-radius: 10px;
+    border: 1px solid $border;
+    background: transparent;
+    color: $text;
+    font-weight: 700;
+
+    &:focus-visible {
+      outline: 2px solid $primary;
+      outline-offset: 2px;
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+
+  &__library {
+    padding: 14px;
+    border: 1px solid $border;
+    border-radius: 12px;
+    background: $bg-secondary;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  &__libraryHeader {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  &__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  &__state,
+  &__empty {
+    color: $muted;
+    margin: 0;
+  }
+}
+
+.playlist-item {
+  margin: 0;
+  border: 1px solid $border;
+  border-radius: 10px;
+  background: $bg;
+
+  &__name {
+    color: $text;
+    font-weight: 700;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__meta {
+    color: $muted;
+    font-size: 13px;
+  }
+
+  &__link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 12px;
+    text-decoration: none;
+
+    &:focus-visible {
+      outline: 2px solid $primary;
+      outline-offset: 2px;
+      border-radius: 10px;
+    }
+  }
+}
+
+.playlist-details {
+  padding: 18px;
+
+  &__container {
+    max-width: 1040px;
+    margin: 0 auto;
+  }
+
+  &__header {
+    padding-bottom: 12px;
+    border-bottom: 1px solid $border;
+    margin-bottom: 16px;
+  }
+
+  &__heading {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  &__title {
+    margin: 0;
+    color: $text;
+    font-size: 20px;
+    font-weight: 800;
+  }
+
+  &__subtext {
+    margin: 0;
+    color: $muted;
+    font-size: 13px;
+  }
+
+  &__state,
+  &__empty {
+    color: $muted;
+    margin: 0;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
+
+  &__item {
+    border: 1px solid $border;
+    border-radius: 12px;
+    background: $bg-secondary;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  &__card {
+    min-width: 0;
+  }
+
+  &__itemActions {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  &__remove {
+    height: 34px;
+    padding: 0 12px;
+    border-radius: 10px;
+    border: 1px solid $border;
+    background: transparent;
+    color: $text;
+
+    &:focus-visible {
+      outline: 2px solid $primary;
+      outline-offset: 2px;
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+}
+
+@media (max-width: 960px) {
+  .playlist-details {
+    &__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+}

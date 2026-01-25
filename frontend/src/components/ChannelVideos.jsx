@@ -14,8 +14,11 @@ const ChannelVideos = () => {
   useEffect(() => {
     let cancelled = false;
 
-    setLoading(true);
-    setError("");
+    Promise.resolve().then(() => {
+      if (cancelled) return;
+      setLoading(true);
+      setError("");
+    });
 
     getChannelVideos(username)
       .then((res) => {

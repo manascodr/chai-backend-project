@@ -37,6 +37,22 @@ const getUserTweets = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, tweets, "User tweets fetched successfully"));
 });
 
+const getAllTweets = asyncHandler(async (req, res) => {
+  const rawLimit = Number(req.query?.limit ?? 50);
+  const limit = Number.isFinite(rawLimit)
+    ? Math.min(Math.max(rawLimit, 1), 100)
+    : 50;
+
+  const tweets = await Tweet.find({})
+    .sort({ createdAt: -1 })
+    .limit(limit)
+    .populate("owner", "username fullname avatar");
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, tweets, "Tweets fetched successfully"));
+});
+
 const updateTweet = asyncHandler(async (req, res) => {
   //TODO: update tweet
   const { tweetId } = req.params;
@@ -87,4 +103,4 @@ const deleteTweet = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, null, "Tweet deleted successfully"));
 });
 
-export { createTweet, getUserTweets, updateTweet, deleteTweet };
+export { createTweet, getUserTweets, getAllTweets, updateTweet, deleteTweet };

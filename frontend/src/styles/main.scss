@@ -10,10 +10,17 @@
 @use "./components/video-card";
 @use "./components/comments";
 @use "./components/buttons";
+@use "./components/forms";
+@use "./components/states";
 @use "./components/channel-header";
+@use "./components/save-to-playlist";
 
 @use "./pages/home";
 @use "./pages/video-details";
 @use "./pages/channel-page";
 @use "./pages/watch-history";
 @use "./pages/dashboard";
+@use "./pages/profile-settings";
+@use "./pages/playlists";
+@use "./pages/upload-video";
+@use "./pages/tweets";

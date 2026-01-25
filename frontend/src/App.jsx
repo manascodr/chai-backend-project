@@ -13,6 +13,11 @@ import AppLayout from "./components/layout/AppLayout";
 import LikedVideos from "./pages/LikedVideos";
 import UploadVideo from "./pages/UploadVideo";
 import Dashboard from './pages/Dashboard';
+import ProfileSettings from "./pages/ProfileSettings";
+import PlaylistsPage from "./pages/PlaylistsPage";
+import PlaylistDetails from "./pages/PlaylistDetails";
+import TweetsPage from "./pages/TweetsPage";
+import TweetFeedPage from "./pages/TweetFeedPage";
 
 const App = () => {
   const user = useAuthStore((s) => s.user);
@@ -54,10 +59,15 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/watch/:videoId" element={<VideoDetails />} />
         <Route path="/c/:username" element={<ChannelPage />} />
+        <Route path="/playlists" element={<PlaylistsPage />} />
+        <Route path="/playlist/:playlistId" element={<PlaylistDetails />} />
+        <Route path="/tweets/feed" element={<TweetFeedPage />} />
+        <Route path="/tweets" element={<TweetsPage />} />
         <Route path="/history" element={<WatchHistory />} />
         <Route path="/liked-videos" element={<LikedVideos />} />
         <Route path="/upload-video" element={<UploadVideo />} />
         <Route path="/Dashboard" element={<Dashboard />} />
+        <Route path="/profile-settings" element={<ProfileSettings />} />
         
       </Route>
 

@@ -70,7 +70,6 @@ const ChannelPage = () => {
         setSubscriberCount((countPrev) =>
           next ? countPrev + 1 : countPrev - 1
         );
-        toast.success(next ? "Subscribed" : "Unsubscribed");
         return next;
       });
     } catch (err) {
@@ -82,38 +81,35 @@ const ChannelPage = () => {
     }
   };
 
-  if (isLoading) {
-    return (
-      <main className="channel-page">
-        <ChannelPageHeaderSkeleton />
-      </main>
-    );
-  }
-
-  if (errorMessage) {
-    return (
-      <main className="channel-page">
-        <div className="channel-page-error">
-          <p className="channel-page-error-text">{errorMessage}</p>
-        </div>
-      </main>
-    );
-  }
-
   return (
-    <>
-        <ChannelHeader
-          channel={channel}
-          isSubscribed={isSubscribed}
-          subscriberCount={subscriberCount}
-          onToggleSubscribe={handleToggleSubscribe}
-          isSubscribeLoading={isSubscribeLoading}
-        />
+    <section className="page page--channel channel-page">
+      <div className="page__content">
+        {isLoading && <ChannelPageHeaderSkeleton />}
 
-        <section className="channel-page-content">
-          <ChannelVideos />
-        </section>
-    </>
+        {!isLoading && errorMessage && (
+          <div className="state state--error">
+            <p className="state__title">Couldn’t load channel</p>
+            <p className="state__text">{errorMessage}</p>
+          </div>
+        )}
+
+        {!isLoading && !errorMessage && (
+          <>
+            <ChannelHeader
+              channel={channel}
+              isSubscribed={isSubscribed}
+              subscriberCount={subscriberCount}
+              onToggleSubscribe={handleToggleSubscribe}
+              isSubscribeLoading={isSubscribeLoading}
+            />
+
+            <section className="channel-page-content">
+              <ChannelVideos />
+            </section>
+          </>
+        )}
+      </div>
+    </section>
   );
 };
 

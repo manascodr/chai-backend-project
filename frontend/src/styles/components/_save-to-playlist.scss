@@ -1,0 +1,98 @@
+@use "../base/variables" as *;
+
+.save-to-playlist {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+
+  &__button {
+    height: 36px;
+    padding: 0 14px;
+    border-radius: 10px;
+    border: 1px solid $border;
+    background: transparent;
+    color: $text;
+    font-weight: 600;
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    &:focus-visible {
+      outline: 2px solid $primary;
+      outline-offset: 2px;
+    }
+  }
+
+  &__panel {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    z-index: 50;
+    width: 300px;
+    max-height: 320px;
+    overflow: auto;
+
+    background: $bg-secondary;
+    border: 1px solid $border;
+    border-radius: 12px;
+    padding: 10px;
+  }
+
+  &__title {
+    margin: 0 0 10px;
+    font-size: 13px;
+    color: $muted;
+  }
+
+  &__state {
+    color: $muted;
+    font-size: 13px;
+    margin: 0;
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  &__item {
+    display: grid;
+    grid-template-columns: 16px 1fr auto;
+    align-items: center;
+    gap: 10px;
+
+    padding: 8px;
+    border-radius: 10px;
+    border: 1px solid transparent;
+
+    input {
+      width: 16px;
+      height: 16px;
+    }
+
+    &:focus-within {
+      border-color: $border;
+    }
+  }
+
+  &__name {
+    color: $text;
+    font-size: 14px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__status {
+    font-size: 12px;
+    color: $muted;
+
+    &--saved {
+      color: $text;
+      font-weight: 600;
+    }
+  }
+}

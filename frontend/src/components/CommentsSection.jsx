@@ -34,7 +34,6 @@ const CommentsSection = ({ videoId }) => {
       .catch((err) => setError(err.message || "Failed to load comments"))
       .finally(() => setLoading(false));
   }, [videoId]);
-  // console.log(comments);
 
   // Delete comment handler
   const deleteHandler = (commentId) => async () => {

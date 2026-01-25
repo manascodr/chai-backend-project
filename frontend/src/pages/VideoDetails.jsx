@@ -5,6 +5,7 @@ import { likeVideo } from "../api/like.api";
 import CommentsSection from "./../components/CommentsSection";
 import { toggleSubscription } from "../api/subscriptions.auth";
 import VideoPlayer from "../components/video/VideoPlayer";
+import SaveToPlaylist from "../components/SaveToPlaylist";
 
 const VideoDetails = () => {
   const { videoId } = useParams();
@@ -34,7 +35,6 @@ const VideoDetails = () => {
       .catch((err) => setError(err.message || "Failed to load video"))
       .finally(() => setLoading(false));
   }, [videoId]);
-  // console.log(video);
 
   // Like video handler
   const likeHandler = async () => {
@@ -57,7 +57,8 @@ const VideoDetails = () => {
   const navigate = useNavigate();
 
   const handleChannelProfile = () => {
-    navigate(`/c/${video.owner.fullname}`);
+    const handle = video?.owner?.username || video?.owner?.fullname;
+    if (handle) navigate(`/c/${handle}`);
   };
 
   return (
@@ -91,6 +92,8 @@ const VideoDetails = () => {
                 <button onClick={likeHandler}>
                   {liked ? "Unlike" : "Like"} ({likesCount})
                 </button>
+
+                <SaveToPlaylist videoId={videoId} disabled={!video} />
               </div>
             </div>
 

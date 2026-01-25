@@ -1,10 +1,12 @@
 @use "../base/variables" as *;
 
 .app-layout {
+	display: flex;
+	flex-direction: column;
 	min-height: calc(100vh - 2rem);
 	border: 1px solid $border;
 	border-radius: $radius;
-	background: rgba(255, 255, 255, 0.01);
+	background: $bg-secondary;
 	overflow: hidden;
 }
 
@@ -15,10 +17,113 @@
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	gap: 1rem;
-	padding: 0.75rem 1rem;
+	gap: 0.9rem;
+	padding: 0.65rem 1rem;
 	background: $bg-secondary;
 	border-bottom: 1px solid $border;
+	min-height: 64px;
+	backdrop-filter: blur(6px);
+	box-shadow: $shadow-1;
+}
+
+.app-layout__topbarLeft {
+	flex: 0 0 auto;
+	min-width: 0;
+}
+
+.app-layout__topbarCenter {
+	flex: 1 1 auto;
+	min-width: 220px;
+	display: flex;
+	justify-content: center;
+}
+
+.app-layout__search {
+	width: 100%;
+	max-width: 560px;
+	display: flex;
+}
+
+.app-layout__searchInput {
+	width: 100%;
+	padding: 0.55rem 0.8rem;
+	border-radius: 999px;
+	border: 1px solid $border;
+	background: $bg;
+	color: $text;
+	transition: $transition;
+}
+
+.app-layout__searchInput:focus {
+	border-color: $primary;
+}
+
+.app-layout__searchInput:focus-visible {
+	outline: 2px solid $focus;
+	outline-offset: 2px;
+}
+
+.app-layout__topbarRight {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.75rem;
+	flex: 0 0 auto;
+}
+
+.app-layout__cta {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	border: 1px solid $border;
+	background: $bg;
+	color: $text;
+	border-radius: 999px;
+	padding: 0.5rem 0.9rem;
+	transition: $transition;
+}
+
+.app-layout__cta:hover {
+	border-color: $text;
+	background: $bg-hover;
+}
+
+.app-layout__cta:focus-visible {
+	outline: 2px solid $focus;
+	outline-offset: 2px;
+}
+
+.app-layout__avatarLink {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 40px;
+	height: 40px;
+	border-radius: 999px;
+	border: 1px solid $border;
+	background: $bg;
+	overflow: hidden;
+	transition: $transition;
+}
+
+.app-layout__avatarLink:hover {
+	border-color: $border;
+	background: $bg-hover;
+}
+
+.app-layout__avatarLink:focus-visible {
+	outline: 2px solid $focus;
+	outline-offset: 2px;
+}
+
+.app-layout__avatar {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+}
+
+.app-layout__avatar--placeholder {
+	background: $bg-secondary;
 }
 
 .app-layout__brand {
@@ -28,6 +133,12 @@
 	font-weight: 800;
 	letter-spacing: 0.2px;
 	color: $text;
+}
+
+.app-layout__brand:focus-visible {
+	outline: 2px solid $focus;
+	outline-offset: 2px;
+	border-radius: $radius;
 }
 
 .app-layout__brand span {
@@ -50,7 +161,13 @@
 	background: $bg-hover;
 }
 
+.app-layout__logout:focus-visible {
+	outline: 2px solid $focus;
+	outline-offset: 2px;
+}
+
 .app-layout__body {
+	flex: 1 1 auto;
 	display: grid;
 	grid-template-columns: 220px 1fr;
 	min-height: 0;
@@ -63,6 +180,9 @@
 	display: flex;
 	flex-direction: column;
 	gap: 0.25rem;
+	min-height: 0;
+	overflow: auto;
+	scrollbar-width: thin;
 }
 
 .app-layout__link {
@@ -73,6 +193,7 @@
 	color: $text;
 	border: 1px solid transparent;
 	transition: $transition;
+	position: relative;
 }
 
 .app-layout__link:hover {
@@ -80,9 +201,31 @@
 	border-color: $border;
 }
 
+.app-layout__link:focus-visible {
+	outline: 2px solid $focus;
+	outline-offset: 2px;
+}
+
+.app-layout__link--active {
+	background: $bg-hover;
+	border-color: $border;
+}
+
+.app-layout__link--active::before {
+	content: "";
+	position: absolute;
+	left: -0.75rem;
+	top: 0.35rem;
+	bottom: 0.35rem;
+	width: 3px;
+	border-radius: 999px;
+	background: $primary;
+}
+
 .app-layout__content {
 	padding: 1rem;
 	min-width: 0;
+	min-height: 0;
 }
 
 @media (max-width: 900px) {
@@ -96,11 +239,41 @@
 		grid-template-columns: 1fr;
 	}
 
+	.app-layout__topbar {
+		flex-wrap: wrap;
+		gap: 0.6rem;
+		padding: 0.65rem 0.85rem;
+		min-height: auto;
+	}
+
+	.app-layout__topbarCenter {
+		order: 3;
+		flex: 1 1 100%;
+		min-width: 100%;
+		justify-content: stretch;
+	}
+
+	.app-layout__search {
+		max-width: none;
+	}
+
 	.app-layout__sidebar {
 		flex-direction: row;
 		align-items: center;
 		border-right: none;
 		border-bottom: 1px solid $border;
 		gap: 0.5rem;
+		overflow-x: auto;
+		overflow-y: hidden;
+		white-space: nowrap;
+		padding: 0.6rem;
+	}
+
+	.app-layout__link {
+		flex: 0 0 auto;
+	}
+
+	.app-layout__link--active::before {
+		display: none;
 	}
 }

@@ -61,10 +61,6 @@ const Dashboard = () => {
             : v,
         ),
       );
-
-      toast.success(
-        updatedVideo.isPublished ? "Video published" : "Video unpublished",
-      );
     } catch (err) {
       toast.error(
         err?.response?.data?.message || "Failed to update publish status",

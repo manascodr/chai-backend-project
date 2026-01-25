@@ -1,6 +1,6 @@
 import api from "./axios";
 
-const getAllVideos = () => api.get("/videos");
+const getAllVideos = (params = {}) => api.get("/videos", { params });
 const getVideoById = (id) => api.get(`/videos/${id}`);
 const uploadVideo = (videoData) => api.post(`/videos`, videoData);
 

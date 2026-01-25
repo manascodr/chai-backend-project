@@ -1,4 +1,45 @@
+@use "../base/variables" as *;
+
 .page {
+  width: 100%;
   margin: 0 auto;
-  // padding: 1rem;
+  min-height: 100%;
+}
+
+.page__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.page__title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: 0.2px;
+}
+
+.page__subtitle {
+  margin: 0.25rem 0 0 0;
+  color: $muted;
+}
+
+.page__actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.page__content {
+  min-width: 0;
+}
+
+@media (max-width: 520px) {
+  .page {
+    padding: 0.85rem;
+  }
 }
