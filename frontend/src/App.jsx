@@ -12,6 +12,7 @@ import WatchHistory from "./pages/watchHistory";
 import AppLayout from "./components/layout/AppLayout";
 import LikedVideos from "./pages/LikedVideos";
 import UploadVideo from "./pages/UploadVideo";
+import Dashboard from './pages/Dashboard';
 
 const App = () => {
   const user = useAuthStore((s) => s.user);
@@ -56,6 +57,7 @@ const App = () => {
         <Route path="/history" element={<WatchHistory />} />
         <Route path="/liked-videos" element={<LikedVideos />} />
         <Route path="/upload-video" element={<UploadVideo />} />
+        <Route path="/Dashboard" element={<Dashboard />} />
         
       </Route>
 

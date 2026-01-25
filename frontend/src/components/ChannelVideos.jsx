@@ -5,38 +5,50 @@ import { useParams } from "react-router-dom";
 import VideoCard from "./video/VideoCard";
 
 const ChannelVideos = () => {
-  const [videos, setVideos] = useState(null);
+  const { username } = useParams();
+
+  const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const { username } = useParams();
-
   useEffect(() => {
+    let cancelled = false;
+
+    setLoading(true);
+    setError("");
+
     getChannelVideos(username)
       .then((res) => {
-        setVideos(res.data.data);
+        if (cancelled) return;
+        setVideos(res?.data?.data || []);
       })
       .catch((err) => {
-        toast.error("Failed to load channel videos", err);
+        if (cancelled) return;
+        const message =
+          err?.response?.data?.message || "Failed to load channel videos";
+        setError(message);
+        toast.error(message);
       })
       .finally(() => {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       });
-  }, [username]);
-  console.log(videos);
 
-  if (loading) return <div>Loading videos...</div>;
+    return () => {
+      // this return runs when the component unmounts(means we leave the page or the dependencies change)
+      cancelled = true;
+    };
+  }, [username]);
+
+  if (loading) return <p>Loading videos...</p>;
   if (error) return <p>{error}</p>;
   if (!videos.length) return <p>No videos yet.</p>;
 
   return (
-    <>
-      <div className="video-grid">
-        {videos.map((v) => (
-          <VideoCard key={v._id} video={v} />
-        ))}
-      </div>
-    </>
+    <div className="video-grid">
+      {videos.map((v) => (
+        <VideoCard key={v._id} video={v} />
+      ))}
+    </div>
   );
 };
 
