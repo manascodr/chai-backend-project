@@ -1,0 +1,62 @@
+@use "../base/variables" as *;
+
+.auth-page {
+  min-height: calc(100vh - 2rem);
+  display: grid;
+  place-items: center;
+  padding: 1.25rem;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 520px;
+  border: 1px solid $border;
+  border-radius: $radius;
+  background: $bg-secondary;
+  box-shadow: $shadow-1;
+  padding: 1.25rem;
+}
+
+.auth-card__header {
+  margin-bottom: 1rem;
+}
+
+.auth-card__title {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 900;
+  letter-spacing: 0.2px;
+}
+
+.auth-card__subtitle {
+  margin: 0.35rem 0 0 0;
+  color: $muted;
+}
+
+.auth-card__submit {
+  width: 100%;
+  background: $primary;
+  border-color: $primary;
+  color: #06101e;
+  font-weight: 800;
+}
+
+.auth-card__submit:hover {
+  background: $primary-hover;
+  border-color: $primary-hover;
+}
+
+.auth-card__footer {
+  margin-top: 1rem;
+  color: $muted;
+  font-size: 0.95rem;
+}
+
+.auth-card__link {
+  color: $primary;
+  font-weight: 700;
+}
+
+.auth-card__link:hover {
+  color: $primary-hover;
+}

@@ -5,6 +5,7 @@ import { useAuthStore } from "./stores/auth.store";
 import Home from "./pages/Home";
 
 import Login from "./pages/Login";
+import Register from "./pages/Register";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import VideoDetails from "./pages/VideoDetails";
 import ChannelPage from "./pages/ChannelPage";
@@ -43,6 +44,11 @@ const App = () => {
       <Route
         path="/login"
         element={user ? <Navigate to="/" replace /> : <Login />}
+      />
+
+      <Route
+        path="/register"
+        element={user ? <Navigate to="/" replace /> : <Register />}
       />
 
       {/* Protected Layout 

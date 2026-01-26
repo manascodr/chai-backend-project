@@ -46,7 +46,8 @@
 
 .app-layout__searchInput {
 	width: 100%;
-	padding: 0.55rem 0.8rem;
+	min-height: 44px;
+	padding: 0.7rem 0.9rem;
 	border-radius: 999px;
 	border: 1px solid $border;
 	background: $bg;
@@ -74,6 +75,7 @@
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
+	gap: 0.5rem;
 	border: 1px solid $border;
 	background: $bg;
 	color: $text;
@@ -154,6 +156,9 @@
 	padding: 0.5rem 0.9rem;
 	cursor: pointer;
 	transition: $transition;
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
 }
 
 .app-layout__logout:hover {
@@ -185,15 +190,35 @@
 	scrollbar-width: thin;
 }
 
+.app-layout__navGroup {
+	display: flex;
+	flex-direction: column;
+	gap: 0.25rem;
+}
+
+.app-layout__navBottom {
+	margin-top: auto;
+	padding-top: 0.5rem;
+	border-top: 1px solid $border;
+}
+
 .app-layout__link {
 	display: flex;
 	align-items: center;
+	gap: 0.6rem;
 	padding: 0.6rem 0.75rem;
 	border-radius: $radius;
 	color: $text;
 	border: 1px solid transparent;
 	transition: $transition;
 	position: relative;
+}
+
+.app-layout__linkIcon {
+	flex: 0 0 auto;
+	width: 18px;
+	height: 18px;
+	opacity: 0.9;
 }
 
 .app-layout__link:hover {
@@ -226,6 +251,157 @@
 	padding: 1rem;
 	min-width: 0;
 	min-height: 0;
+}
+
+.app-layout__footer {
+	border-top: 1px solid $border;
+	background: $bg;
+	padding: 1.25rem 1.25rem;
+}
+
+.app-layout__footerInner {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+}
+
+.app-layout__footerTop {
+	display: grid;
+	grid-template-columns: minmax(220px, 1.2fr) 2fr;
+	gap: 1.25rem;
+	align-items: start;
+}
+
+.app-layout__footerBrand {
+	min-width: 0;
+}
+
+.app-layout__footerLogo {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	font-weight: 800;
+	letter-spacing: 0.2px;
+	color: $text;
+}
+
+.app-layout__footerLogo span:first-child {
+	color: $primary;
+}
+
+.app-layout__footerLogo:focus-visible {
+	outline: 2px solid $focus;
+	outline-offset: 2px;
+	border-radius: $radius;
+}
+
+.app-layout__footerTagline {
+	margin: 0.6rem 0 0;
+	color: $muted;
+	line-height: 1.35;
+	max-width: 44ch;
+}
+
+.app-layout__footerCols {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(160px, 1fr));
+	gap: 1rem;
+}
+
+.app-layout__footerTitle {
+	margin: 0 0 0.55rem;
+	font-size: 0.95rem;
+	font-weight: 700;
+	color: $text;
+}
+
+.app-layout__footerLinks {
+	display: flex;
+	flex-direction: column;
+	gap: 0.45rem;
+}
+
+.app-layout__footerLink {
+	color: $muted;
+	font-size: 0.92rem;
+	transition: $transition;
+	width: fit-content;
+}
+
+.app-layout__footerLink:hover {
+	color: $text;
+}
+
+.app-layout__footerLink:focus-visible {
+	outline: 2px solid $focus;
+	outline-offset: 2px;
+	border-radius: $radius;
+}
+
+.app-layout__footerBottom {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	padding-top: 1rem;
+	border-top: 1px solid $border;
+}
+
+.app-layout__footerText {
+	color: $muted;
+	font-size: 0.9rem;
+}
+
+@media (max-width: 900px) {
+	.app-layout__footerTop {
+		grid-template-columns: 1fr;
+	}
+
+	.app-layout__footerCols {
+		grid-template-columns: repeat(2, minmax(160px, 1fr));
+	}
+}
+
+@media (max-width: 520px) {
+	.app-layout__footer {
+		padding: 1rem;
+	}
+
+	.app-layout__footerCols {
+		grid-template-columns: 1fr;
+	}
+
+	.app-layout__footerBottom {
+		flex-direction: column;
+		align-items: flex-start;
+	}
+}
+
+.app-layout__footerInner {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+}
+
+.app-layout__footerText {
+	color: $muted;
+	font-size: 0.9rem;
+}
+
+.app-layout__footerLinks {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.75rem;
+}
+
+.app-layout__footerLink {
+	color: $muted;
+	font-size: 0.9rem;
+}
+
+.app-layout__footerLink:hover {
+	color: $text;
 }
 
 @media (max-width: 900px) {
@@ -267,6 +443,20 @@
 		overflow-y: hidden;
 		white-space: nowrap;
 		padding: 0.6rem;
+	}
+
+	.app-layout__navGroup,
+	.app-layout__navBottom {
+		display: inline-flex;
+		flex-direction: row;
+		align-items: center;
+		gap: 0.5rem;
+	}
+
+	.app-layout__navBottom {
+		margin-top: 0;
+		padding-top: 0;
+		border-top: 0;
 	}
 
 	.app-layout__link {
