@@ -66,7 +66,7 @@ const AppLayout = () => {
       <header className="app-layout__topbar">
         <div className="app-layout__topbarLeft">
           <Link to="/" className="app-layout__brand">
-            <span>▶</span> ChaiTube
+            <span>▶</span> VividStream
           </Link>
         </div>
 
@@ -238,7 +238,7 @@ const AppLayout = () => {
             <div className="app-layout__footerBrand">
               <Link to="/" className="app-layout__footerLogo">
                 <span aria-hidden="true">▶</span>
-                <span>ChaiTube</span>
+                <span>VividStream</span>
               </Link>
               <p className="app-layout__footerTagline">
                 Watch, upload, and manage your content — all in one place.
@@ -295,7 +295,7 @@ const AppLayout = () => {
 
           <div className="app-layout__footerBottom">
             <span className="app-layout__footerText">
-              © {new Date().getFullYear()} ChaiTube
+              © {new Date().getFullYear()} VividStream
             </span>
             <span className="app-layout__footerText">Built with React + Vite</span>
           </div>
