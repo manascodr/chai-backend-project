@@ -151,13 +151,13 @@ const loginUser = asyncHandler(async (req, res) => {
   const loggedInUser = await User.findById(user._id)
     .select("-password -refreshToken")
     .lean(); // lean to get plain JS object
-
-  // store refresh token in httpOnly cookie
+           
+  // store refresh token in httpOnly cookie              
   const options = {
-    httpOnly: true, // prevent client-side JS access
+    httpOnly: true, // prevent client-side JS access               
     secure: true, // set to true if using HTTPS
-  };
-  return res
+  };             
+  return res        
     .status(200)
     .cookie("accessToken", accessToken, options)
     .cookie("refreshToken", refreshToken, options)
@@ -195,10 +195,7 @@ const logoutUser = asyncHandler(async (req, res) => {
 
 const refreshAccessToken = asyncHandler(async (req, res) => {
   const incomingRefreshToken =
-    req.cookies?.refreshToken ||
-    req.cookies?.refreshToken ||
-    req.body?.refreshToken ||
-    req.body?.refreshToken;
+    req.cookies?.refreshToken || req.body?.refreshToken;
 
   if (!incomingRefreshToken) {
     throw new ApiError(401, "Unauthorized request");
@@ -210,8 +207,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
       process.env.REFRESH_TOKEN_SECRET
     );
 
-    const userId = decodedToken?._id || decodedToken?.userId;
-    const user = await User.findById(userId);
+    const user = await User.findById(decodedToken?._id);
 
     if (!user) {
       throw new ApiError(401, "Invalid refresh token");
@@ -252,7 +248,7 @@ const changeCurrentPassword = asyncHandler(async (req, res) => {
   }
 
   const user = await User.findById(req.user?._id); // req.user is set in auth middleware
-  const isPasswordCorrect = await user.isPasswordCorrect(oldPassword);
+  const isPasswordCorrect = await user.isPasswordCorrect(oldPassword); 
 
   if (!isPasswordCorrect) {
     throw new ApiError(400, "Old password is incorrect");
