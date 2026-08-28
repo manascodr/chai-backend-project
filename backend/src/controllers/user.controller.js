@@ -366,7 +366,7 @@ const updateUserCoverImage = asyncHandler(async (req, res) => {
 });
 
 const getUserChannelProfile = asyncHandler(async (req, res) => {
-  // get channel profile by username
+  // Extract username from URL parameters (e.g., /c/:username)
   const { username } = req.params;
 
   if (!username?.trim()) {
@@ -374,47 +374,59 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
   }
 
   const channel = await User.aggregate([
+    // STAGE 1: Match the specific user by their username (case-insensitive)
     {
       $match: {
-        // find user by username
         username: username?.toLowerCase(),
       },
     },
+
+    // STAGE 2: Fetch all subscribers of this channel
+    // Looks into the 'subscriptions' collection where 'channel' matches this user's '_id'
     {
       $lookup: {
-        // join with subscriptions collection and get subscriber count
         from: "subscriptions",
         localField: "_id",
         foreignField: "channel",
-        as: "subscribers",
+        as: "subscribers", // Output array of subscriber documents
       },
     },
+
+    // STAGE 3: Fetch all channels this user is subscribed to
+    // Looks into the 'subscriptions' collection where 'subscriber' matches this user's '_id'
     {
       $lookup: {
-        // join with subscriptions collection and get subscribed channels
         from: "subscriptions",
         localField: "_id",
         foreignField: "subscriber",
-        as: "subscribedTo",
+        as: "subscribedTo", // Output array of channel documents this user subscribed to
       },
     },
+
+    // STAGE 4: Calculate derived metrics and subscription status
     {
       $addFields: {
-        // add subscriberCount and subscribedToCount fields to the user document
+        // Count total subscribers by getting array length
         subscribersCount: { $size: "$subscribers" },
+
+        // Count how many channels this user is subscribed to
         channelsSubscribedToCount: { $size: "$subscribedTo" },
+
+        // Check if the currently logged-in user (req.user?._id) is in the channel's subscribers list which we got earlier from counting channels field
         isSubscribed: {
           $cond: {
-            if: { $in: [req.user?._id, "$subscribers.subscriber"] }, // check if current user is subscribed to this channel
+            if: { $in: [req.user?._id, "$subscribers.subscriber"] },
             then: true,
             else: false,
           },
         },
       },
     },
+
+    // STAGE 5: Project only the required public fields
+    // Strips out sensitive fields (password, tokens) and heavy raw lookup arrays (subscribers, subscribedTo)
     {
       $project: {
-        // exclude sensitive fields
         fullname: 1,
         username: 1,
         avatar: 1,
@@ -427,9 +439,12 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
     },
   ]);
 
+  // Aggregate always returns an array; if no user matched, channel array is empty
   if (!channel?.length) {
     throw new ApiError(404, "Channel not found");
   }
+
+  // channel[0] contains the single aggregated profile document
   return res
     .status(200)
     .json(
