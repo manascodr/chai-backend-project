@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-
 import ChannelHeader from "../components/ChannelHeader";
 import ChannelVideos from "../components/ChannelVideos";
 import { getUserChannelProfile } from "../api/user.api";
@@ -9,11 +8,11 @@ import { toggleSubscription } from "../api/subscriptions.auth";
 
 const ChannelPageHeaderSkeleton = () => {
   return (
-    <div className="channel-page-header-skeleton">
-      <div className="channel-page-banner-skeleton" />
-      <div className="channel-page-header-row-skeleton">
-        <div className="channel-page-avatar-skeleton" />
-        <div className="channel-page-text-skeleton" />
+    <div className="flex flex-col gap-4 animate-pulse mb-8">
+      <div className="w-full h-44 sm:h-56 md:h-64 rounded-3xl bg-slate-800" />
+      <div className="flex items-end gap-5 px-4 -mt-14 sm:-mt-18">
+        <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-full bg-slate-700 border-4 border-[#0a0d16]" />
+        <div className="h-6 bg-slate-800 rounded w-48 mb-4" />
       </div>
     </div>
   );
@@ -82,35 +81,34 @@ const ChannelPage = () => {
   };
 
   return (
-    <section className="page page--channel channel-page">
-      <div className="page__content">
-        {isLoading && <ChannelPageHeaderSkeleton />}
+    <div className="w-full px-4 sm:px-8 py-6">
+      {isLoading && <ChannelPageHeaderSkeleton />}
 
-        {!isLoading && errorMessage && (
-          <div className="state state--error">
-            <p className="state__title">Couldn’t load channel</p>
-            <p className="state__text">{errorMessage}</p>
-          </div>
-        )}
+      {!isLoading && errorMessage && (
+        <div className="p-8 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-center max-w-xl mx-auto my-12">
+          <p className="text-lg font-bold text-rose-400 mb-1">Couldn’t load channel</p>
+          <p className="text-sm text-slate-400 m-0">{errorMessage}</p>
+        </div>
+      )}
 
-        {!isLoading && !errorMessage && (
-          <>
-            <ChannelHeader
-              channel={channel}
-              isSubscribed={isSubscribed}
-              subscriberCount={subscriberCount}
-              onToggleSubscribe={handleToggleSubscribe}
-              isSubscribeLoading={isSubscribeLoading}
-            />
+      {!isLoading && !errorMessage && (
+        <>
+          <ChannelHeader
+            channel={channel}
+            isSubscribed={isSubscribed}
+            subscriberCount={subscriberCount}
+            onToggleSubscribe={handleToggleSubscribe}
+            isSubscribeLoading={isSubscribeLoading}
+          />
 
-            <section className="channel-page-content">
-              <ChannelVideos />
-            </section>
-          </>
-        )}
-      </div>
-    </section>
+          <section className="mt-6">
+            <ChannelVideos />
+          </section>
+        </>
+      )}
+    </div>
   );
 };
 
 export default ChannelPage;
+

@@ -6,12 +6,9 @@ import { Link } from "react-router-dom";
 import { FiThumbsUp, FiFilm } from "react-icons/fi";
 
 /**
- * LikedVideos Component
+ * LikedVideos Component (Obsidian & Sunset Amber Studio Edition)
  * 
- * Displays all videos that the current user has liked:
- * 1. 8-card skeleton placeholder grid during fetch.
- * 2. Total count metric badge in page header.
- * 3. Responsive 16:9 video card grid.
+ * Displays all creations that the current user has liked (strictly max 3 videos per row).
  */
 const LikedVideos = () => {
   const [videos, setVideos] = useState([]);
@@ -32,33 +29,31 @@ const LikedVideos = () => {
   }, []);
 
   return (
-    <section className="page page--liked liked-videos">
-      <header className="page__header">
+    <div className="w-full px-4 sm:px-8 py-8 flex flex-col gap-8">
+      <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/[0.08]">
         <div>
-          <h1 className="page__title">Liked Videos</h1>
-          <p className="page__subtitle">All the videos you’ve given a thumbs up to.</p>
+          <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight m-0">Liked Creations</h1>
+          <p className="text-sm text-zinc-400 mt-1 m-0">All the videos and masterclasses you’ve curated with high praise.</p>
         </div>
 
         {!loading && (
-          <div className="page__actions">
-            <span className="badge badge--pill">
-              <FiThumbsUp /> {totalVideos} {totalVideos === 1 ? "video" : "videos"}
-            </span>
-          </div>
+          <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold bg-[#141418] border border-white/10 text-zinc-300 self-start sm:self-auto shadow-sm">
+            <FiThumbsUp className="text-amber-400" /> {totalVideos} {totalVideos === 1 ? "creation" : "creations"}
+          </span>
         )}
       </header>
 
-      <div className="page__content">
+      <div>
         {loading && (
-          <div className="video-grid">
-            {Array.from({ length: 8 }).map((_, i) => (
-              <div key={i} className="video-card-skeleton">
-                <div className="skeleton-thumb" />
-                <div className="skeleton-details">
-                  <div className="skeleton-avatar" />
-                  <div className="skeleton-lines">
-                    <div className="skeleton-line skeleton-line--title" />
-                    <div className="skeleton-line skeleton-line--meta" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-8 gap-x-5">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="flex flex-col gap-3 animate-pulse">
+                <div className="w-full aspect-video rounded-2xl bg-[#121215] border border-white/5" />
+                <div className="flex items-start gap-3 mt-1.5 px-0.5">
+                  <div className="w-9 h-9 rounded-full bg-[#18181d] shrink-0" />
+                  <div className="flex-1 flex flex-col gap-2">
+                    <div className="h-4 bg-[#18181d] rounded-md w-11/12" />
+                    <div className="h-3 bg-[#18181d] rounded-md w-1/2" />
                   </div>
                 </div>
               </div>
@@ -67,29 +62,33 @@ const LikedVideos = () => {
         )}
 
         {!loading && videos.length === 0 && (
-          <div className="state state--empty">
-            <FiThumbsUp style={{ fontSize: "2.5rem", color: "var(--accent)", marginBottom: "0.5rem" }} />
-            <p className="state__title">No liked videos yet</p>
-            <p className="state__text">Give thumbs up to videos you enjoy to save them in this list.</p>
-            <div className="state__actions">
-              <Link to="/" className="btn btn-primary">
-                <FiFilm /> Discover Videos
-              </Link>
-            </div>
+          <div className="flex flex-col items-center justify-center py-20 bg-[#121215] rounded-3xl border border-white/10 text-center px-4 max-w-lg mx-auto">
+            <FiThumbsUp className="text-4xl text-amber-400/60 mb-3 opacity-80" />
+            <p className="text-lg font-bold text-zinc-200 mb-1">No liked creations yet</p>
+            <p className="text-sm text-zinc-400 mb-6 max-w-xs">Like creations you enjoy to save them directly in this list.</p>
+            <Link
+              to="/"
+              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-zinc-950 font-bold text-sm shadow-md shadow-amber-500/25 transition-all no-underline"
+            >
+              <FiFilm /> Discover Creations
+            </Link>
           </div>
         )}
 
         {!loading && videos.length > 0 && (
-          <div className="video-grid">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-8 gap-x-5">
             {videos.map((v) => (
               <VideoCard key={v._id} video={v} />
             ))}
           </div>
         )}
       </div>
-    </section>
+    </div>
   );
 };
 
 export default LikedVideos;
+
+
+
 

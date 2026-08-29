@@ -6,9 +6,9 @@ import VideoCard from "./video/VideoCard";
 import { FiFilm } from "react-icons/fi";
 
 /**
- * ChannelVideos Component
+ * ChannelVideos Component (Obsidian & Sunset Amber Studio Edition)
  * 
- * Fetches and displays all public videos created by the specified channel creator.
+ * Displays creator video showcase (strictly maximum 3 videos per row).
  */
 const ChannelVideos = () => {
   const { username } = useParams();
@@ -46,15 +46,13 @@ const ChannelVideos = () => {
 
   if (loading) {
     return (
-      <div className="video-grid">
-        {Array.from({ length: 4 }).map((_, i) => (
-          <div key={i} className="video-card-skeleton">
-            <div className="skeleton-thumb" />
-            <div className="skeleton-details">
-              <div className="skeleton-lines" style={{ width: "100%" }}>
-                <div className="skeleton-line skeleton-line--title" />
-                <div className="skeleton-line skeleton-line--meta" />
-              </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-8 gap-x-5">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <div key={i} className="flex flex-col gap-3 animate-pulse">
+            <div className="w-full aspect-video rounded-2xl bg-[#121215] border border-white/5" />
+            <div className="flex flex-col gap-2 px-0.5">
+              <div className="h-4 bg-[#18181d] rounded w-11/12" />
+              <div className="h-3 bg-[#18181d] rounded w-1/2" />
             </div>
           </div>
         ))}
@@ -64,25 +62,25 @@ const ChannelVideos = () => {
 
   if (error) {
     return (
-      <div className="state state--error">
-        <p className="state__title">Could not load videos</p>
-        <p className="state__text">{error}</p>
+      <div className="p-6 rounded-2xl bg-[#121215] border border-amber-500/20 text-center">
+        <p className="text-base font-bold text-amber-400 mb-1">Could not load videos</p>
+        <p className="text-sm text-zinc-400 m-0">{error}</p>
       </div>
     );
   }
 
   if (!videos.length) {
     return (
-      <div className="state state--empty">
-        <FiFilm style={{ fontSize: "2.5rem", color: "var(--accent)", marginBottom: "0.5rem" }} />
-        <p className="state__title">No videos yet</p>
-        <p className="state__text">This creator hasn't published any videos yet.</p>
+      <div className="flex flex-col items-center justify-center py-20 text-center px-4 bg-[#121215] rounded-3xl border border-white/10">
+        <FiFilm className="text-4xl text-amber-400/60 mb-3 opacity-80" />
+        <p className="text-base font-bold text-zinc-200 mb-1">No creations yet</p>
+        <p className="text-sm text-zinc-400 max-w-sm m-0">This creator hasn't published any public videos yet.</p>
       </div>
     );
   }
 
   return (
-    <div className="video-grid">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-8 gap-x-5">
       {videos.map((v) => (
         <VideoCard key={v._id} video={v} />
       ))}
@@ -91,4 +89,7 @@ const ChannelVideos = () => {
 };
 
 export default ChannelVideos;
+
+
+
 

@@ -1,18 +1,17 @@
 import React from "react";
 
 /**
- * VideoPlayer Component
+ * VideoPlayer Component (Tailwind Edition)
  * 
- * Renders a responsive 16:9 HTML5 video player with modern browser controls,
- * smooth buffering feedback, and seamless aspect ratio preservation across devices.
+ * Renders a responsive 16:9 HTML5 video player with modern browser controls.
  */
 const VideoPlayer = ({ videoFile, thumbnail, title }) => {
   if (!videoFile) return null;
 
   return (
-    <div className="video-player-container">
+    <div className="relative w-full aspect-video bg-black flex items-center justify-center">
       <video
-        className="video-player-element"
+        className="w-full h-full object-contain rounded-2xl outline-none"
         controls
         playsInline
         preload="metadata"
@@ -28,4 +27,5 @@ const VideoPlayer = ({ videoFile, thumbnail, title }) => {
 };
 
 export default VideoPlayer;
+
 

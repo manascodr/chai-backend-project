@@ -5,13 +5,12 @@ import {
   getMyPlaylists,
   removeFromPlaylist,
 } from "../api/playlist.api";
-import { FiBookmark, FiCheck, FiFolderPlus, FiX } from "react-icons/fi";
+import { FiBookmark, FiCheck, FiX } from "react-icons/fi";
 
 /**
- * SaveToPlaylist Component
+ * SaveToPlaylist Component (Obsidian & Sunset Amber Studio Edition)
  * 
- * Floating popup modal to easily add or remove the current video
- * across user-created playlists with live state synchronization.
+ * Floating popup modal to add/remove current video across user collections.
  */
 const SaveToPlaylist = ({ videoId, disabled = false }) => {
   const [open, setOpen] = useState(false);
@@ -94,64 +93,76 @@ const SaveToPlaylist = ({ videoId, disabled = false }) => {
   };
 
   return (
-    <div className="save-to-playlist" ref={containerRef}>
+    <div className="relative inline-block" ref={containerRef}>
       <button
-        className="video-details__actionBtn"
+        className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#141418] hover:bg-[#1c1c22] text-zinc-200 text-sm font-medium border border-white/10 hover:border-white/20 transition-all cursor-pointer"
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
         aria-controls="saveToPlaylistPanel"
         disabled={disabled}
-        title="Save to playlist"
+        title="Save to collection"
       >
-        <FiBookmark className="video-details__actionIcon" />
+        <FiBookmark className="text-base text-amber-400" />
         <span>Save</span>
       </button>
 
       {open && (
-        <div className="save-to-playlist__panel" id="saveToPlaylistPanel" role="dialog">
-          <div className="save-to-playlist__header">
-            <p className="save-to-playlist__title">Save video to...</p>
+        <div
+          className="absolute right-0 top-full mt-2 w-72 bg-[#141418] border border-amber-500/25 rounded-2xl shadow-2xl shadow-black/80 p-4 z-50 backdrop-blur-2xl flex flex-col gap-3"
+          id="saveToPlaylistPanel"
+          role="dialog"
+        >
+          <div className="flex items-center justify-between pb-2 border-b border-white/10">
+            <p className="text-sm font-bold text-white m-0">Save creation to...</p>
             <button
               type="button"
-              className="save-to-playlist__close"
+              className="text-zinc-400 hover:text-white transition-colors cursor-pointer"
               onClick={() => setOpen(false)}
               aria-label="Close modal"
             >
-              <FiX />
+              <FiX className="text-base" />
             </button>
           </div>
 
           {loading && (
-            <div className="save-to-playlist__loading">
-              <div className="spinner" style={{ width: "22px", height: "22px" }} />
+            <div className="flex justify-center py-4">
+              <div className="spinner" style={{ width: "20px", height: "20px" }} />
             </div>
           )}
 
           {error && !loading && (
-            <p className="save-to-playlist__state">{error}</p>
+            <p className="text-xs text-amber-400 m-0 py-2 text-center">{error}</p>
           )}
 
           {!loading && !error && (
-            <div className="save-to-playlist__list">
+            <div className="flex flex-col gap-1 max-h-60 overflow-y-auto">
               {playlists.length === 0 ? (
-                <p className="save-to-playlist__state">No playlists found. Create one from the Playlists page.</p>
+                <p className="text-xs text-zinc-400 text-center py-3 m-0">
+                  No collections found. Create one from the Playlists page.
+                </p>
               ) : (
                 playlists.map((pl) => {
                   const checked = hasVideo(pl);
                   const busy = togglingId === pl._id;
 
                   return (
-                    <label key={pl._id} className="save-to-playlist__item">
+                    <label
+                      key={pl._id}
+                      className="flex items-center gap-3 p-2 rounded-xl hover:bg-zinc-800/80 cursor-pointer text-sm transition-colors"
+                    >
                       <input
                         type="checkbox"
+                        className="rounded border-zinc-700 text-amber-500 focus:ring-amber-400 bg-[#09090b] w-4 h-4 cursor-pointer accent-amber-500"
                         checked={checked}
                         disabled={busy}
                         onChange={() => onToggle(pl._id, checked)}
                       />
-                      <span className="save-to-playlist__name">{pl.name}</span>
+                      <span className="text-zinc-200 text-sm font-medium flex-1 truncate">
+                        {pl.name}
+                      </span>
                       {checked && (
-                        <span className="save-to-playlist__status save-to-playlist__status--saved">
+                        <span className="text-xs text-amber-400 font-semibold flex items-center gap-1">
                           <FiCheck /> Saved
                         </span>
                       )}
@@ -168,4 +179,7 @@ const SaveToPlaylist = ({ videoId, disabled = false }) => {
 };
 
 export default SaveToPlaylist;
+
+
+
 

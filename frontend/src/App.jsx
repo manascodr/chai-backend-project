@@ -56,7 +56,13 @@ const App = () => {
       .finally(() => setLoading(false));
   }, [setUser]);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) {
+    return (
+      <div className="min-h-screen w-full bg-[#09090b] flex items-center justify-center">
+        <div className="spinner" style={{ width: "28px", height: "28px" }} />
+      </div>
+    );
+  }
 
   return (
     <Routes>

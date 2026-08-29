@@ -3,13 +3,13 @@ import { formatViews, formatTimeAgo } from "../../utils/formatViews";
 import { FiPlay, FiUser } from "react-icons/fi";
 
 /**
- * VideoCard Component
+ * VideoCard Component (Obsidian & Sunset Amber Studio Edition)
  * 
- * Renders a single video card in YouTube/Twitch style:
- * - 16:9 aspect ratio thumbnail with smooth hover zoom.
- * - Dynamic view count and relative time (e.g. "1.2K views • 2 days ago").
- * - Interactive channel avatar and username linking to creator's channel.
- * - Multi-line title truncation with tooltip.
+ * Designer studio video card:
+ * - 16:9 thumbnail with scale-on-hover effect and warm amber ambient highlight.
+ * - Dynamic view count and relative time.
+ * - Interactive channel avatar and username linking to creator profile.
+ * - 2-line clamped title.
  */
 const VideoCard = ({ video }) => {
   if (!video) return null;
@@ -28,86 +28,88 @@ const VideoCard = ({ video }) => {
   const channelUsername = owner.username || "";
 
   return (
-    <article className="video-card">
-      {/* Clickable Thumbnail & Title linking to the video watch page */}
-      <Link to={`/watch/${_id}`} className="video-card__link" title={title}>
-        <div className="video-card__thumb">
+    <article className="flex flex-col group cursor-pointer transition-all duration-300">
+      {/* 16:9 Thumbnail Link */}
+      <Link to={`/watch/${_id}`} className="block no-underline" title={title}>
+        <div className="relative w-full aspect-video rounded-2xl overflow-hidden bg-[#121215] border border-white/[0.08] group-hover:border-amber-500/40 transition-all duration-300 shadow-sm group-hover:shadow-amber-500/10 group-hover:shadow-lg">
           {thumbnail ? (
-            <img 
-              src={thumbnail} 
-              alt={title} 
-              loading="lazy" 
-              className="video-card__thumbImg"
+            <img
+              src={thumbnail}
+              alt={title}
+              loading="lazy"
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
               onError={(e) => {
-                // Fallback placeholder if image link fails
                 e.target.style.display = "none";
               }}
             />
           ) : (
-            <div className="video-card__thumbPlaceholder">
-              <FiPlay className="video-card__thumbIcon" />
+            <div className="w-full h-full flex items-center justify-center bg-[#121215] text-zinc-700">
+              <FiPlay className="text-4xl opacity-40" />
             </div>
           )}
-          
-          <div className="video-card__overlay">
-            <span className="video-card__playBtn">
-              <FiPlay />
+
+          {/* Hover Play Icon Overlay */}
+          <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+            <span className="w-12 h-12 rounded-full bg-gradient-to-tr from-amber-500 to-amber-600 flex items-center justify-center text-zinc-950 text-lg shadow-xl shadow-amber-500/50 group-hover:scale-110 transition-transform">
+              <FiPlay className="fill-current ml-0.5" />
             </span>
           </div>
         </div>
       </Link>
 
-      {/* Video Information (Avatar + Title + Channel Meta) */}
-      <div className="video-card__details">
+      {/* Video Details (Avatar + Info) */}
+      <div className="flex items-start gap-3 mt-3.5 px-0.5">
         {channelUsername ? (
           <Link
             to={`/c/${channelUsername}`}
-            className="video-card__avatarLink"
+            className="shrink-0 no-underline"
             title={`Visit ${ownerName}'s channel`}
             onClick={(e) => e.stopPropagation()}
           >
             {ownerAvatar ? (
               <img
-                className="video-card__avatar"
+                className="w-9 h-9 rounded-full object-cover border border-white/10 hover:border-amber-500 transition-all hover:scale-105"
                 src={ownerAvatar}
                 alt={ownerName}
                 loading="lazy"
               />
             ) : (
-              <div className="video-card__avatar video-card__avatar--placeholder">
+              <div className="w-9 h-9 rounded-full bg-zinc-900 flex items-center justify-center text-amber-400 text-xs font-bold border border-white/10">
                 <FiUser />
               </div>
             )}
           </Link>
         ) : (
-          <div className="video-card__avatar video-card__avatar--placeholder">
+          <div className="w-9 h-9 rounded-full bg-zinc-900 flex items-center justify-center text-amber-400 text-xs font-bold border border-white/10 shrink-0">
             <FiUser />
           </div>
         )}
 
-        <div className="video-card__info">
-          <Link to={`/watch/${_id}`} className="video-card__titleLink" title={title}>
-            <h3 className="video-card__title">{title}</h3>
+        <div className="flex flex-col gap-1 min-w-0 flex-1">
+          <Link to={`/watch/${_id}`} className="no-underline text-inherit" title={title}>
+            <h3 className="text-[15px] font-semibold text-zinc-100 group-hover:text-amber-400 line-clamp-2 leading-snug transition-colors m-0">
+              {title}
+            </h3>
           </Link>
 
           {channelUsername ? (
             <Link
               to={`/c/${channelUsername}`}
-              className="video-card__channelName"
+              className="text-xs text-zinc-400 hover:text-zinc-200 font-medium truncate no-underline transition-colors"
               onClick={(e) => e.stopPropagation()}
             >
               {ownerName}
             </Link>
           ) : (
-            <span className="video-card__channelName">{ownerName}</span>
+            <span className="text-xs text-zinc-400 font-medium truncate">{ownerName}</span>
           )}
 
-          <div className="video-card__meta">
-            <span className="video-card__views">{formatViews(views)}</span>
+          <div className="flex items-center gap-1.5 text-xs text-zinc-500 font-normal">
+            <span>{formatViews(views)}</span>
             {createdAt && (
               <>
-                <span className="video-card__dot" aria-hidden="true">•</span>
-                <span className="video-card__time">{formatTimeAgo(createdAt)}</span>
+                <span className="text-[8px] opacity-60">•</span>
+                <span>{formatTimeAgo(createdAt)}</span>
               </>
             )}
           </div>
@@ -118,4 +120,7 @@ const VideoCard = ({ video }) => {
 };
 
 export default VideoCard;
+
+
+
 

@@ -5,12 +5,9 @@ import VideoCard from "../components/video/VideoCard";
 import { FiClock, FiFilm } from "react-icons/fi";
 
 /**
- * WatchHistory Component
+ * WatchHistory Component (Obsidian & Sunset Amber Studio Edition)
  * 
- * Displays the user's chronological video watch history:
- * 1. 8-card skeleton placeholder grid during fetch.
- * 2. Responsive 16:9 video card grid.
- * 3. Friendly empty state with direct action button to browse videos.
+ * Displays the user's chronological video watch history (strictly max 3 videos per row).
  */
 const WatchHistory = () => {
   const [history, setHistory] = useState([]);
@@ -25,25 +22,23 @@ const WatchHistory = () => {
   }, []);
 
   return (
-    <section className="page page--history watch-history">
-      <header className="page__header">
-        <div>
-          <h1 className="page__title">Watch History</h1>
-          <p className="page__subtitle">All the videos you have watched recently on VividStream.</p>
-        </div>
+    <div className="w-full px-4 sm:px-8 py-8 flex flex-col gap-8">
+      <header className="pb-4 border-b border-white/[0.08]">
+        <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight m-0">Watch History</h1>
+        <p className="text-sm text-zinc-400 mt-1 m-0">All the creations you have experienced recently on VividStream.</p>
       </header>
 
-      <div className="page__content">
+      <div>
         {loading && (
-          <div className="video-grid">
-            {Array.from({ length: 8 }).map((_, i) => (
-              <div key={i} className="video-card-skeleton">
-                <div className="skeleton-thumb" />
-                <div className="skeleton-details">
-                  <div className="skeleton-avatar" />
-                  <div className="skeleton-lines">
-                    <div className="skeleton-line skeleton-line--title" />
-                    <div className="skeleton-line skeleton-line--meta" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-8 gap-x-5">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="flex flex-col gap-3 animate-pulse">
+                <div className="w-full aspect-video rounded-2xl bg-[#121215] border border-white/5" />
+                <div className="flex items-start gap-3 mt-1.5 px-0.5">
+                  <div className="w-9 h-9 rounded-full bg-[#18181d] shrink-0" />
+                  <div className="flex-1 flex flex-col gap-2">
+                    <div className="h-4 bg-[#18181d] rounded-md w-11/12" />
+                    <div className="h-3 bg-[#18181d] rounded-md w-1/2" />
                   </div>
                 </div>
               </div>
@@ -52,36 +47,40 @@ const WatchHistory = () => {
         )}
 
         {!loading && error && (
-          <div className="state state--error">
-            <p className="state__title">Couldn’t load watch history</p>
-            <p className="state__text">{error}</p>
+          <div className="p-8 rounded-3xl bg-[#121215] border border-amber-500/20 text-center max-w-xl mx-auto my-8">
+            <p className="text-lg font-bold text-amber-400 mb-1">Couldn’t load watch history</p>
+            <p className="text-sm text-zinc-400 m-0">{error}</p>
           </div>
         )}
 
         {!loading && !error && history.length === 0 && (
-          <div className="state state--empty">
-            <FiClock style={{ fontSize: "2.5rem", color: "var(--accent)", marginBottom: "0.5rem" }} />
-            <p className="state__title">No watch history yet</p>
-            <p className="state__text">Videos you watch will automatically be recorded here.</p>
-            <div className="state__actions">
-              <Link to="/" className="btn btn-primary">
-                <FiFilm /> Browse Videos
-              </Link>
-            </div>
+          <div className="flex flex-col items-center justify-center py-20 bg-[#121215] rounded-3xl border border-white/10 text-center px-4 max-w-lg mx-auto">
+            <FiClock className="text-4xl text-amber-400/60 mb-3 opacity-80" />
+            <p className="text-lg font-bold text-zinc-200 mb-1">No watch history yet</p>
+            <p className="text-sm text-zinc-400 mb-6 max-w-xs">Creations you watch will automatically be recorded here.</p>
+            <Link
+              to="/"
+              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-zinc-950 font-bold text-sm shadow-md shadow-amber-500/25 transition-all no-underline"
+            >
+              <FiFilm /> Browse Creations
+            </Link>
           </div>
         )}
 
         {!loading && !error && history.length > 0 && (
-          <div className="video-grid">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-8 gap-x-5">
             {history.map((video) => (
               <VideoCard key={video._id} video={video} />
             ))}
           </div>
         )}
       </div>
-    </section>
+    </div>
   );
 };
 
 export default WatchHistory;
+
+
+
 
