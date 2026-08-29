@@ -8,6 +8,27 @@ import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { Like } from "../models/like.model.js";
 import { Subscription } from "../models/subscription.model.js";
 
+/**
+ * Fetches a paginated list of published videos with optional filtering and sorting.
+ *
+ * Query params:
+ * - page {number} Optional. Page number. Defaults to 1.
+ * - limit {number} Optional. Number of videos per page. Defaults to 10 and is capped at 50 to avoid large payloads.
+ * - query {string} Optional. Case-insensitive search term used against the video title and description.
+ * - sortBy {"createdAt"|"views"} Optional. Sort field. Defaults to "createdAt".
+ * - sortType {"asc"|"desc"} Optional. Sort direction. Defaults to "desc".
+ * - userId {string} Optional. Filters videos by a specific owner/user. This is sent in the query string because this is a list endpoint and the filter is optional; it allows fetching videos for one user without creating a separate route. The value must be a valid MongoDB ObjectId.
+ *
+ * @route GET /videos
+ * @returns {object} JSON response containing:
+ * - videos {Array<Object>} Published videos, with owner details populated.
+ * - page {number} Current page number.
+ * - limit {number} Number of videos per page.
+ * - totalVideos {number} Total matching videos.
+ * - totalPages {number} Total number of pages.
+ *
+ * @throws {ApiError} If `userId` is provided but is not a valid ObjectId.
+ */
 const getAllVideos = asyncHandler(async (req, res) => {
   let {
     page = 1,
@@ -28,7 +49,7 @@ const getAllVideos = asyncHandler(async (req, res) => {
     isPublished: true,
   };
 
-  // optional: filter by user
+  // optional: filter videos by user
   if (userId) {
     if (!mongoose.isValidObjectId(userId)) {
       throw new ApiError(400, "Invalid userId");
@@ -39,6 +60,7 @@ const getAllVideos = asyncHandler(async (req, res) => {
   // optional: search by title or description
   if (query) {
     filter.$or = [
+      // filter.$or is used to specify multiple conditions, where at least one must be true for a document to match. In this case, it allows searching for videos where either the title or description matches the query string.
       // $or operator for multiple conditions either title or description
       { title: { $regex: query, $options: "i" } }, // case-insensitive search
       { description: { $regex: query, $options: "i" } }, // regex search in description
@@ -51,11 +73,11 @@ const getAllVideos = asyncHandler(async (req, res) => {
     sortBy = "createdAt";
   }
 
-  const sortOrder = sortType === "asc" ? 1 : -1;
+  const sortOrder = sortType === "asc" ? 1 : -1; // 1 for ascending, -1 for descending
   const sort = { [sortBy]: sortOrder };
 
   // fetch videos
-  const videos = await Video.find(filter)
+  const videos = await Video.find(filter) // find function => fetches documents from the Video collection based on the filter(published)
     .sort(sort) // .sort function => sorts the documents based on the sort object
     .skip(skip) // .skip function => skips the first 'n' documents
     .limit(limit) // .limit function => limits the result to 'n' documents
@@ -73,7 +95,7 @@ const getAllVideos = asyncHandler(async (req, res) => {
         page,
         limit,
         totalVideos,
-        totalPages: Math.ceil(totalVideos / limit),
+        totalPages: Math.ceil(totalVideos / limit), // calculate total pages based on totalVideos and limit
       },
       "Videos fetched successfully"
     )
@@ -164,13 +186,14 @@ const getVideoById = asyncHandler(async (req, res) => {
   if (!isOwner) {
     video = await Video.findByIdAndUpdate(
       videoId,
-      { $inc: { views: 1 } },
+      { $inc: { views: 1 } }, // Increment the views field by 1
       { new: true }
     ).populate("owner", "username fullname avatar");
   }
 
   // Record watch history for authenticated viewers.
   // Keep most-recent-first, prevent duplicates, and cap list length.
+  // The following code updates the authenticated user's watch history by adding the current video to the beginning of the list, removing any duplicates, and limiting the list to the 50 most recent videos. It uses MongoDB's aggregation operators to achieve this efficiently.
 
   await User.findByIdAndUpdate(req.user._id, [
     {
