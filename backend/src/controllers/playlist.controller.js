@@ -52,10 +52,11 @@ const getPlaylistById = asyncHandler(async (req, res) => {
   if (!mongoose.isValidObjectId(playlistId)) {
     throw new ApiError(400, "Invalid playlist ID");
   }
-  const playlist = await Playlist.findById(playlistId)
-    .populate("videos", "title thumbnail duration")
-    .populate("owner", "username email")
-    .lean();
+  const playlist = await Playlist.findById(playlistId).populate({
+    path: "videos",
+    select: "title thumbnail duration views owner",
+    populate: { path: "owner", select: "fullname username avatar" },
+  });
   if (!playlist) {
     throw new ApiError(404, "Playlist not found");
   }
