@@ -1,26 +1,66 @@
 @use "./variables" as *;
 
+/* ==========================================================================
+   CSS RESET & BASE DEFAULTS
+   Rationale:
+   - Sets up border-box sizing everywhere so padding doesn't affect fixed dimensions.
+   - Smooth font antialiasing gives crisp text on Retina/4K and standard screens.
+   - Custom sleek scrollbars match the dark aesthetic without harsh native OS bars.
+   ========================================================================== */
 
-* {
+*, *::before, *::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-html,
-body {
+html {
   height: 100%;
-  width: 100%;
-  font-family: system-ui, sans-serif;
+  font-size: 16px;
+  color-scheme: dark;
+  scroll-behavior: smooth;
 }
 
 body {
-  background: $bg;
+  min-height: 100%;
+  width: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  background-color: $bg;
   color: $text;
+  line-height: 1.5;
+  overflow-x: hidden;
 }
 
-// #root {
-//   max-width: 1100px;
-//   margin: 0 auto;
-//   padding: 1.5rem;
-// }
+/* Modern dark-themed scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: $bg;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: $radius-full;
+  border: 2px solid $bg;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.22);
+  }
+}
+
+/* User text selection color */
+::selection {
+  background: rgba(56, 189, 248, 0.28);
+  color: #ffffff;
+}
+
+img, video, svg {
+  display: block;
+  max-width: 100%;
+}

@@ -1,6 +1,17 @@
 import { formatSubscriberCount } from "../utils/formatViews";
 import { useAuthStore } from "../stores/auth.store";
+import { Link } from "react-router-dom";
+import { FiCheck, FiBell, FiEdit3, FiUser, FiFilm } from "react-icons/fi";
 
+/**
+ * ChannelHeader Component
+ * 
+ * Renders the top profile identity for a creator's channel:
+ * 1. Wide panoramic cover banner with vivid gradient fallback.
+ * 2. Elevated circular avatar with glowing border.
+ * 3. Creator name, handle, subscriber count, and bio.
+ * 4. Contextual CTA: "Edit Profile" (for channel owner) vs "Subscribe / Subscribed" (for visitors).
+ */
 const ChannelHeader = ({
   channel,
   isSubscribed,
@@ -10,6 +21,7 @@ const ChannelHeader = ({
 }) => {
   const currentUser = useAuthStore((s) => s.user);
   if (!channel) return null;
+
   const { fullname, username, coverImage, avatar } = channel;
 
   const isOwnChannel = Boolean(
@@ -23,75 +35,88 @@ const ChannelHeader = ({
 
   return (
     <header className="channel-header">
-      {/* Banner / Cover Image */}
+      {/* Cover Banner */}
       <div className="channel-header-banner">
-        {channel.coverImage ? (
+        {coverImage ? (
           <img
             src={coverImage}
             alt={`${fullname}'s banner`}
             className="channel-header-banner-img"
+            loading="lazy"
           />
         ) : (
-          <div className="channel-header-banner-placeholder"></div>
+          <div className="channel-header-banner-placeholder" />
         )}
       </div>
 
-      {/* Channel Info Section */}
+      {/* Channel Profile Info & Actions */}
       <div className="channel-header-content">
         <div className="channel-header-info">
           {/* Avatar */}
           <div className="channel-header-avatar">
-            <img
-              src={avatar || "/default-avatar.png"}
-              alt={fullname}
-              className="channel-header-avatar-img"
-            />
+            {avatar ? (
+              <img
+                src={avatar}
+                alt={fullname}
+                className="channel-header-avatar-img"
+                loading="lazy"
+              />
+            ) : (
+              <div className="channel-header-avatar-img channel-header-avatar-img--placeholder">
+                <FiUser />
+              </div>
+            )}
           </div>
 
-          {/* Channel Details */}
+          {/* Details */}
           <div className="channel-header-details">
             <h1 className="channel-header-name">{fullname}</h1>
             <div className="channel-header-meta">
-              <span className="channel-header-username">
-                @{username}
-              </span>
-              <span className="channel-header-separator">•</span>
+              <span className="channel-header-username">@{username}</span>
+              <span className="channel-header-separator" aria-hidden="true">•</span>
               <span className="channel-header-subscribers">
                 {formatSubscriberCount(subscriberCount)} subscribers
               </span>
             </div>
-            <p className="channel-header-description">Welcome to my channel!</p>
+            <p className="channel-header-description">
+              Welcome to my official VividStream channel! Check out my latest videos below.
+            </p>
           </div>
 
-          {/* Subscribe Button (hidden on your own channel) */}
-          {!isOwnChannel && (
-            <div className="channel-header-actions">
+          {/* Actions: Edit Profile (Own) or Subscribe Toggle (Visitor) */}
+          <div className="channel-header-actions">
+            {isOwnChannel ? (
+              <Link to="/profile-settings" className="btn btn-secondary channel-header-edit-btn">
+                <FiEdit3 /> Customize Channel
+              </Link>
+            ) : (
               <button
+                type="button"
                 className={`channel-header-subscribe-btn ${
                   isSubscribed ? "is-subscribed" : ""
                 }`}
                 onClick={onToggleSubscribe}
                 disabled={isSubscribeLoading}
               >
-                {isSubscribed ? (
+                {isSubscribeLoading ? (
+                  "Updating..."
+                ) : isSubscribed ? (
                   <>
-                    <svg
-                      className="channel-header-bell-icon"
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
-                    >
-                      <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z" />
-                    </svg>
-                    {isSubscribeLoading ? "Updating..." : "Subscribed"}
+                    <FiCheck /> Subscribed
                   </>
-                ) : isSubscribeLoading ? (
-                  "Subscribing..."
                 ) : (
                   "Subscribe"
                 )}
               </button>
-            </div>
-          )}
+            )}
+          </div>
+        </div>
+
+        {/* Channel Navigation Sub-Tabs */}
+        <div className="channel-header-tabs" role="tablist">
+          <div className="channel-header-tab channel-header-tab--active">
+            <FiFilm /> Videos
+          </div>
         </div>
       </div>
     </header>
@@ -99,3 +124,4 @@ const ChannelHeader = ({
 };
 
 export default ChannelHeader;
+

@@ -1,236 +1,248 @@
 @use "../base/variables" as *;
 
+/* ==========================================================================
+   PLAYLISTS & PLAYLIST DETAILS STYLING
+   Rationale:
+   - Folder-themed collection cards with animated elevation on hover.
+   - Clean creation panel positioned above the collections grid.
+   - Easy single-click video removal inside detailed playlist view.
+   ========================================================================== */
+
 .playlists {
-  padding: 18px;
-
   &__container {
-    max-width: 1040px;
-    margin: 0 auto;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 18px;
+    gap: 2rem;
   }
 
-  &__header {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 12px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid $border;
-  }
-
-  &__heading {
+  &__createCard {
+    background: $bg-surface;
+    border: 1px solid $border;
+    border-radius: $radius-lg;
+    padding: 1.5rem;
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 1rem;
+    box-shadow: $shadow-1;
   }
 
-  &__title {
-    margin: 0;
-    font-size: 20px;
-    font-weight: 800;
-    color: $text;
+  &__createHeader {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
   }
 
-  &__subtitle {
-    margin: 0;
-    color: $muted;
-    font-size: 13px;
+  &__createIcon {
+    font-size: 1.5rem;
+    color: $primary;
   }
 
   &__sectionTitle {
     margin: 0;
-    color: $text;
-    font-size: 14px;
+    font-size: 1.1rem;
     font-weight: 700;
+    color: $text;
   }
 
-  &__create {
-    padding: 14px;
-    border: 1px solid $border;
-    border-radius: 12px;
-    background: $bg-secondary;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+  &__createHint {
+    margin: 0.2rem 0 0;
+    color: $text-muted;
+    font-size: 0.85rem;
   }
 
   &__createForm {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  &__label {
-    display: block;
-    color: $muted;
-    font-size: 13px;
+    width: 100%;
   }
 
   &__controls {
     display: flex;
-    gap: 10px;
+    gap: 0.75rem;
     align-items: center;
     flex-wrap: wrap;
   }
 
   &__input {
-    min-width: 260px;
     flex: 1;
-    height: 40px;
-    padding: 0 12px;
-    border-radius: 10px;
-    background: $bg;
-    border: 1px solid $border;
-    color: $text;
-
-    &::placeholder {
-      color: $muted;
-    }
+    min-width: 280px;
   }
 
-  &__button {
-    height: 40px;
-    padding: 0 14px;
-    border-radius: 10px;
-    border: 1px solid $border;
-    background: transparent;
-    color: $text;
-    font-weight: 700;
-
-    &:focus-visible {
-      outline: 2px solid $primary;
-      outline-offset: 2px;
-    }
-
-    &:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
+  &__createBtn {
+    padding: 0.7rem 1.4rem;
+    white-space: nowrap;
   }
 
   &__library {
-    padding: 14px;
-    border: 1px solid $border;
-    border-radius: 12px;
-    background: $bg-secondary;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 1.25rem;
   }
 
   &__libraryHeader {
     display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 12px;
-  }
-
-  &__list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  &__state,
-  &__empty {
-    color: $muted;
-    margin: 0;
-  }
-}
-
-.playlist-item {
-  margin: 0;
-  border: 1px solid $border;
-  border-radius: 10px;
-  background: $bg;
-
-  &__name {
-    color: $text;
-    font-weight: 700;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  &__meta {
-    color: $muted;
-    font-size: 13px;
-  }
-
-  &__link {
-    display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 12px;
-    padding: 10px 12px;
-    text-decoration: none;
-
-    &:focus-visible {
-      outline: 2px solid $primary;
-      outline-offset: 2px;
-      border-radius: 10px;
-    }
-  }
-}
-
-.playlist-details {
-  padding: 18px;
-
-  &__container {
-    max-width: 1040px;
-    margin: 0 auto;
   }
 
-  &__header {
-    padding-bottom: 12px;
-    border-bottom: 1px solid $border;
-    margin-bottom: 16px;
-  }
-
-  &__heading {
+  &__loading {
     display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-
-  &__title {
-    margin: 0;
-    color: $text;
-    font-size: 20px;
-    font-weight: 800;
-  }
-
-  &__subtext {
-    margin: 0;
-    color: $muted;
-    font-size: 13px;
-  }
-
-  &__state,
-  &__empty {
-    color: $muted;
-    margin: 0;
+    justify-content: center;
+    padding: 2.5rem 0;
   }
 
   &__grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 14px;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.25rem;
+  }
+}
+
+/* Individual Playlist Card */
+.playlist-card {
+  display: flex;
+  flex-direction: column;
+  background: $bg-surface;
+  border: 1px solid $border;
+  border-radius: $radius-lg;
+  padding: 1.25rem;
+  text-decoration: none;
+  transition: $transition;
+  box-shadow: $shadow-1;
+
+  &:hover {
+    background: $bg-surface-2;
+    border-color: $border-hover;
+    transform: translateY(-2px);
+    box-shadow: $shadow-2;
+
+    .playlist-card__icon {
+      color: $primary;
+      transform: scale(1.1);
+    }
+  }
+}
+
+.playlist-card__iconWrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.playlist-card__icon {
+  font-size: 1.8rem;
+  color: $text-muted;
+  transition: $transition-fast;
+}
+
+.playlist-card__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: rgba(56, 189, 248, 0.12);
+  color: $primary;
+  padding: 0.25rem 0.65rem;
+  border-radius: $radius-full;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.playlist-card__info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.playlist-card__name {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: $text;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.playlist-card__meta {
+  font-size: 0.82rem;
+  color: $text-muted;
+}
+
+/* Playlist Details Specifics */
+.playlist-details {
+  &__container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  &__backLink {
+    align-self: flex-start;
+    padding-left: 0;
+    margin-bottom: 0.5rem;
+  }
+
+  &__header {
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid $border;
+  }
+
+  &__heading {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  &__iconBadge {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    background: rgba(56, 189, 248, 0.12);
+    color: $primary;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+  }
+
+  &__title {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: $text;
+  }
+
+  &__subtext {
+    margin: 0.25rem 0 0;
+    color: $text-muted;
+    font-size: 0.88rem;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
   }
 
   &__item {
+    background: $bg-surface;
     border: 1px solid $border;
-    border-radius: 12px;
-    background: $bg-secondary;
-    padding: 10px;
+    border-radius: $radius-lg;
+    padding: 0.85rem;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 0.75rem;
+    transition: $transition;
+
+    &:hover {
+      background: $bg-surface-2;
+      border-color: $border-hover;
+    }
   }
 
   &__card {
@@ -240,32 +252,19 @@
   &__itemActions {
     display: flex;
     justify-content: flex-end;
+    border-top: 1px solid $border;
+    padding-top: 0.5rem;
   }
 
   &__remove {
-    height: 34px;
-    padding: 0 12px;
-    border-radius: 10px;
-    border: 1px solid $border;
-    background: transparent;
-    color: $text;
+    color: $text-muted;
+    font-size: 0.82rem;
+    padding: 0.35rem 0.75rem;
 
-    &:focus-visible {
-      outline: 2px solid $primary;
-      outline-offset: 2px;
-    }
-
-    &:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
+    &:hover:not(:disabled) {
+      color: $danger;
+      background: $danger-bg;
     }
   }
 }
 
-@media (max-width: 960px) {
-  .playlist-details {
-    &__grid {
-      grid-template-columns: 1fr;
-    }
-  }
-}

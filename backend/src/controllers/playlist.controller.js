@@ -35,10 +35,11 @@ const getUserPlaylists = asyncHandler(async (req, res) => {
     throw new ApiError(404, "User not found");
   }
 
-  const playlists = await Playlist.find({ owner: userId }).populate(
-    "videos",
-    "title thumbnail duration"
-  );
+  const playlists = await Playlist.find({ owner: userId }).populate({
+    path: "videos",
+    select: "title thumbnail duration views owner",
+    populate: { path: "owner", select: "fullname username avatar" },
+  });
   res
     .status(200)
     .json(

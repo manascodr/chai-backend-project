@@ -1,63 +1,68 @@
 @use "../base/variables" as *;
-@use "sass:color"; 
+
+/* ==========================================================================
+   CHANNEL PROFILE PAGE STYLING
+   Rationale:
+   - Clean container centering for the entire channel view.
+   - Fluid skeleton placeholders that mimic the exact banner and avatar dimensions.
+   ========================================================================== */
 
 .channel-page {
   width: 100%;
 }
 
 .channel-page-content {
-  padding: 0;
+  padding-top: 1rem;
 }
 
-.channel-page-error {
-  color: $text;
-}
-
-.channel-page-error-text {
-  color: $muted;
-}
-
+/* Skeleton Loading Structure */
 .channel-page-header-skeleton {
   padding: 0;
+  margin-bottom: 2rem;
 }
 
 .channel-page-banner-skeleton {
   width: 100%;
-  height: 200px;
-  background: $bg-secondary;
-  border-radius: 12px;
-  margin-bottom: 16px;
+  height: 180px;
+  background: $bg-surface-2;
+  border-radius: $radius-lg;
+  margin-bottom: 1rem;
 
   @media (min-width: 768px) {
-    height: 250px;
+    height: 220px;
   }
 
   @media (min-width: 1200px) {
-    height: 300px;
+    height: 260px;
   }
 }
 
 .channel-page-header-row-skeleton {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 1.25rem;
 }
 
 .channel-page-avatar-skeleton {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  background: $bg-secondary;
+  width: 110px;
+  height: 110px;
+  border-radius: $radius-full;
+  background: $bg-surface-2;
+  margin-top: -50px;
+  border: 4px solid $bg;
+  flex-shrink: 0;
 
   @media (min-width: 768px) {
-    width: 128px;
-    height: 128px;
+    width: 136px;
+    height: 136px;
+    margin-top: -65px;
   }
 }
 
 .channel-page-text-skeleton {
   flex: 1;
-  height: 20px;
-  border-radius: 8px;
-  background: $bg-secondary;
+  height: 24px;
+  border-radius: $radius-sm;
+  background: $bg-surface-2;
 }
+

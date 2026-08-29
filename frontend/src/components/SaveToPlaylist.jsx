@@ -1,11 +1,18 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import {
   addToPlaylist,
   getMyPlaylists,
   removeFromPlaylist,
 } from "../api/playlist.api";
+import { FiBookmark, FiCheck, FiFolderPlus, FiX } from "react-icons/fi";
 
+/**
+ * SaveToPlaylist Component
+ * 
+ * Floating popup modal to easily add or remove the current video
+ * across user-created playlists with live state synchronization.
+ */
 const SaveToPlaylist = ({ videoId, disabled = false }) => {
   const [open, setOpen] = useState(false);
   const [playlists, setPlaylists] = useState([]);
@@ -14,6 +21,7 @@ const SaveToPlaylist = ({ videoId, disabled = false }) => {
   const [error, setError] = useState("");
   const [togglingId, setTogglingId] = useState(null);
 
+  const containerRef = useRef(null);
   const isLoaded = useMemo(() => loaded, [loaded]);
 
   const load = async () => {
@@ -37,6 +45,18 @@ const SaveToPlaylist = ({ videoId, disabled = false }) => {
     if (isLoaded) return;
     load();
   }, [open, isLoaded]);
+
+  // Click outside to close dropdown modal
+  useEffect(() => {
+    if (!open) return;
+    const handleClickOutside = (e) => {
+      if (containerRef.current && !containerRef.current.contains(e.target)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [open]);
 
   const hasVideo = (playlist) => {
     const vids = playlist?.videos || [];
@@ -74,23 +94,40 @@ const SaveToPlaylist = ({ videoId, disabled = false }) => {
   };
 
   return (
-    <div className="save-to-playlist">
+    <div className="save-to-playlist" ref={containerRef}>
       <button
-        className="save-to-playlist__button"
+        className="video-details__actionBtn"
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
         aria-controls="saveToPlaylistPanel"
         disabled={disabled}
+        title="Save to playlist"
       >
-        Save
+        <FiBookmark className="video-details__actionIcon" />
+        <span>Save</span>
       </button>
 
       {open && (
         <div className="save-to-playlist__panel" id="saveToPlaylistPanel" role="dialog">
-          <p className="save-to-playlist__title">Save to playlist</p>
+          <div className="save-to-playlist__header">
+            <p className="save-to-playlist__title">Save video to...</p>
+            <button
+              type="button"
+              className="save-to-playlist__close"
+              onClick={() => setOpen(false)}
+              aria-label="Close modal"
+            >
+              <FiX />
+            </button>
+          </div>
 
-          {loading && <p className="save-to-playlist__state">Loading...</p>}
+          {loading && (
+            <div className="save-to-playlist__loading">
+              <div className="spinner" style={{ width: "22px", height: "22px" }} />
+            </div>
+          )}
+
           {error && !loading && (
             <p className="save-to-playlist__state">{error}</p>
           )}
@@ -98,7 +135,7 @@ const SaveToPlaylist = ({ videoId, disabled = false }) => {
           {!loading && !error && (
             <div className="save-to-playlist__list">
               {playlists.length === 0 ? (
-                <p className="save-to-playlist__state">No playlists yet.</p>
+                <p className="save-to-playlist__state">No playlists found. Create one from the Playlists page.</p>
               ) : (
                 playlists.map((pl) => {
                   const checked = hasVideo(pl);
@@ -113,15 +150,11 @@ const SaveToPlaylist = ({ videoId, disabled = false }) => {
                         onChange={() => onToggle(pl._id, checked)}
                       />
                       <span className="save-to-playlist__name">{pl.name}</span>
-                      <span
-                        className={
-                          checked
-                            ? "save-to-playlist__status save-to-playlist__status--saved"
-                            : "save-to-playlist__status"
-                        }
-                      >
-                        {checked ? "Saved" : "Not saved"}
-                      </span>
+                      {checked && (
+                        <span className="save-to-playlist__status save-to-playlist__status--saved">
+                          <FiCheck /> Saved
+                        </span>
+                      )}
                     </label>
                   );
                 })
@@ -135,3 +168,4 @@ const SaveToPlaylist = ({ videoId, disabled = false }) => {
 };
 
 export default SaveToPlaylist;
+

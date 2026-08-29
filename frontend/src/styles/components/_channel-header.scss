@@ -1,23 +1,34 @@
 @use "../base/variables" as *;
 
+/* ==========================================================================
+   CHANNEL HEADER COMPONENT STYLING
+   Rationale:
+   - High-impact widescreen banner with responsive height.
+   - Large avatar protruding seamlessly from the banner with an outer glow border.
+   - Distinctive channel tabs for clean tabbed navigation.
+   ========================================================================== */
+
 .channel-header {
   width: 100%;
-  background-color: $bg;
+  margin-bottom: 2rem;
 }
 
+/* Panoramic Cover Banner */
 .channel-header-banner {
   width: 100%;
-  height: 200px;
+  height: 180px;
   overflow: hidden;
-  border-radius: 12px;
-  margin-bottom: 16px;
+  border-radius: $radius-lg;
+  background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 50%, #0369a1 100%);
+  border: 1px solid $border;
+  position: relative;
 
   @media (min-width: 768px) {
-    height: 250px;
+    height: 220px;
   }
 
   @media (min-width: 1200px) {
-    height: 300px;
+    height: 260px;
   }
 }
 
@@ -25,21 +36,22 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
 }
 
 .channel-header-banner-placeholder {
   width: 100%;
   height: 100%;
-  background: $bg-secondary;
+  background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 50%, #0369a1 100%);
 }
 
 .channel-header-content {
-  padding: 0 16px;
-  max-width: 1284px;
+  padding: 0 1rem;
+  max-width: 1400px;
   margin: 0 auto;
 
   @media (min-width: 768px) {
-    padding: 0 24px;
+    padding: 0 1.5rem;
   }
 }
 
@@ -47,41 +59,48 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 16px;
-  padding-bottom: 16px;
+  gap: 1.25rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid $border;
 
   @media (min-width: 768px) {
     flex-direction: row;
     align-items: flex-start;
-    gap: 24px;
+    gap: 1.75rem;
   }
 }
 
 .channel-header-avatar {
   flex-shrink: 0;
-  margin-top: -40px;
+  margin-top: -50px;
+  z-index: 2;
 
   @media (min-width: 768px) {
-    margin-top: -50px;
+    margin-top: -65px;
   }
 }
 
 .channel-header-avatar-img {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
+  width: 110px;
+  height: 110px;
+  border-radius: $radius-full;
   border: 4px solid $bg;
   object-fit: cover;
-  background-color: $bg-secondary;
+  background-color: $bg-surface-2;
+  box-shadow: $shadow-2;
 
   @media (min-width: 768px) {
-    width: 128px;
-    height: 128px;
+    width: 136px;
+    height: 136px;
   }
 
-  @media (min-width: 1200px) {
-    width: 160px;
-    height: 160px;
+  &--placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: $primary-gradient;
+    color: #ffffff;
+    font-size: 3rem;
   }
 }
 
@@ -92,23 +111,19 @@
 
   @media (min-width: 768px) {
     text-align: left;
-    padding-top: 8px;
+    padding-top: 0.5rem;
   }
 }
 
 .channel-header-name {
-  font-size: 24px;
-  font-weight: 600;
+  font-size: 1.6rem;
+  font-weight: 800;
   color: $text;
-  margin: 0 0 4px 0;
-  line-height: 1.2;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.25rem;
 
   @media (min-width: 768px) {
-    font-size: 28px;
-  }
-
-  @media (min-width: 1200px) {
-    font-size: 36px;
+    font-size: 2rem;
   }
 }
 
@@ -117,10 +132,10 @@
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  gap: 4px;
-  margin-bottom: 8px;
+  gap: 0.5rem;
+  margin-bottom: 0.65rem;
   color: $muted;
-  font-size: 14px;
+  font-size: 0.9rem;
 
   @media (min-width: 768px) {
     justify-content: flex-start;
@@ -128,77 +143,127 @@
 }
 
 .channel-header-username {
-  color: $muted;
+  font-weight: 600;
+  color: $text-secondary;
 }
 
 .channel-header-separator {
-  margin: 0 4px;
+  color: $text-muted;
 }
 
 .channel-header-subscribers {
-  color: $muted;
+  color: $text-secondary;
 }
 
 .channel-header-description {
   color: $muted;
-  font-size: 14px;
-  margin: 0;
-  display: -webkit-box;
-  line-clamp: 2;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  max-width: 600px;
-
-  @media (min-width: 768px) {
-    margin-right: auto;
-  }
+  font-size: 0.92rem;
+  line-height: 1.5;
+  max-width: 650px;
 }
 
 .channel-header-actions {
   flex-shrink: 0;
 
   @media (min-width: 768px) {
-    padding-top: 8px;
+    padding-top: 0.5rem;
     margin-left: auto;
+  }
+}
+
+.channel-header-edit-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: $bg-surface-2;
+  border: 1px solid $border;
+  padding: 0.6rem 1.2rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: $text;
+  border-radius: $radius-full;
+  text-decoration: none;
+  transition: $transition;
+
+  &:hover {
+    background: $bg-hover;
+    border-color: $border-hover;
+    color: #ffffff;
   }
 }
 
 .channel-header-subscribe-btn {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 10px 20px;
-  font-size: 14px;
-  font-weight: 500;
-  border: none;
-  border-radius: 20px;
+  gap: 0.45rem;
+  padding: 0.6rem 1.35rem;
+  font-size: 0.92rem;
+  font-weight: 700;
+  border-radius: $radius-full;
   cursor: pointer;
   transition: $transition;
-  background-color: $primary;
-  color: $bg;
+  border: none;
+  background: $primary-gradient;
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(56, 189, 248, 0.35);
 
-  &:hover {
-    background-color: $primary-hover;
-  }
-
-  &:disabled {
-    opacity: 0.7;
-    cursor: not-allowed;
+  &:hover:not(:disabled) {
+    box-shadow: 0 6px 20px rgba(56, 189, 248, 0.5);
+    transform: translateY(-1px);
   }
 
   &.is-subscribed {
-    background-color: $bg-hover;
+    background: $bg-surface-3;
     color: $text;
+    border: 1px solid $border;
+    box-shadow: none;
 
-    &:hover {
-      background-color: $bg-secondary;
+    &:hover:not(:disabled) {
+      background: $danger-bg;
+      color: $danger;
+      border-color: rgba(244, 63, 94, 0.3);
     }
   }
 }
 
-.channel-header-bell-icon {
-  width: 20px;
-  height: 20px;
+/* Channel Tabs (Videos, Playlists, etc.) */
+.channel-header-tabs {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1rem 0 0;
 }
+
+.channel-header-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.25rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: $muted;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.15s ease-in-out;
+
+  &:hover {
+    color: $text;
+  }
+
+  &--active {
+    color: #ffffff;
+
+    &::after {
+      content: "";
+      position: absolute;
+      bottom: -1rem;
+      left: 0;
+      right: 0;
+      height: 3px;
+      border-radius: $radius-full;
+      background: $primary-gradient;
+      box-shadow: 0 0 10px $primary-glow;
+    }
+  }
+}
+

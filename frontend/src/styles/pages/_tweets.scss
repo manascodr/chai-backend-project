@@ -1,156 +1,107 @@
 @use "../base/variables" as *;
 
-.tweets {
-  padding: 18px;
+/* ==========================================================================
+   COMMUNITY POSTS (TWEETS & COMMUNITY FEED)
+   Rationale:
+   - Twitter/X style stream cards with circular avatars and handle hyperlinks.
+   - Clean compose card positioned above the stream for instant posting.
+   - Micro-action buttons (Edit, Delete) cleanly aligned to the right.
+   ========================================================================== */
 
+.tweets {
   &__container {
-    max-width: 1040px;
+    max-width: 860px;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
-    gap: 18px;
-  }
-
-  &__header {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 12px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid $border;
-  }
-
-  &__heading {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-
-  &__title {
-    margin: 0;
-    font-size: 20px;
-    font-weight: 800;
-    color: $text;
-  }
-
-  &__subtitle {
-    margin: 0;
-    color: $muted;
-    font-size: 13px;
+    gap: 2rem;
   }
 
   &__headerActions {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 0.75rem;
   }
 
-  &__link {
-    height: 34px;
-    padding: 0 12px;
-    border-radius: 10px;
+  /* Compose Card */
+  &__compose {
+    background: $bg-surface;
     border: 1px solid $border;
-    background: transparent;
-    color: $text;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    font-weight: 700;
-
-    &:focus-visible {
-      outline: 2px solid $primary;
-      outline-offset: 2px;
-    }
+    border-radius: $radius-lg;
+    padding: 1.5rem;
+    box-shadow: $shadow-1;
   }
 
-  &__sectionTitle {
-    margin: 0;
-    color: $text;
-    font-size: 14px;
-    font-weight: 700;
-  }
-
-  &__compose,
-  &__feed {
-    padding: 14px;
-    border: 1px solid $border;
-    border-radius: 12px;
-    background: $bg-secondary;
+  &__composeTop {
     display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  &__feedHeader {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 12px;
+    gap: 1rem;
+    align-items: flex-start;
   }
 
   &__form {
+    flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    max-width: 720px;
-  }
-
-  &__label {
-    color: $muted;
-    font-size: 13px;
+    gap: 1rem;
   }
 
   &__textarea {
     width: 100%;
-    padding: 10px 12px;
-    border-radius: 10px;
+    padding: 0.85rem 1rem;
+    border-radius: $radius;
     border: 1px solid $border;
-    background: $bg;
+    background: $bg-surface-2;
     color: $text;
     resize: vertical;
-    min-height: 88px;
+    min-height: 90px;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    transition: $transition-fast;
 
-    &:disabled {
-      opacity: 0.7;
-      cursor: not-allowed;
+    &::placeholder {
+      color: $text-muted;
     }
 
-    &:focus-visible {
-      outline: 2px solid $primary;
-      outline-offset: 2px;
+    &:focus {
+      border-color: $primary;
+      background: $bg-surface-3;
     }
   }
 
   &__actions {
     display: flex;
     justify-content: flex-end;
-    gap: 10px;
   }
 
-  &__button {
-    height: 38px;
-    padding: 0 14px;
-    border-radius: 10px;
-    border: 1px solid $border;
-    background: transparent;
-    color: $text;
-    font-weight: 700;
-
-    &:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
-
-    &:focus-visible {
-      outline: 2px solid $primary;
-      outline-offset: 2px;
-    }
+  &__postBtn {
+    padding: 0.6rem 1.35rem;
+    font-size: 0.9rem;
   }
 
-  &__state,
-  &__empty {
+  /* Feed List */
+  &__feed {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  &__feedHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__sectionTitle {
     margin: 0;
-    color: $muted;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: $text;
+  }
+
+  &__loading {
+    display: flex;
+    justify-content: center;
+    padding: 2.5rem 0;
   }
 
   &__list {
@@ -159,144 +110,131 @@
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 1rem;
   }
 }
 
+/* Individual Community Post Card */
 .tweet-item {
+  background: $bg-surface;
   border: 1px solid $border;
-  border-radius: 12px;
-  background: $bg;
-  padding: 12px;
+  border-radius: $radius-lg;
+  padding: 1.25rem;
+  box-shadow: $shadow-1;
+  transition: $transition;
+
+  &:hover {
+    background: $bg-surface-2;
+    border-color: $border-hover;
+  }
 
   &__meta {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 12px;
-    margin-bottom: 8px;
+    gap: 1rem;
+    margin-bottom: 0.85rem;
   }
 
   &__owner {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 0.75rem;
     min-width: 0;
   }
 
-  &__avatar {
-    width: 34px;
-    height: 34px;
-    border-radius: 999px;
-    border: 1px solid $border;
-    object-fit: cover;
-    background: $bg-secondary;
-    flex: 0 0 auto;
+  &__avatarWrap {
+    flex-shrink: 0;
   }
 
-  &__avatar--placeholder {
-    background: rgba(255, 255, 255, 0.02);
+  &__avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: $radius-full;
+    object-fit: cover;
+    border: 1px solid $border;
+
+    &--placeholder {
+      width: 40px;
+      height: 40px;
+      border-radius: $radius-full;
+      background: $primary-gradient;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      font-size: 1rem;
+    }
   }
 
   &__ownerText {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 0.1rem;
     min-width: 0;
   }
 
   &__ownerName {
-    color: $text;
+    font-size: 0.95rem;
     font-weight: 700;
-    font-size: 13px;
+    color: $text;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
 
   &__ownerLink {
-    color: $muted;
-    font-size: 12px;
+    font-size: 0.82rem;
+    color: $primary;
     text-decoration: none;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    max-width: 260px;
+    transition: color 0.15s ease-in-out;
 
-    &:focus-visible {
-      outline: 2px solid $primary;
-      outline-offset: 2px;
-      border-radius: 8px;
+    &:hover {
+      text-decoration: underline;
     }
   }
 
   &__date {
-    color: $muted;
-    font-size: 12px;
+    font-size: 0.8rem;
+    color: $text-muted;
+    flex-shrink: 0;
   }
 
   &__content {
     margin: 0;
     color: $text;
-    font-size: 14px;
-    line-height: 1.5;
+    font-size: 0.95rem;
+    line-height: 1.55;
     white-space: pre-wrap;
+    word-break: break-word;
   }
 
   &__edit {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-  }
-
-  &__textarea {
-    width: 100%;
-    padding: 10px 12px;
-    border-radius: 10px;
-    border: 1px solid $border;
-    background: $bg;
-    color: $text;
-    resize: vertical;
-
-    &:disabled {
-      opacity: 0.7;
-      cursor: not-allowed;
-    }
-
-    &:focus-visible {
-      outline: 2px solid $primary;
-      outline-offset: 2px;
-    }
+    gap: 0.85rem;
   }
 
   &__actions {
     display: flex;
     justify-content: flex-end;
-    gap: 10px;
-  }
-
-  &__button {
-    height: 34px;
-    padding: 0 12px;
-    border-radius: 10px;
-    border: 1px solid $border;
-    background: transparent;
-    color: $text;
-    font-weight: 700;
-
-    &:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
-
-    &:focus-visible {
-      outline: 2px solid $primary;
-      outline-offset: 2px;
-    }
-  }
-
-  &__button--primary {
-    background: $bg-hover;
-    border-color: rgba(255, 255, 255, 0.18);
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
   }
 }
+
+.tweet-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.82rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: $radius-full;
+
+  &--delete:hover {
+    color: $danger;
+    background: $danger-bg;
+  }
+}
+

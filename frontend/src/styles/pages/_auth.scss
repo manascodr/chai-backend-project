@@ -1,62 +1,179 @@
 @use "../base/variables" as *;
 
+/* ==========================================================================
+   AUTHENTICATION PAGES (LOGIN & REGISTER)
+   Rationale:
+   - Centered ambient card layout with radiant top gradient glow.
+   - Integrated input icons and password reveal toggle.
+   - Interactive file dropzones with live circular and widescreen image previews.
+   ========================================================================== */
+
 .auth-page {
-  min-height: calc(100vh - 2rem);
-  display: grid;
-  place-items: center;
-  padding: 1.25rem;
+  min-height: calc(100vh - 120px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
 }
 
 .auth-card {
   width: 100%;
-  max-width: 520px;
+  max-width: 460px;
   border: 1px solid $border;
-  border-radius: $radius;
-  background: $bg-secondary;
-  box-shadow: $shadow-1;
-  padding: 1.25rem;
+  border-radius: $radius-xl;
+  background: $bg-surface;
+  box-shadow: $shadow-3;
+  padding: 2.25rem 2rem;
+  position: relative;
+  overflow: hidden;
+
+  /* Ambient gradient top highlight */
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 10%;
+    right: 10%;
+    height: 2px;
+    background: $primary-gradient;
+    box-shadow: 0 0 20px $primary-glow;
+  }
+
+  &--wide {
+    max-width: 620px;
+  }
 }
 
 .auth-card__header {
-  margin-bottom: 1rem;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.auth-card__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 1.25rem;
+}
+
+.auth-card__brandTitle {
+  font-size: 1.35rem;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  color: $text;
+
+  span {
+    color: $primary;
+  }
 }
 
 .auth-card__title {
   margin: 0;
-  font-size: 1.4rem;
-  font-weight: 900;
-  letter-spacing: 0.2px;
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: $text;
 }
 
 .auth-card__subtitle {
-  margin: 0.35rem 0 0 0;
-  color: $muted;
+  margin: 0.4rem 0 0;
+  color: $text-muted;
+  font-size: 0.9rem;
+}
+
+/* Input Icon Wrapper */
+.auth-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+
+  .auth-input-icon {
+    position: absolute;
+    left: 1rem;
+    color: $text-muted;
+    font-size: 1.1rem;
+    pointer-events: none;
+    transition: color 0.15s ease-in-out;
+  }
+
+  .auth-input {
+    padding-left: 2.75rem;
+    padding-right: 2.75rem;
+  }
+
+  &:focus-within .auth-input-icon {
+    color: $primary;
+  }
+}
+
+.auth-password-toggle {
+  position: absolute;
+  right: 0.75rem;
+  background: transparent;
+  border: none;
+  color: $text-muted;
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 0.35rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: $radius-full;
+  transition: $transition-fast;
+
+  &:hover {
+    color: $text;
+    background: $bg-hover;
+  }
+}
+
+.auth-file-zone {
+  padding: 1.25rem 1rem !important;
+  min-height: 110px;
+}
+
+.auth-preview-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: $radius-full;
+  object-fit: cover;
+  border: 2px solid $primary;
+}
+
+.auth-preview-cover {
+  width: 100%;
+  height: 60px;
+  border-radius: $radius-sm;
+  object-fit: cover;
+  border: 1px solid $primary;
 }
 
 .auth-card__submit {
   width: 100%;
-  background: $primary;
-  border-color: $primary;
-  color: #06101e;
-  font-weight: 800;
-}
-
-.auth-card__submit:hover {
-  background: $primary-hover;
-  border-color: $primary-hover;
+  padding: 0.8rem 1.5rem;
+  font-size: 0.95rem;
+  margin-top: 0.5rem;
 }
 
 .auth-card__footer {
-  margin-top: 1rem;
-  color: $muted;
-  font-size: 0.95rem;
+  margin-top: 1.75rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid $border;
+  text-align: center;
+  color: $text-muted;
+  font-size: 0.88rem;
 }
 
 .auth-card__link {
   color: $primary;
   font-weight: 700;
+  text-decoration: none;
+  transition: color 0.15s ease-in-out;
+
+  &:hover {
+    color: #ffffff;
+    text-decoration: underline;
+  }
 }
 
-.auth-card__link:hover {
-  color: $primary-hover;
-}

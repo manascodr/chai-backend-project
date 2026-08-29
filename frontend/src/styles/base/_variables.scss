@@ -1,54 +1,107 @@
 :root {
-	/* Core backgrounds (layered darks; no pure black) */
-	--bg-main: #0b1020;
-	--bg-surface: #101a2b;
-	--bg-surface-2: #15223a;
-	--bg-hover: #1b2c49;
+	/* ==========================================================================
+	   THEME DESIGN TOKENS (VividStream Modern Dark Mode)
+	   Rationale:
+	   - Deep blue-slate obsidian background reduces eye fatigue and gives depth.
+	   - Layered surface tiers (surface-1 -> surface-3) create clear visual hierarchy.
+	   - Vibrant electric cyan-to-indigo gradient provides a signature brand identity.
+	   ========================================================================== */
 
-	/* Text */
-	--text-primary: #eaf0ff;
-	--text-secondary: #9fb0d0;
+	/* Core Layered Backgrounds */
+	--bg-main: #0a0d16;          /* Deepest canvas background */
+	--bg-surface: #101626;       /* Sidebar, header, and primary card background */
+	--bg-surface-2: #162035;     /* Nested cards, input backgrounds, and popovers */
+	--bg-surface-3: #1f2d4a;     /* Elevated modals, floating dropdowns */
+	--bg-hover: #1c2742;         /* Hover state background for interactive items */
+	--bg-active: #233254;        /* Pressed/active state */
 
-	/* Subtle borders/dividers */
-	--border-subtle: #223456;
+	/* Text & Contrast Hierarchy */
+	--text-primary: #f8fafc;     /* High-contrast crisp text for titles and main content */
+	--text-secondary: #94a3b8;   /* Balanced slate for metadata, subheadings, and timestamps */
+	--text-muted: #64748b;       /* Subtle muted text for placeholders and tertiary info */
 
-	/* Accent (use sparingly) */
-	--accent: #4bc6ff;
-	--accent-hover: #38b3eb;
-	--focus-ring: rgba(75, 198, 255, 0.35);
+	/* Borders & Separators */
+	--border-subtle: rgba(255, 255, 255, 0.08); /* Frosted ultra-subtle border */
+	--border-focus: rgba(56, 189, 248, 0.5);     /* Focus outline accent */
+	--border-hover: rgba(255, 255, 255, 0.16);   /* Hover border definition */
 
-	/* Semantic */
-	--danger: #e06b7a;
-	--danger-bg: rgba(224, 107, 122, 0.12);
+	/* Primary Brand Accents */
+	--accent: #38bdf8;           /* Electric Cyan accent for interactive icons & highlights */
+	--accent-hover: #60a5fa;     /* Slightly warmer blue on hover */
+	--accent-gradient: linear-gradient(135deg, #38bdf8 0%, #6366f1 100%); /* Signature brand gradient */
+	--accent-glow: rgba(56, 189, 248, 0.25); /* Subtle ambient glow */
+	--focus-ring: rgba(56, 189, 248, 0.4);
 
-	--success: #45d39b;
-	--success-bg: rgba(69, 211, 155, 0.12);
+	/* Semantic Status Colors */
+	--danger: #f43f5e;           /* Rose danger color */
+	--danger-hover: #e11d48;
+	--danger-bg: rgba(244, 63, 94, 0.12);
 
-	--warning: #f0c36a;
-	--warning-bg: rgba(240, 195, 106, 0.14);
+	--success: #10b981;          /* Emerald success color */
+	--success-bg: rgba(16, 185, 129, 0.12);
 
-	/* Keep shadows subtle */
-	--shadow-1: 0 6px 18px rgba(0, 0, 0, 0.22);
+	--warning: #f59e0b;          /* Amber warning color */
+	--warning-bg: rgba(245, 158, 11, 0.12);
+
+	/* Shadows & Elevation */
+	--shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+	--shadow-md: 0 8px 24px -4px rgba(0, 0, 0, 0.45);
+	--shadow-lg: 0 16px 36px -6px rgba(0, 0, 0, 0.6);
+	--shadow-glow: 0 0 20px rgba(56, 189, 248, 0.2);
+
+	/* Border Radius Scale */
+	--radius-sm: 8px;
+	--radius-md: 12px;
+	--radius-lg: 16px;
+	--radius-full: 9999px;
+
+	/* Smooth transitions (cubic-bezier gives organic acceleration) */
+	--transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+	--transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-// SCSS aliases used across the app
+// SCSS shortcuts used seamlessly across stylesheet components
 $bg: var(--bg-main);
+$bg-main: var(--bg-main);
+$bg-surface: var(--bg-surface);
 $bg-secondary: var(--bg-surface);
+$bg-surface-2: var(--bg-surface-2);
+$bg-surface-3: var(--bg-surface-3);
 $bg-hover: var(--bg-hover);
+$bg-active: var(--bg-active);
 
 $text: var(--text-primary);
+$text-secondary: var(--text-secondary);
 $muted: var(--text-secondary);
+$text-muted: var(--text-muted);
 $border: var(--border-subtle);
+$border-subtle: var(--border-subtle);
+$border-focus: var(--border-focus);
+$border-hover: var(--border-hover);
 
 $primary: var(--accent);
 $primary-hover: var(--accent-hover);
+$primary-gradient: var(--accent-gradient);
+$primary-glow: var(--accent-glow);
 $focus: var(--focus-ring);
+
 $danger: var(--danger);
+$danger-bg: var(--danger-bg);
 $success: var(--success);
+$success-bg: var(--success-bg);
 $warning: var(--warning);
-$shadow-1: var(--shadow-1);
+$warning-bg: var(--warning-bg);
 
-$radius: 6px;
+$shadow-1: var(--shadow-sm);
+$shadow-2: var(--shadow-md);
+$shadow-3: var(--shadow-lg);
+$shadow-glow: var(--shadow-glow);
 
-// No animations/motion
-$transition: none;
+$radius-sm: var(--radius-sm);
+$radius: var(--radius-md);
+$radius-lg: var(--radius-lg);
+$radius-xl: 20px;
+$radius-full: var(--radius-full);
+
+$transition: var(--transition-smooth);
+$transition-fast: var(--transition-fast);

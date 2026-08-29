@@ -1,14 +1,31 @@
 import React from "react";
 
-const VideoPlayer = ({ videoFile }) => {
+/**
+ * VideoPlayer Component
+ * 
+ * Renders a responsive 16:9 HTML5 video player with modern browser controls,
+ * smooth buffering feedback, and seamless aspect ratio preservation across devices.
+ */
+const VideoPlayer = ({ videoFile, thumbnail, title }) => {
+  if (!videoFile) return null;
+
   return (
-    <>
-        <video width="600" controls>
-          <source src={videoFile} type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
-    </>
+    <div className="video-player-container">
+      <video
+        className="video-player-element"
+        controls
+        playsInline
+        preload="metadata"
+        poster={thumbnail}
+        aria-label={title || "Video Player"}
+      >
+        <source src={videoFile} type="video/mp4" />
+        <source src={videoFile} type="video/webm" />
+        Your browser does not support HTML5 video playback.
+      </video>
+    </div>
   );
 };
 
 export default VideoPlayer;
+
