@@ -20,6 +20,29 @@ import PlaylistDetails from "./pages/PlaylistDetails";
 import TweetsPage from "./pages/TweetsPage";
 import TweetFeedPage from "./pages/TweetFeedPage";
 
+/**
+ * Main application router component.
+ *
+ * What’s happening here:
+ * - On mount, it fetches the current authenticated user (`getCurrentUser`).
+ * - If successful, it stores the user in auth state (`setUser(res.data.data)`).
+ * - If it fails, it clears auth state by setting user to `null`.
+ * - While the auth check is in progress, it renders a simple `Loading...` fallback.
+ *
+ * Routing behavior:
+ * - Public auth routes:
+ *   - `/login` and `/register` are only for logged-out users.
+ *   - If already logged in, those paths redirect to `/`.
+ * - Protected routes:
+ *   - Wrapped with `ProtectedRoute` + `AppLayout`.
+ *   - Paths like `/`, `/watch/:videoId`, `/history`, etc. require authentication.
+ *   - Unauthenticated access is expected to redirect to `/login` via `ProtectedRoute`.
+ * - Catch-all route:
+ *   - Any unknown path redirects to `/`.
+ *
+ * @component
+ * @returns {JSX.Element} The app routes, with auth-aware redirects and protected pages.
+ */
 const App = () => {
   const user = useAuthStore((s) => s.user);
   const setUser = useAuthStore((s) => s.setUser);

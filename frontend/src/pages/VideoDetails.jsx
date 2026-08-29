@@ -141,7 +141,7 @@ const VideoDetails = () => {
   }
 
   return (
-    <div className="video-details-layout">
+    <div className="page page--watch video-details-layout">
       <div className="video-details">
         {/* Responsive Theater Video Player */}
         <section className="video-details__playerWrap">
