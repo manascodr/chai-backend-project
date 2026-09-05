@@ -1,16 +1,21 @@
-// Load environment variables BEFORE any other imports so all modules see them
+import http from "http";
 import "dotenv/config";
 import { app } from "./app.js";
 import connectDB from "./db/index.js";
+import { initializeSocket } from "./socket/index.js";
+
+const server = http.createServer(app); // Create an HTTP server using the Express app
+export const io = initializeSocket(server); // Initialize socket.io with the server
 
 connectDB()
   .then(() => {
-    app.on("error", (error) => {
+    server.on("error", (error) => {
       console.error("Server error:", error);
     });
 
-    app.listen(process.env.PORT || 8000, () => {
-      // Server started
+    const PORT = process.env.PORT || 8000;
+    server.listen(PORT, () => {
+      console.log(`⚙️ Server is running at port: ${PORT}`);
     });
   })
   .catch((error) => {

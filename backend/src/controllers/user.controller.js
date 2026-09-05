@@ -11,6 +11,18 @@ import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 import { Video } from "../models/video.model.js";
 
+const getCookieOptions = () => {
+  const isProduction =
+    process.env.NODE_ENV === "production" ||
+    (process.env.CORS_ORIGIN && !process.env.CORS_ORIGIN.includes("localhost"));
+
+  return {
+    httpOnly: true,
+    secure: isProduction,
+    sameSite: isProduction ? "none" : "lax",
+  };
+};
+
 const generateAccessAndRefreshToken = async (userId) => {
   try {
     const user = await User.findById(userId);
@@ -153,10 +165,7 @@ const loginUser = asyncHandler(async (req, res) => {
     .lean(); // lean to get plain JS object
            
   // store refresh token in httpOnly cookie              
-  const options = {
-    httpOnly: true, // prevent client-side JS access               
-    secure: true, // set to true if using HTTPS
-  };             
+  const options = getCookieOptions();             
   return res        
     .status(200)
     .cookie("accessToken", accessToken, options)
@@ -182,10 +191,7 @@ const logoutUser = asyncHandler(async (req, res) => {
     { new: true } // return the updated document
   );
 
-  const options = {
-    httpOnly: true,
-    secure: true, // set to true if using HTTPS
-  };
+  const options = getCookieOptions();
   return res
     .status(200)
     .clearCookie("accessToken", options)
@@ -217,10 +223,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
       throw new ApiError(401, "Refresh token is expired or used");
     }
 
-    const options = {
-      httpOnly: true,
-      secure: true,
-    };
+    const options = getCookieOptions();
     const { accessToken, refreshToken: newRefreshToken } =
       await generateAccessAndRefreshToken(user._id);
 

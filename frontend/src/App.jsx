@@ -19,6 +19,7 @@ import PlaylistsPage from "./pages/PlaylistsPage";
 import PlaylistDetails from "./pages/PlaylistDetails";
 import TweetsPage from "./pages/TweetsPage";
 import TweetFeedPage from "./pages/TweetFeedPage";
+import WatchPartyPage from "./pages/WatchPartyPage";
 
 /**
  * Main application router component.
@@ -103,7 +104,7 @@ const App = () => {
         <Route path="/upload-video" element={<UploadVideo />} />
         <Route path="/Dashboard" element={<Dashboard />} />
         <Route path="/profile-settings" element={<ProfileSettings />} />
-        
+        <Route path="/watch-party/:roomId" element={<WatchPartyPage />} />
       </Route>
 
       {/* Fallback if user enters random stuff in the url */}

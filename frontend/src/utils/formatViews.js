@@ -55,9 +55,28 @@ export const formatTimeAgo = (date) => {
   return `${diffInYears}y ago`;
 };
 
+/**
+ * Formats seconds into MM:SS or HH:MM:SS
+ * @param {number|string} seconds - Total duration in seconds
+ * @returns {string|null} Formatted timecode (e.g., "14:28" or "1:04:12")
+ */
+export const formatDuration = (seconds) => {
+  if (!seconds || isNaN(seconds) || Number(seconds) <= 0) return null;
+  const s = Math.floor(Number(seconds));
+  const hrs = Math.floor(s / 3600);
+  const mins = Math.floor((s % 3600) / 60);
+  const secs = s % 60;
+
+  if (hrs > 0) {
+    return `${hrs}:${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+  }
+  return `${mins}:${secs.toString().padStart(2, "0")}`;
+};
+
 export default {
   formatViews,
   formatSubscriberCount,
   formatTimeAgo,
+  formatDuration,
 };
 

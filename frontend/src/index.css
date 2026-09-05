@@ -2,25 +2,33 @@
 
 @layer base {
   :root {
-    --bg-main: #09090b;
-    --bg-surface: #121215;
-    --bg-surface-2: #18181d;
-    --bg-surface-3: #22222a;
-    --accent: #f59e0b;
-    --accent-hover: #d97706;
+    --bg-canvas: #090a0d;
+    --bg-surface: #111317;
+    --bg-surface-raised: #181a20;
+    --bg-surface-hover: #1f222a;
+    --border-subtle: rgba(255, 255, 255, 0.07);
+    --border-hover: rgba(255, 255, 255, 0.14);
+    --accent: #ffffff;
+    --accent-hover: #e4e4e7;
+    --accent-glow: rgba(255, 255, 255, 0.12);
   }
 
   html {
     scrollbar-gutter: stable;
+    color-scheme: dark;
   }
 
   body {
-    background-color: #09090b;
-    color: #f4f4f5;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    background-color: #090a0d;
+    color: #f3f4f6;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", "Helvetica Neue", sans-serif;
     margin: 0;
     padding: 0;
     overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    letter-spacing: -0.011em;
   }
 
   * {
@@ -28,49 +36,105 @@
   }
 }
 
-/* Custom Scrollbar for Obsidian Studio */
+/* Tabular numbers for clean, jitter-free timestamps & metrics */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Custom Minimal Scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #09090b;
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #27272a;
+  background: #23262f;
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #3f3f46;
+  background: #363a45;
 }
 
-/* Glassmorphism helpers */
-.glass-panel {
-  background: rgba(18, 18, 21, 0.85);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+/* Hide scrollbar for clean horizontal chip lists */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Hairline Glass and Surfaces */
+.surface-canvas {
+  background-color: #090a0d;
+}
+
+.surface-card {
+  background-color: #111317;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.surface-card-hover {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.surface-card-hover:hover {
+  border-color: rgba(255, 255, 255, 0.22);
+  box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.7), 0 0 20px -5px rgba(255, 255, 255, 0.04);
+}
+
+.glass-nav {
+  background: rgba(9, 10, 13, 0.85);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
 }
 
 .glass-dropdown {
-  background: rgba(24, 24, 29, 0.95);
+  background: rgba(17, 19, 23, 0.95);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(245, 158, 11, 0.2);
-  box-shadow: 0 20px 40px -8px rgba(0, 0, 0, 0.8), 0 0 20px -5px rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.8), 0 0 20px -5px rgba(255, 255, 255, 0.06);
 }
 
-/* Spinner Animation with Sunset Amber Glow */
+/* Tactile button micro-feel */
+.tactile-btn {
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.tactile-btn:active {
+  transform: scale(0.97);
+}
+
+/* Ambient Backlight for Cinema Player */
+.cinema-ambient {
+  position: relative;
+}
+
+.cinema-ambient::before {
+  content: "";
+  position: absolute;
+  inset: -20px;
+  background: radial-gradient(circle at 50% 40%, rgba(255, 255, 255, 0.04), transparent 70%);
+  filter: blur(40px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Refined Minimal Spinner */
 .spinner {
-  width: 24px;
-  height: 24px;
-  border: 3px solid rgba(245, 158, 11, 0.2);
-  border-top-color: #f59e0b;
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  border-top-color: #ffffff;
   border-radius: 9999px;
-  animation: spin 0.75s linear infinite;
+  animation: spin 0.7s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 
 @keyframes spin {

@@ -7,7 +7,7 @@ A YouTube-like platform where users can upload videos, watch videos, like, comme
 
 Tech Stack
 
-Frontend
+Frontend`
 
 React (Vite)
 

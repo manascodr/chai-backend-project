@@ -106,20 +106,20 @@ const CommentsSection = ({ videoId }) => {
   return (
     <section className="mt-8 flex flex-col gap-6" aria-label="Comments">
       {/* Comments Header */}
-      <div className="flex items-center gap-2">
-        <FiMessageSquare className="text-amber-400 text-lg" />
-        <h3 className="text-lg font-bold text-white tracking-tight m-0">
+      <div className="flex items-center gap-2 pb-1 border-b border-white/[0.06]">
+        <FiMessageSquare className="text-zinc-300 text-base" />
+        <h3 className="text-base font-semibold text-zinc-100 tracking-tight m-0">
           {comments.length} {comments.length === 1 ? "Discussion" : "Discussions"}
         </h3>
       </div>
 
       {/* Add New Comment Box */}
       <form className="flex items-start gap-3.5" onSubmit={handleSubmit(submitHandler)}>
-        <div className="w-9 h-9 rounded-full overflow-hidden shrink-0 border border-white/10 bg-zinc-900">
+        <div className="w-8 h-8 rounded-full overflow-hidden shrink-0 border border-white/[0.1] bg-[#181a20]">
           {currentUser?.avatar ? (
             <img className="w-full h-full object-cover" src={currentUser.avatar} alt="You" />
           ) : (
-            <div className="w-full h-full flex items-center justify-center bg-zinc-900 text-amber-400 text-xs font-bold">
+            <div className="w-full h-full flex items-center justify-center text-zinc-300 text-xs font-medium">
               <FiUser />
             </div>
           )}
@@ -127,8 +127,8 @@ const CommentsSection = ({ videoId }) => {
 
         <div className="flex-1 flex flex-col">
           <textarea
-            className="w-full bg-[#121215] text-zinc-100 placeholder-zinc-500 px-4 py-3 rounded-2xl border border-white/[0.08] focus:border-amber-500/60 focus:ring-2 focus:ring-amber-500/20 text-sm outline-none transition-all resize-none shadow-sm"
-            placeholder="Share your thoughts or feedback on this creation..."
+            className="w-full bg-[#111317] text-zinc-100 placeholder-zinc-500 px-4 py-2.5 rounded-xl border border-white/[0.08] focus:border-white/30 focus:ring-1 focus:ring-white/10 text-sm outline-none transition-all resize-none shadow-xs"
+            placeholder="Share your perspective on this creation..."
             rows={isInputFocused || newCommentContent ? 3 : 1}
             onFocus={() => setIsInputFocused(true)}
             {...register("content", { required: true })}
@@ -136,10 +136,10 @@ const CommentsSection = ({ videoId }) => {
           />
 
           {(isInputFocused || newCommentContent) && (
-            <div className="flex justify-end gap-2.5 mt-2.5">
+            <div className="flex justify-end gap-2 mt-2.5">
               <button
                 type="button"
-                className="px-4 py-1.5 rounded-full text-xs font-semibold text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors cursor-pointer"
+                className="px-3.5 py-1.5 rounded-xl text-xs font-medium text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04] transition-colors cursor-pointer tactile-btn"
                 onClick={() => {
                   reset();
                   setIsInputFocused(false);
@@ -151,11 +151,11 @@ const CommentsSection = ({ videoId }) => {
 
               <button
                 type="submit"
-                className="inline-flex items-center gap-1.5 px-5 py-1.5 rounded-full text-xs font-bold bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-zinc-950 shadow-md shadow-amber-500/20 transition-all disabled:opacity-50 cursor-pointer"
+                className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-xl text-xs font-medium bg-white hover:bg-zinc-200 text-zinc-950 shadow-xs transition-all disabled:opacity-50 cursor-pointer tactile-btn"
                 disabled={!newCommentContent.trim() || submitting}
               >
                 <FiSend className="text-xs" />
-                {submitting ? "Posting..." : "Comment"}
+                <span>{submitting ? "Posting..." : "Comment"}</span>
               </button>
             </div>
           )}
@@ -163,7 +163,7 @@ const CommentsSection = ({ videoId }) => {
       </form>
 
       {/* Comments List */}
-      <div className="flex flex-col gap-5 mt-2">
+      <div className="flex flex-col gap-5 mt-1">
         {loading && (
           <div className="flex justify-center py-6">
             <div className="spinner" />
@@ -171,14 +171,14 @@ const CommentsSection = ({ videoId }) => {
         )}
 
         {!loading && error && (
-          <div className="p-4 rounded-xl bg-[#121215] border border-amber-500/20 text-center">
-            <p className="text-sm text-amber-400 m-0">{error}</p>
+          <div className="p-3.5 rounded-xl bg-[#111317] border border-white/[0.08] text-center">
+            <p className="text-xs text-zinc-300 m-0">{error}</p>
           </div>
         )}
 
         {!loading && !error && comments.length === 0 && (
-          <p className="text-sm text-zinc-500 text-center py-4">
-            No discussions yet. Be the first to share your thoughts!
+          <p className="text-xs text-zinc-500 text-center py-6">
+            No discussions yet. Be the first to start a conversation.
           </p>
         )}
 
@@ -192,7 +192,7 @@ const CommentsSection = ({ videoId }) => {
 
             return (
               <div key={comment._id} className="flex items-start gap-3.5 group">
-                <div className="w-9 h-9 rounded-full overflow-hidden shrink-0 border border-white/10 bg-zinc-900">
+                <div className="w-8 h-8 rounded-full overflow-hidden shrink-0 border border-white/[0.1] bg-[#181a20]">
                   {comment.owner?.avatar ? (
                     <img
                       className="w-full h-full object-cover"
@@ -200,7 +200,7 @@ const CommentsSection = ({ videoId }) => {
                       alt={comment.owner?.fullname || "User"}
                     />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-zinc-900 text-amber-400 text-xs font-bold">
+                    <div className="w-full h-full flex items-center justify-center text-zinc-300 text-xs font-medium">
                       <FiUser />
                     </div>
                   )}
@@ -208,9 +208,9 @@ const CommentsSection = ({ videoId }) => {
 
                 <div className="flex-1 flex flex-col min-w-0">
                   {editingCommentId === comment._id ? (
-                    <div className="flex flex-col gap-2 bg-[#121215] p-3.5 rounded-2xl border border-white/10 shadow-sm">
+                    <div className="flex flex-col gap-2 bg-[#111317] p-3 rounded-xl border border-white/[0.08] shadow-xs">
                       <textarea
-                        className="w-full bg-[#09090b] text-zinc-100 px-3 py-2 rounded-xl border border-white/10 text-sm outline-none resize-none"
+                        className="w-full bg-[#090a0d] text-zinc-100 px-3 py-2 rounded-lg border border-white/[0.08] text-sm outline-none resize-none"
                         value={editContent}
                         onChange={(e) => setEditContent(e.target.value)}
                         rows={2}
@@ -218,16 +218,15 @@ const CommentsSection = ({ videoId }) => {
                       <div className="flex justify-end gap-2">
                         <button
                           type="button"
-                          className="px-3 py-1 rounded-full text-xs font-medium text-zinc-400 hover:text-white"
+                          className="px-3 py-1 text-xs text-zinc-400 hover:text-zinc-200"
                           onClick={cancelEdit}
                         >
                           Cancel
                         </button>
                         <button
                           type="button"
-                          className="px-4 py-1 rounded-full text-xs font-bold bg-amber-500 hover:bg-amber-400 text-zinc-950"
+                          className="px-3 py-1 text-xs font-medium bg-white text-zinc-950 rounded-lg tactile-btn"
                           onClick={() => saveEdit(comment._id)}
-                          disabled={!editContent.trim()}
                         >
                           Save
                         </button>
@@ -236,35 +235,31 @@ const CommentsSection = ({ videoId }) => {
                   ) : (
                     <>
                       <div className="flex items-center gap-2">
-                        <span className="text-xs sm:text-sm font-bold text-zinc-200">
-                          @{comment.owner?.username || "user"}
+                        <span className="text-xs font-semibold text-zinc-200">
+                          {comment.owner?.fullname || comment.owner?.username || "Creator"}
                         </span>
-                        <span className="text-xs text-zinc-500">
+                        <span className="text-[11px] text-zinc-500 tabular-nums">
                           {formatTimeAgo(comment.createdAt)}
                         </span>
                       </div>
-
-                      <p className="text-zinc-300 text-sm leading-relaxed whitespace-pre-wrap mt-0.5 mb-1">
+                      <p className="text-sm text-zinc-300 mt-1 leading-relaxed whitespace-pre-wrap font-normal m-0">
                         {comment.content}
                       </p>
-
                       {isOwner && (
-                        <div className="flex items-center gap-3 mt-1 text-xs text-zinc-500 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div className="flex items-center gap-3 mt-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
                           <button
                             type="button"
-                            className="hover:text-amber-400 inline-flex items-center gap-1 cursor-pointer"
+                            className="inline-flex items-center gap-1 text-[11px] text-zinc-500 hover:text-zinc-300 transition-colors cursor-pointer"
                             onClick={() => startEdit(comment)}
-                            title="Edit comment"
                           >
-                            <FiEdit2 /> Edit
+                            <FiEdit2 className="text-[10px]" /> Edit
                           </button>
                           <button
                             type="button"
-                            className="hover:text-rose-400 inline-flex items-center gap-1 cursor-pointer"
+                            className="inline-flex items-center gap-1 text-[11px] text-zinc-500 hover:text-rose-400 transition-colors cursor-pointer"
                             onClick={deleteHandler(comment._id)}
-                            title="Delete comment"
                           >
-                            <FiTrash2 /> Delete
+                            <FiTrash2 className="text-[10px]" /> Delete
                           </button>
                         </div>
                       )}
@@ -280,7 +275,3 @@ const CommentsSection = ({ videoId }) => {
 };
 
 export default CommentsSection;
-
-
-
-

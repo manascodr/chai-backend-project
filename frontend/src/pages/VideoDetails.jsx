@@ -18,6 +18,8 @@ import {
   FiChevronDown,
   FiChevronUp,
 } from "react-icons/fi";
+import { FaUsers } from "react-icons/fa";
+import { set } from "react-hook-form";
 
 /**
  * VideoDetails (Watch Page) Component (Obsidian & Sunset Amber Studio Edition)
@@ -79,6 +81,7 @@ const VideoDetails = () => {
       setLikesCount((prev) => (isNowLiked ? prev + 1 : Math.max(0, prev - 1)));
     } catch (err) {
       toast.error(err?.response?.data?.message || "Failed to update like status");
+      setLiked((prev) => !prev); // Revert optimistic update on error
     } finally {
       setLiking(false);
     }
@@ -129,9 +132,9 @@ const VideoDetails = () => {
   if (error || !video) {
     return (
       <div className="max-w-xl mx-auto px-4 py-20 text-center flex flex-col items-center">
-        <p className="text-xl font-bold text-amber-400 mb-2">Unable to load video</p>
+        <p className="text-xl font-semibold text-white mb-2">Unable to load video</p>
         <p className="text-sm text-zinc-400 mb-6">{error || "The requested video could not be found."}</p>
-        <Link to="/" className="inline-flex items-center px-6 py-2.5 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-zinc-950 font-bold text-sm shadow-md shadow-amber-500/25">
+        <Link to="/" className="inline-flex items-center px-6 py-2.5 rounded-xl bg-white hover:bg-zinc-200 text-zinc-950 font-medium text-sm shadow-xs transition-all tactile-btn">
           Back to Home
         </Link>
       </div>
@@ -139,23 +142,25 @@ const VideoDetails = () => {
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 flex flex-col gap-5">
-      {/* 16:9 Cinema Player */}
-      <section className="w-full rounded-2xl overflow-hidden bg-black border border-white/[0.08] shadow-2xl shadow-black/80">
-        <VideoPlayer
-          videoFile={video.videoFile}
-          thumbnail={video.thumbnail}
-          title={video.title}
-        />
-      </section>
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 flex flex-col gap-6">
+      {/* 16:9 Cinema Player with Ambient Backlight */}
+      <div className="cinema-ambient">
+        <section className="relative w-full rounded-2xl overflow-hidden bg-black border border-white/[0.08] shadow-2xl shadow-black/90">
+          <VideoPlayer
+            videoFile={video.videoFile}
+            thumbnail={video.thumbnail}
+            title={video.title}
+          />
+        </section>
+      </div>
 
       {/* Video Title */}
-      <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight leading-snug m-0">
+      <h1 className="text-xl sm:text-2xl font-semibold text-zinc-100 tracking-tight leading-snug m-0">
         {video.title}
       </h1>
 
-      {/* Channel Info & Action Buttons Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/[0.08]">
+      {/* Channel Bar & Unified Action Dock */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/[0.07]">
         {/* Left: Channel Info & Subscribe */}
         <div className="flex items-center gap-3.5">
           <Link to={`/c/${channelHandle}`} className="shrink-0 no-underline">
@@ -163,30 +168,30 @@ const VideoDetails = () => {
               <img
                 src={channelAvatar}
                 alt={channelName}
-                className="w-11 h-11 rounded-full object-cover border border-white/10 hover:border-amber-500 transition-transform hover:scale-105"
+                className="w-10 h-10 rounded-full object-cover border border-white/[0.1] hover:border-white/40 transition-all hover:scale-105"
               />
             ) : (
-              <div className="w-11 h-11 rounded-full bg-zinc-900 flex items-center justify-center text-amber-400 font-bold border border-white/10">
+              <div className="w-10 h-10 rounded-full bg-[#181a20] flex items-center justify-center text-zinc-300 font-medium border border-white/[0.08]">
                 <FiUser />
               </div>
             )}
           </Link>
 
           <div className="flex flex-col">
-            <Link to={`/c/${channelHandle}`} className="font-bold text-white text-base hover:text-amber-400 transition-colors no-underline">
+            <Link to={`/c/${channelHandle}`} className="font-semibold text-zinc-100 text-sm sm:text-base hover:text-white transition-colors no-underline">
               {channelName}
             </Link>
-            <span className="text-xs text-zinc-400">
+            <span className="text-xs text-zinc-400 tabular-nums">
               {formatSubscriberCount(subscriberCount)} subscribers
             </span>
           </div>
 
           <button
             type="button"
-            className={`ml-2 px-5 py-2 rounded-full text-sm font-semibold transition-all cursor-pointer ${
+            className={`ml-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition-all cursor-pointer tactile-btn ${
               subscribed
-                ? "bg-zinc-900 hover:bg-zinc-800 text-zinc-300 border border-white/10 flex items-center gap-1.5"
-                : "bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-zinc-950 font-bold shadow-md shadow-amber-500/25 hover:scale-105"
+                ? "bg-white/[0.06] hover:bg-white/[0.1] text-zinc-300 border border-white/[0.08] flex items-center gap-1.5"
+                : "bg-white hover:bg-zinc-200 text-zinc-950 shadow-xs"
             }`}
             onClick={handleSubscribe}
             disabled={subscribing}
@@ -195,7 +200,7 @@ const VideoDetails = () => {
               "Updating..."
             ) : subscribed ? (
               <>
-                <FiCheck /> Subscribed
+                <FiCheck className="text-sm" /> Subscribed
               </>
             ) : (
               "Subscribe"
@@ -203,60 +208,76 @@ const VideoDetails = () => {
           </button>
         </div>
 
-        {/* Right: Engagement Actions (Like, Share, Save) */}
-        <div className="flex items-center gap-2.5 flex-wrap">
+        {/* Right: Unified Action Dock */}
+        <div className="flex items-center gap-2 flex-wrap">
+          {/* Like Button */}
           <button
             type="button"
-            className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border transition-all cursor-pointer ${
+            className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-medium border transition-all cursor-pointer tactile-btn ${
               liked
-                ? "bg-amber-500/15 border-amber-500/40 text-amber-400 shadow-sm shadow-amber-500/20"
-                : "bg-[#141418] hover:bg-[#1c1c22] text-zinc-200 border-white/10 hover:border-white/20"
+                ? "bg-white text-zinc-950 border-white shadow-xs"
+                : "bg-[#111317] hover:bg-[#181a20] text-zinc-300 hover:text-zinc-100 border-white/[0.08] hover:border-white/[0.14]"
             }`}
             onClick={likeHandler}
             disabled={liking}
             title={liked ? "Unlike video" : "Like video"}
           >
-            <FiThumbsUp className="text-base" />
-            <span>{likesCount}</span>
+            <FiThumbsUp className="text-sm" />
+            <span className="tabular-nums">{likesCount}</span>
           </button>
 
+          {/* Share Button */}
           <button
             type="button"
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#141418] hover:bg-[#1c1c22] text-zinc-200 text-sm font-medium border border-white/10 hover:border-white/20 transition-all cursor-pointer"
+            className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#111317] hover:bg-[#181a20] text-zinc-300 hover:text-zinc-100 text-xs sm:text-sm font-medium border border-white/[0.08] hover:border-white/[0.14] transition-all cursor-pointer tactile-btn"
             onClick={handleShare}
-            title="Share link"
+            title="Copy link to clipboard"
           >
-            <FiShare2 className="text-base" />
+            <FiShare2 className="text-sm" />
             <span>Share</span>
           </button>
 
+          {/* Watch Party Button */}
+          <button
+            type="button"
+            className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#111317] hover:bg-[#181a20] text-zinc-300 hover:text-white border border-white/[0.08] hover:border-white/[0.2] text-xs sm:text-sm font-medium transition-all cursor-pointer tactile-btn"
+            onClick={() => {
+              const partyRoomId = `party_${videoId}_${Math.random().toString(36).substring(2, 8)}`;
+              navigate(`/watch-party/${partyRoomId}?v=${videoId}`);
+            }}
+            title="Start a synchronized Watch Party"
+          >
+            <FaUsers className="text-sm" />
+            <span>Watch Party</span>
+          </button>
+
+          {/* Playlist Save */}
           <SaveToPlaylist videoId={videoId} />
         </div>
       </div>
 
-      {/* Expandable Video Description Box */}
+      {/* Expandable Editorial Description Box */}
       <div
-        className="bg-[#121215] hover:bg-[#16161a] border border-white/[0.08] hover:border-white/15 rounded-2xl p-4 sm:p-5 flex flex-col gap-2.5 transition-all text-sm cursor-pointer shadow-sm"
+        className="bg-[#111317] hover:bg-[#15171d] border border-white/[0.07] hover:border-white/[0.12] rounded-2xl p-4 sm:p-5 flex flex-col gap-3 transition-all cursor-pointer shadow-xs"
         onClick={() => !descExpanded && setDescExpanded(true)}
       >
-        <div className="flex items-center gap-3 text-xs font-bold text-zinc-300">
-          <span className="flex items-center gap-1.5 text-amber-400">
-            <FiEye /> {formatViews(video.views)}
+        <div className="flex items-center gap-3 text-xs font-medium text-zinc-300 tabular-nums">
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/[0.04] border border-white/[0.06] text-zinc-200">
+            <FiEye className="text-xs" /> {formatViews(video.views)}
           </span>
-          <span className="opacity-40">•</span>
-          <span className="flex items-center gap-1.5 text-zinc-400">
-            <FiClock /> {video.createdAt ? formatTimeAgo(video.createdAt) : "Recently"}
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/[0.04] border border-white/[0.06] text-zinc-400">
+            <FiClock className="text-xs" /> {video.createdAt ? formatTimeAgo(video.createdAt) : "Recently"}
           </span>
         </div>
 
-        <p className={`text-zinc-300 text-sm leading-relaxed whitespace-pre-wrap m-0 ${!descExpanded ? "line-clamp-3" : ""}`}>
-          {video.description || "No description provided."}
+        <p className={`text-zinc-300 text-sm leading-relaxed whitespace-pre-wrap m-0 font-normal ${!descExpanded ? "line-clamp-3" : ""}`}>
+          {video.description || "No description provided for this creation."}
         </p>
 
         {video.description && video.description.length > 120 && (
           <button
             type="button"
-            className="self-start inline-flex items-center gap-1 text-xs font-bold text-amber-400 hover:text-amber-300 mt-1 cursor-pointer"
+            className="self-start inline-flex items-center gap-1 text-xs font-medium text-zinc-300 hover:text-white mt-0.5 cursor-pointer tactile-btn"
             onClick={(e) => {
               e.stopPropagation();
               setDescExpanded((prev) => !prev);
@@ -265,7 +286,7 @@ const VideoDetails = () => {
             {descExpanded ? (
               <>Show less <FiChevronUp /></>
             ) : (
-              <>Show more <FiChevronDown /></>
+              <>Read more <FiChevronDown /></>
             )}
           </button>
         )}

@@ -8,14 +8,14 @@ import { FiRefreshCw, FiFilm, FiX, FiCompass } from "react-icons/fi";
  * Designer Category Filter Chips
  */
 const CATEGORIES = [
-  { id: "all", label: "All Creations" },
-  { id: "latest", label: "✨ New Releases", sort: "new" },
-  { id: "popular", label: "🔥 Top Trending", sort: "views" },
-  { id: "music", label: "Music & Audio", query: "music" },
-  { id: "gaming", label: "Gaming & Streams", query: "gaming" },
-  { id: "tech", label: "Tech & Dev", query: "tech" },
-  { id: "podcasts", label: "Podcasts & Talks", query: "podcast" },
-  { id: "tutorials", label: "Tutorials & Masterclasses", query: "tutorial" },
+  { id: "all", label: "All Works" },
+  { id: "latest", label: "Recent", sort: "new" },
+  { id: "popular", label: "Trending", sort: "views" },
+  { id: "music", label: "Audio & Music", query: "music" },
+  { id: "tech", label: "Technology", query: "tech" },
+  { id: "podcasts", label: "Interviews & Talks", query: "podcast" },
+  { id: "tutorials", label: "Masterclasses", query: "tutorial" },
+  { id: "gaming", label: "Gaming", query: "gaming" },
 ];
 
 /**
@@ -23,26 +23,25 @@ const CATEGORIES = [
  */
 const VideoCardSkeleton = () => (
   <div className="flex flex-col gap-3 animate-pulse">
-    <div className="w-full aspect-video rounded-2xl bg-[#121215] border border-white/5" />
-    <div className="flex items-start gap-3 mt-1.5 px-0.5">
-      <div className="w-9 h-9 rounded-full bg-[#18181d] shrink-0" />
-      <div className="flex-1 flex flex-col gap-2">
-        <div className="h-4 bg-[#18181d] rounded-md w-11/12" />
-        <div className="h-3 bg-[#18181d] rounded-md w-1/2" />
-        <div className="h-2.5 bg-[#18181d] rounded-md w-1/3" />
+    <div className="w-full aspect-video rounded-2xl bg-[#111317] border border-white/[0.06]" />
+    <div className="flex items-start gap-3 mt-1 px-0.5">
+      <div className="w-8 h-8 rounded-full bg-[#181a20] shrink-0" />
+      <div className="flex-1 flex flex-col gap-2 pt-0.5">
+        <div className="h-3.5 bg-[#181a20] rounded-md w-11/12" />
+        <div className="h-3 bg-[#181a20] rounded-md w-1/2" />
       </div>
     </div>
   </div>
 );
 
 /**
- * Home Feed Component (Obsidian & Sunset Amber Studio Edition)
+ * Home Feed Component
  * 
- * Designer studio video discovery portal:
- * 1. Sticky frosted obsidian category chips bar with sunset amber highlights.
- * 2. Responsive 16:9 thumbnail grid with exactly 3 videos per row maximum (`grid-cols-1 sm:grid-cols-2 lg:grid-cols-3`).
- * 3. Search query banner with 1-click dismissal.
- * 4. Pagination / Load more.
+ * Editorial gallery presentation:
+ * 1. Minimal frosted category chips.
+ * 2. Spacious 3-column gallery grid (`max-w-7xl`).
+ * 3. Search query status banner.
+ * 4. Human-crafted empty and loading states.
  */
 const Home = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -94,7 +93,7 @@ const Home = () => {
         setHasMore(nextVideos.length >= limit);
       }
     } catch (err) {
-      setError(err?.response?.data?.message || "Failed to load videos");
+      setError(err?.response?.data?.message || "Failed to load creations");
     } finally {
       setLoading(false);
       setLoadingMore(false);
@@ -127,9 +126,9 @@ const Home = () => {
 
   return (
     <section className="w-full flex flex-col min-h-full">
-      {/* Horizontal Category Chips Bar (Sticky Frosted Obsidian) */}
-      <div className="sticky top-[64px] z-30 bg-[#09090b]/90 backdrop-blur-2xl px-4 sm:px-6 py-3 border-b border-white/[0.08] mb-6">
-        <div className="flex items-center gap-2.5 overflow-x-auto no-scrollbar pb-0.5">
+      {/* Category Filter Chips Bar */}
+      <div className="sticky top-[64px] z-30 bg-[#090a0d]/90 backdrop-blur-2xl px-4 sm:px-6 py-2.5 border-b border-white/[0.07] mb-6">
+        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar max-w-7xl mx-auto">
           {CATEGORIES.map((cat) => {
             const isActive =
               (cat.id === "all" && !q && sort === "new" && activeCategory === "all") ||
@@ -141,10 +140,10 @@ const Home = () => {
               <button
                 key={cat.id}
                 type="button"
-                className={`px-4 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all duration-200 cursor-pointer ${
+                className={`px-3.5 py-1.5 rounded-full text-xs whitespace-nowrap transition-all duration-150 cursor-pointer tactile-btn ${
                   isActive
-                    ? "bg-gradient-to-r from-amber-500 to-amber-600 text-zinc-950 shadow-sm shadow-amber-500/30 font-bold"
-                    : "bg-[#141418] text-zinc-300 hover:text-white hover:bg-[#1c1c22] border border-white/10 hover:border-white/20"
+                    ? "bg-white text-zinc-950 font-medium shadow-xs"
+                    : "text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04] border border-white/[0.07]"
                 }`}
                 onClick={() => handleCategorySelect(cat)}
               >
@@ -155,28 +154,30 @@ const Home = () => {
         </div>
       </div>
 
-      {/* Active Search Filter Banner */}
+      {/* Active Search Filter Status */}
       {q && (
-        <div className="flex items-center justify-between gap-4 mx-4 sm:mx-6 mb-6 px-4 py-3 rounded-2xl bg-[#121215] border border-amber-500/20 shadow-sm">
-          <span className="text-sm text-zinc-300">
-            Filtered results for <strong className="text-amber-400">“{q}”</strong>
-          </span>
-          <button
-            type="button"
-            className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold rounded-full bg-zinc-900 hover:bg-amber-500/20 text-zinc-400 hover:text-amber-400 border border-white/10 transition-colors cursor-pointer"
-            onClick={handleClearSearch}
-            title="Clear filter"
-          >
-            <FiX /> Clear filter
-          </button>
+        <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 mb-6">
+          <div className="flex items-center justify-between gap-4 px-4 py-2.5 rounded-xl bg-[#111317] border border-white/[0.08]">
+            <span className="text-xs sm:text-sm text-zinc-300">
+              Showing results for <span className="text-white font-medium">“{q}”</span>
+            </span>
+            <button
+              type="button"
+              className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-lg text-zinc-400 hover:text-zinc-100 hover:bg-white/[0.06] transition-colors cursor-pointer"
+              onClick={handleClearSearch}
+              title="Reset query"
+            >
+              <FiX className="text-sm" /> Clear
+            </button>
+          </div>
         </div>
       )}
 
-      {/* Video Content Grid (Strictly 3 videos per row maximum) */}
-      <div className="px-4 sm:px-6 pb-12">
+      {/* Video Content Grid */}
+      <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 pb-16">
         {/* Loading Skeletons */}
         {loading && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-8 gap-x-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-10 gap-x-6">
             {Array.from({ length: 6 }).map((_, idx) => (
               <VideoCardSkeleton key={idx} />
             ))}
@@ -185,54 +186,56 @@ const Home = () => {
 
         {/* Error State */}
         {!loading && error && (
-          <div className="flex flex-col items-center justify-center py-20 text-center px-4 bg-[#121215] rounded-3xl border border-amber-500/20 max-w-xl mx-auto my-8">
-            <p className="text-lg font-bold text-amber-400 mb-1">Unable to load feed</p>
-            <p className="text-sm text-zinc-400 mb-6">{error}</p>
+          <div className="flex flex-col items-center justify-center py-20 text-center px-4 bg-[#111317] rounded-2xl border border-white/[0.08] max-w-lg mx-auto my-8">
+            <p className="text-base font-semibold text-white mb-1">Unable to load creations</p>
+            <p className="text-xs text-zinc-400 mb-5 max-w-sm">{error}</p>
             <button
-              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-zinc-950 font-bold text-sm shadow-md shadow-amber-500/25 transition-all cursor-pointer"
+              className="inline-flex items-center gap-2 px-5 py-2 rounded-xl bg-white hover:bg-zinc-200 text-zinc-950 font-medium text-xs shadow-xs transition-all cursor-pointer tactile-btn"
               onClick={() => loadPage(1)}
             >
-              <FiRefreshCw /> Retry
+              <FiRefreshCw className="text-xs" /> Try Again
             </button>
           </div>
         )}
 
         {/* Empty State */}
         {!loading && !error && videos.length === 0 && (
-          <div className="flex flex-col items-center justify-center py-24 text-center px-4 bg-[#121215] rounded-3xl border border-white/10 max-w-lg mx-auto my-8">
-            <FiFilm className="text-5xl text-amber-400/60 mb-4" />
-            <p className="text-lg font-bold text-zinc-100 mb-1">No videos found</p>
-            <p className="text-sm text-zinc-400 max-w-md mb-6">
+          <div className="flex flex-col items-center justify-center py-20 text-center px-4 bg-[#111317] rounded-2xl border border-white/[0.08] max-w-md mx-auto my-8">
+            <div className="w-12 h-12 rounded-2xl bg-white/[0.04] border border-white/[0.08] flex items-center justify-center text-zinc-400 mb-3">
+              <FiFilm className="text-xl" />
+            </div>
+            <p className="text-base font-semibold text-zinc-100 mb-1">No creations found</p>
+            <p className="text-xs text-zinc-400 max-w-xs mb-5">
               {q
-                ? `We couldn’t find any matches for “${q}”. Try a different keyword.`
-                : "No videos have been uploaded yet. Be the first creator to publish!"}
+                ? `No videos match “${q}”. Try a different search term or browse all works.`
+                : "No videos have been published yet. Be the first to share your work."}
             </p>
             {q ? (
               <button
-                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-zinc-950 font-bold text-sm shadow-md shadow-amber-500/25 transition-all cursor-pointer"
+                className="inline-flex items-center px-4 py-2 rounded-xl bg-white hover:bg-zinc-200 text-zinc-950 font-medium text-xs transition-all cursor-pointer tactile-btn"
                 onClick={handleClearSearch}
               >
-                View all creations
+                Clear Filter
               </button>
             ) : null}
           </div>
         )}
 
-        {/* Video Cards Grid (Strictly 3 videos per row maximum) */}
+        {/* Video Cards Grid */}
         {!loading && !error && videos.length > 0 && (
           <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-8 gap-x-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-10 gap-x-6">
               {videos.map((video) => (
                 <VideoCard key={video._id} video={video} />
               ))}
             </div>
 
             {/* Load More Button */}
-            <div className="mt-12 flex justify-center items-center">
+            <div className="mt-14 flex justify-center items-center">
               {hasMore ? (
                 <button
                   type="button"
-                  className="inline-flex items-center gap-2 px-8 py-3 rounded-full bg-[#141418] hover:bg-[#1c1c22] text-zinc-200 hover:text-white font-semibold text-sm border border-white/10 hover:border-amber-500/40 shadow-md transition-all cursor-pointer"
+                  className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[#111317] hover:bg-[#181a20] text-zinc-300 hover:text-zinc-100 font-medium text-xs border border-white/[0.08] hover:border-white/[0.15] transition-all cursor-pointer tactile-btn"
                   onClick={() => {
                     if (!loadingMore) loadPage(page + 1);
                   }}
@@ -240,15 +243,15 @@ const Home = () => {
                 >
                   {loadingMore ? (
                     <>
-                      <div className="spinner" style={{ width: "16px", height: "16px", borderWidth: "2px" }} />
-                      <span>Loading more...</span>
+                      <div className="spinner" style={{ width: "14px", height: "14px", borderWidth: "2px" }} />
+                      <span>Loading...</span>
                     </>
                   ) : (
-                    "Load more creations"
+                    "Load More"
                   )}
                 </button>
               ) : (
-                <p className="text-xs text-zinc-500 font-medium">You're all caught up ✨</p>
+                <p className="text-xs text-zinc-500 font-normal">All caught up</p>
               )}
             </div>
           </>
@@ -259,6 +262,18 @@ const Home = () => {
 };
 
 export default Home;
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -65,13 +65,13 @@ const PlaylistsPage = () => {
       </header>
 
       {/* Create Playlist Form Card */}
-      <section className="bg-[#121215] border border-white/[0.08] rounded-3xl p-6 sm:p-7 shadow-xl flex flex-col gap-5 backdrop-blur-xl">
+      <section className="bg-[#111317] border border-white/[0.07] rounded-2xl p-6 shadow-xs flex flex-col gap-4">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 text-xl shrink-0">
+          <div className="w-9 h-9 rounded-xl bg-white/[0.06] border border-white/[0.1] flex items-center justify-center text-white text-lg shrink-0">
             <FiFolderPlus />
           </div>
           <div>
-            <h2 className="text-base font-bold text-white tracking-tight m-0">New Collection</h2>
+            <h2 className="text-sm font-semibold text-white tracking-tight m-0">New Collection</h2>
             <p className="text-xs text-zinc-400 m-0">Group creations into custom curated playlists.</p>
           </div>
         </div>
@@ -80,14 +80,14 @@ const PlaylistsPage = () => {
           <div className="flex flex-col sm:flex-row gap-3">
             <input
               id="playlistName"
-              className="flex-1 bg-[#09090b] text-white px-4 py-3 rounded-xl border border-white/10 focus:border-amber-500/60 focus:ring-2 focus:ring-amber-500/20 text-sm outline-none transition-all placeholder-zinc-500"
+              className="flex-1 bg-[#090a0d] text-white px-4 py-2.5 rounded-xl border border-white/[0.08] focus:border-white/30 focus:ring-1 focus:ring-white/10 text-sm outline-none transition-all placeholder-zinc-500"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="e.g. Masterclass Series, Electronic Audio, Tech Insights..."
+              placeholder="e.g. Masterclass Series, Electronic Audio, Architecture..."
               disabled={creating}
             />
             <button
-              className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-zinc-950 font-bold text-sm shadow-md shadow-amber-500/25 transition-all disabled:opacity-50 cursor-pointer shrink-0"
+              className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-white hover:bg-zinc-200 text-zinc-950 font-medium text-xs sm:text-sm shadow-xs transition-all disabled:opacity-50 cursor-pointer shrink-0 tactile-btn"
               type="submit"
               disabled={creating || !name.trim()}
             >
@@ -97,11 +97,11 @@ const PlaylistsPage = () => {
         </form>
       </section>
 
-      {/* Playlists Grid (3 columns max) */}
+      {/* Playlists Grid */}
       <section className="flex flex-col gap-4">
         <div className="flex items-center gap-2">
-          <h2 className="text-lg font-bold text-white tracking-tight m-0">Your Playlists</h2>
-          <span className="text-sm font-semibold text-zinc-500">({playlists.length})</span>
+          <h2 className="text-base font-semibold text-white tracking-tight m-0">Your Collections</h2>
+          <span className="text-xs text-zinc-500 tabular-nums">({playlists.length})</span>
         </div>
 
         {loading && (
@@ -111,17 +111,17 @@ const PlaylistsPage = () => {
         )}
 
         {error && !loading && (
-          <div className="p-6 rounded-2xl bg-[#121215] border border-amber-500/20 text-center">
-            <p className="text-base font-bold text-amber-400 mb-1">Error loading playlists</p>
-            <p className="text-sm text-zinc-400 m-0">{error}</p>
+          <div className="p-5 rounded-2xl bg-[#111317] border border-white/[0.08] text-center">
+            <p className="text-sm font-semibold text-white mb-1">Error loading collections</p>
+            <p className="text-xs text-zinc-400 m-0">{error}</p>
           </div>
         )}
 
         {!loading && !error && playlists.length === 0 && (
-          <div className="flex flex-col items-center justify-center py-16 bg-[#121215] rounded-3xl border border-white/10 text-center px-4">
-            <FiFolder className="text-4xl text-amber-400/60 mb-3 opacity-80" />
-            <p className="text-base font-bold text-zinc-200 mb-1">No collections created yet</p>
-            <p className="text-xs text-zinc-500 m-0">Create your first playlist above to start curating videos.</p>
+          <div className="flex flex-col items-center justify-center py-16 bg-[#111317] rounded-2xl border border-white/[0.08] text-center px-4">
+            <FiFolder className="text-3xl text-zinc-500 mb-3 opacity-80" />
+            <p className="text-base font-semibold text-zinc-200 mb-1">No collections created yet</p>
+            <p className="text-xs text-zinc-500 m-0">Create your first playlist above to start curating creations.</p>
           </div>
         )}
 
@@ -134,22 +134,22 @@ const PlaylistsPage = () => {
                 <Link
                   key={pl._id}
                   to={`/playlist/${pl._id}`}
-                  className="group flex flex-col p-5 rounded-3xl bg-[#121215] hover:bg-[#18181d] border border-white/[0.08] hover:border-amber-500/30 shadow-sm transition-all no-underline"
+                  className="group flex flex-col p-5 rounded-2xl bg-[#111317] hover:bg-[#16181f] border border-white/[0.07] hover:border-white/[0.18] shadow-xs transition-all no-underline"
                 >
                   <div className="flex items-center justify-between mb-4">
-                    <div className="w-12 h-12 rounded-2xl bg-zinc-900 group-hover:bg-amber-500/15 border border-white/10 group-hover:border-amber-500/30 flex items-center justify-center text-amber-400 text-2xl transition-all">
+                    <div className="w-10 h-10 rounded-xl bg-white/[0.04] group-hover:bg-white/[0.08] border border-white/[0.08] flex items-center justify-center text-zinc-300 group-hover:text-white text-xl transition-all">
                       <FiFolder />
                     </div>
-                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-zinc-900 text-zinc-300 border border-white/10 group-hover:border-amber-500/30 group-hover:text-amber-400 transition-colors">
-                      <FiFilm className="text-amber-400" /> {videoCount}
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-white/[0.04] text-zinc-300 border border-white/[0.08] tabular-nums">
+                      <FiFilm className="text-zinc-400" /> {videoCount}
                     </span>
                   </div>
 
-                  <h3 className="text-base font-bold text-white group-hover:text-amber-400 transition-colors truncate m-0 mb-1" title={pl.name}>
+                  <h3 className="text-sm font-medium text-zinc-100 group-hover:text-white transition-colors truncate m-0 mb-1" title={pl.name}>
                     {pl.name}
                   </h3>
-                  <span className="text-xs text-zinc-400">
-                    {videoCount} {videoCount === 1 ? "video" : "videos"} • Open playlist
+                  <span className="text-xs text-zinc-500">
+                    {videoCount} {videoCount === 1 ? "creation" : "creations"}
                   </span>
                 </Link>
               );

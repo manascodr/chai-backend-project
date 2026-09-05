@@ -13,7 +13,7 @@ const AppLayout = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#09090b] text-[#f4f4f5] font-sans">
+    <div className="flex flex-col min-h-screen bg-[#090a0d] text-zinc-100">
       {/* Top Navigation */}
       <Navbar onToggleMenu={() => setMobileMenuOpen((prev) => !prev)} />
 
@@ -23,7 +23,7 @@ const AppLayout = () => {
           isOpen={mobileMenuOpen}
           onClose={() => setMobileMenuOpen(false)}
         />
-        <main className="flex-1 min-w-0 bg-[#09090b]">
+        <main className="flex-1 min-w-0 bg-[#090a0d]">
           <Outlet />
         </main>
       </div>
