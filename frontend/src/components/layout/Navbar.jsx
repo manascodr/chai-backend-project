@@ -12,6 +12,7 @@ import {
   FiLogOut,
   FiUser,
   FiCommand,
+  FiLogIn,
 } from "react-icons/fi";
 
 /**
@@ -152,7 +153,7 @@ const Navbar = ({ onToggleMenu }) => {
         </form>
       </div>
 
-      {/* Right: Actions (Upload, Logout, Avatar) */}
+      {/* Right: Actions (Upload, Logout/SignIn, Avatar) */}
       <div className="flex items-center gap-2.5">
         <Link
           to="/upload-video"
@@ -162,42 +163,51 @@ const Navbar = ({ onToggleMenu }) => {
           <span>Upload</span>
         </Link>
 
-        <button
-          onClick={handleLogout}
-          title="Sign out"
-          className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-zinc-400 hover:text-zinc-100 hover:bg-white/[0.06] text-xs sm:text-sm font-medium transition-colors cursor-pointer tactile-btn"
-        >
-          <FiLogOut className="text-sm" />
-          <span>Logout</span>
-        </button>
+        {user ? (
+          <>
+            <button
+              onClick={handleLogout}
+              title="Sign out"
+              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-zinc-400 hover:text-zinc-100 hover:bg-white/[0.06] text-xs sm:text-sm font-medium transition-colors cursor-pointer tactile-btn"
+            >
+              <FiLogOut className="text-sm" />
+              <span>Logout</span>
+            </button>
 
-        {channelPath ? (
-          <Link
-            to={channelPath}
-            aria-label="Your channel"
-            title={`Profile: ${user?.fullname || user?.username || "Creator"}`}
-            className="relative w-8 h-8 rounded-full overflow-hidden border border-white/[0.12] hover:border-white/40 transition-all hover:scale-105 flex items-center justify-center bg-zinc-900 shrink-0 shadow-xs"
-          >
-            {user?.avatar ? (
-              <img
-                className="w-full h-full object-cover"
-                src={user.avatar}
-                alt={user?.fullname || user?.username || "User"}
-                loading="lazy"
-              />
-            ) : (
-              <div className="w-full h-full bg-white/[0.08] text-zinc-300 flex items-center justify-center text-xs font-medium">
-                <FiUser />
-              </div>
-            )}
-          </Link>
+            <Link
+              to={channelPath}
+              aria-label="Your channel"
+              title={`Profile: ${user?.fullname || user?.username || "Creator"}`}
+              className="relative w-8 h-8 rounded-full overflow-hidden border border-white/[0.12] hover:border-white/40 transition-all hover:scale-105 flex items-center justify-center bg-zinc-900 shrink-0 shadow-xs"
+            >
+              {user?.avatar ? (
+                <img
+                  className="w-full h-full object-cover"
+                  src={user.avatar}
+                  alt={user?.fullname || user?.username || "User"}
+                  loading="lazy"
+                />
+              ) : (
+                <div className="w-full h-full bg-white/[0.08] text-zinc-300 flex items-center justify-center text-xs font-medium">
+                  <FiUser />
+                </div>
+              )}
+            </Link>
+          </>
         ) : (
-          <Link
-            to="/profile-settings"
-            className="w-8 h-8 rounded-full bg-white/[0.08] text-zinc-300 flex items-center justify-center text-xs font-medium border border-white/[0.12]"
-          >
-            <FiUser />
-          </Link>
+          <>
+            <span className="hidden sm:inline-flex items-center px-2.5 py-1 rounded-xl text-xs font-semibold text-zinc-400 bg-white/[0.05] border border-white/[0.08] select-none">
+              Guest
+            </span>
+
+            <Link
+              to="/login"
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-zinc-950 font-bold text-xs sm:text-sm shadow-md shadow-amber-500/20 transition-all tactile-btn no-underline"
+            >
+              <FiLogIn className="text-sm stroke-[2.5]" />
+              <span>Sign In</span>
+            </Link>
+          </>
         )}
       </div>
     </header>

@@ -7,6 +7,7 @@ import { toggleSubscription } from "../api/subscriptions.auth";
 import VideoPlayer from "../components/video/VideoPlayer";
 import SaveToPlaylist from "../components/SaveToPlaylist";
 import { formatSubscriberCount, formatViews, formatTimeAgo } from "../utils/formatViews";
+import { useAuthStore } from "../stores/auth.store";
 import { toast } from "react-toastify";
 import {
   FiThumbsUp,
@@ -19,7 +20,6 @@ import {
   FiChevronUp,
 } from "react-icons/fi";
 import { FaUsers } from "react-icons/fa";
-import { set } from "react-hook-form";
 
 /**
  * VideoDetails (Watch Page) Component (Obsidian & Sunset Amber Studio Edition)
@@ -34,6 +34,8 @@ import { set } from "react-hook-form";
 const VideoDetails = () => {
   const { videoId } = useParams();
   const navigate = useNavigate();
+
+  const user = useAuthStore((s) => s.user);
 
   const [loading, setLoading] = useState(true);
   const [video, setVideo] = useState(null);
@@ -70,6 +72,11 @@ const VideoDetails = () => {
 
   // Like / Unlike video with optimistic UI update
   const likeHandler = async () => {
+    if (!user) {
+      toast.info("Please sign in to like videos");
+      navigate("/login", { state: { from: `/watch/${videoId}` } });
+      return;
+    }
     if (liking) return;
     setLiking(true);
 
@@ -89,6 +96,11 @@ const VideoDetails = () => {
 
   // Subscribe / Unsubscribe channel with optimistic count update
   const handleSubscribe = async () => {
+    if (!user) {
+      toast.info("Please sign in to subscribe to channels");
+      navigate("/login", { state: { from: `/watch/${videoId}` } });
+      return;
+    }
     if (!video?.owner?._id || subscribing) return;
     setSubscribing(true);
 
@@ -242,6 +254,11 @@ const VideoDetails = () => {
             type="button"
             className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#111317] hover:bg-[#181a20] text-zinc-300 hover:text-white border border-white/[0.08] hover:border-white/[0.2] text-xs sm:text-sm font-medium transition-all cursor-pointer tactile-btn"
             onClick={() => {
+              if (!user) {
+                toast.info("Please sign in to host a Watch Party");
+                navigate("/login", { state: { from: `/watch/${videoId}` } });
+                return;
+              }
               const partyRoomId = `party_${videoId}_${Math.random().toString(36).substring(2, 8)}`;
               navigate(`/watch-party/${partyRoomId}?v=${videoId}`);
             }}

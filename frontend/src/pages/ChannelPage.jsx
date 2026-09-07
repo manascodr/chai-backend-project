@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import ChannelHeader from "../components/ChannelHeader";
 import ChannelVideos from "../components/ChannelVideos";
 import { getUserChannelProfile } from "../api/user.api";
 import { toggleSubscription } from "../api/subscriptions.auth";
+import { useAuthStore } from "../stores/auth.store";
 
 const ChannelPageHeaderSkeleton = () => {
   return (
@@ -20,6 +21,8 @@ const ChannelPageHeaderSkeleton = () => {
 
 const ChannelPage = () => {
   const { username } = useParams();
+  const navigate = useNavigate();
+  const user = useAuthStore((s) => s.user);
 
   const [channel, setChannel] = useState(null);
   const [isSubscribed, setIsSubscribed] = useState(false);
@@ -59,6 +62,11 @@ const ChannelPage = () => {
   }, [username]);
 
   const handleToggleSubscribe = async () => {
+    if (!user) {
+      toast.info("Please sign in to subscribe to channels");
+      navigate("/login", { state: { from: `/c/${username}` } });
+      return;
+    }
     if (!channel?._id || isSubscribeLoading) return;
 
     try {

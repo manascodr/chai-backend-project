@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { register as registerUser } from "../api/auth.api";
+import { useAuthStore } from "../stores/auth.store";
 import {
   FiPlay,
   FiUser,
@@ -13,6 +14,7 @@ import {
   FiEyeOff,
   FiImage,
   FiUserPlus,
+  FiCompass,
 } from "react-icons/fi";
 
 /**
@@ -22,12 +24,20 @@ import {
  * 1. Collects Fullname, unique Username (channel handle), Email, Password, and Avatar.
  * 2. Provides interactive file dropzones with live thumbnail previews before submitting.
  * 3. Pre-validates user inputs with descriptive error indicators.
+ * 4. Continue as Guest support for unauthenticated visitors.
  */
 const Register = () => {
   const navigate = useNavigate();
+  const continueAsGuest = useAuthStore((s) => s.continueAsGuest);
   const [showPassword, setShowPassword] = useState(false);
   const [avatarPreview, setAvatarPreview] = useState(null);
   const [coverPreview, setCoverPreview] = useState(null);
+
+  const handleContinueAsGuest = () => {
+    continueAsGuest();
+    toast.info("Exploring VividStream as Guest");
+    navigate("/", { replace: true });
+  };
 
   const {
     register,
@@ -287,6 +297,23 @@ const Register = () => {
                 <FiUserPlus /> Create Account
               </>
             )}
+          </button>
+
+          <div className="relative flex items-center justify-center my-0.5">
+            <div className="border-t border-white/[0.08] w-full" />
+            <span className="bg-[#121215] px-3 text-xs text-zinc-500 uppercase tracking-wider font-semibold">
+              or
+            </span>
+            <div className="border-t border-white/[0.08] w-full" />
+          </div>
+
+          <button
+            type="button"
+            onClick={handleContinueAsGuest}
+            className="inline-flex items-center justify-center gap-2 w-full py-3 rounded-full bg-white/[0.05] hover:bg-white/[0.1] text-zinc-200 hover:text-white border border-white/[0.12] font-semibold text-sm transition-all cursor-pointer tactile-btn group"
+          >
+            <FiCompass className="text-amber-400 group-hover:rotate-45 transition-transform duration-200 text-base" />
+            <span>Continue as Guest</span>
           </button>
         </form>
 

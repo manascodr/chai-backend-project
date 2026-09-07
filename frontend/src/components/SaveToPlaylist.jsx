@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useAuthStore } from "../stores/auth.store";
 import {
   addToPlaylist,
   getMyPlaylists,
@@ -13,6 +15,8 @@ import { FiBookmark, FiCheck, FiX } from "react-icons/fi";
  * Floating popup modal to add/remove current video across user collections.
  */
 const SaveToPlaylist = ({ videoId, disabled = false }) => {
+  const user = useAuthStore((s) => s.user);
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [playlists, setPlaylists] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -97,7 +101,14 @@ const SaveToPlaylist = ({ videoId, disabled = false }) => {
       <button
         className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#111317] hover:bg-[#181a20] text-zinc-300 hover:text-zinc-100 text-xs sm:text-sm font-medium border border-white/[0.08] hover:border-white/[0.14] transition-all cursor-pointer tactile-btn"
         type="button"
-        onClick={() => setOpen((v) => !v)}
+        onClick={() => {
+          if (!user) {
+            toast.info("Please sign in to save videos to playlists");
+            navigate("/login", { state: { from: `/watch/${videoId}` } });
+            return;
+          }
+          setOpen((v) => !v);
+        }}
         aria-expanded={open}
         aria-controls="saveToPlaylistPanel"
         disabled={disabled}

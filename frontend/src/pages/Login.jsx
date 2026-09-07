@@ -3,8 +3,8 @@ import { useForm } from "react-hook-form";
 import { login } from "../api/auth.api";
 import { useAuthStore } from "../stores/auth.store.js";
 import { toast } from "react-toastify";
-import { Link } from "react-router-dom";
-import { FiPlay, FiMail, FiLock, FiEye, FiEyeOff, FiLogIn } from "react-icons/fi";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { FiPlay, FiMail, FiLock, FiEye, FiEyeOff, FiLogIn, FiCompass } from "react-icons/fi";
 
 /**
  * Login Component (Obsidian & Sunset Amber Studio Edition)
@@ -13,8 +13,11 @@ import { FiPlay, FiMail, FiLock, FiEye, FiEyeOff, FiLogIn } from "react-icons/fi
  * 1. Supports login via Email or Username identifier.
  * 2. Password show/hide toggle for convenient input.
  * 3. Reactive Zustand authentication state persistence.
+ * 4. Continue as Guest support for unauthenticated visitors.
  */
 const Login = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [showPassword, setShowPassword] = useState(false);
 
   const {
@@ -30,6 +33,21 @@ const Login = () => {
   });
 
   const setUser = useAuthStore((s) => s.setUser);
+  const continueAsGuest = useAuthStore((s) => s.continueAsGuest);
+
+  const handleContinueAsGuest = () => {
+    continueAsGuest();
+    toast.info("Exploring VividStream as Guest");
+    const rawFrom = location.state?.from;
+    const isGuestSafe =
+      rawFrom &&
+      (rawFrom === "/" ||
+        rawFrom.startsWith("/watch/") ||
+        rawFrom.startsWith("/c/") ||
+        rawFrom === "/tweets/feed");
+    const destination = isGuestSafe ? rawFrom : "/";
+    navigate(destination, { replace: true });
+  };
 
   const onSubmit = async (data) => {
     try {
@@ -140,6 +158,23 @@ const Login = () => {
                 <FiLogIn /> Sign in
               </>
             )}
+          </button>
+
+          <div className="relative flex items-center justify-center my-0.5">
+            <div className="border-t border-white/[0.08] w-full" />
+            <span className="bg-[#121215] px-3 text-xs text-zinc-500 uppercase tracking-wider font-semibold">
+              or
+            </span>
+            <div className="border-t border-white/[0.08] w-full" />
+          </div>
+
+          <button
+            type="button"
+            onClick={handleContinueAsGuest}
+            className="inline-flex items-center justify-center gap-2 w-full py-3 rounded-full bg-white/[0.05] hover:bg-white/[0.1] text-zinc-200 hover:text-white border border-white/[0.12] font-semibold text-sm transition-all cursor-pointer tactile-btn group"
+          >
+            <FiCompass className="text-amber-400 group-hover:rotate-45 transition-transform duration-200 text-base" />
+            <span>Continue as Guest</span>
           </button>
         </form>
 

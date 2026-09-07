@@ -14,7 +14,7 @@ import {
   getChannelVideos,
 } from "../controllers/user.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
-import { verifyJWT } from "../middlewares/auth.middleware.js";
+import { verifyJWT, optionalVerifyJWT } from "../middlewares/auth.middleware.js";
 
 const router = Router();
 // router.route('/register').post(registerUser)
@@ -49,8 +49,8 @@ router.patch(
   upload.single("coverImage"),
   updateUserCoverImage
 );
-router.get("/c/:username", verifyJWT, getUserChannelProfile);
-router.get("/c/videos/:username", verifyJWT, getChannelVideos);
+router.get("/c/:username", optionalVerifyJWT, getUserChannelProfile);
+router.get("/c/videos/:username", optionalVerifyJWT, getChannelVideos);
 router.get("/history", verifyJWT, getWatchHistory);
 
 export default router;

@@ -193,31 +193,31 @@ const getVideoById = asyncHandler(async (req, res) => {
 
   // Record watch history for authenticated viewers.
   // Keep most-recent-first, prevent duplicates, and cap list length.
-  // The following code updates the authenticated user's watch history by adding the current video to the beginning of the list, removing any duplicates, and limiting the list to the 50 most recent videos. It uses MongoDB's aggregation operators to achieve this efficiently.
-
-  await User.findByIdAndUpdate(req.user._id, [
-    {
-      $set: {
-        watchHistory: {
-          $slice: [
-            {
-              $concatArrays: [
-                [video._id],
-                {
-                  $filter: {
-                    input: "$watchHistory",
-                    as: "vid",
-                    cond: { $ne: ["$$vid", video._id] },
+  if (isAuthenticated && req.user?._id) {
+    await User.findByIdAndUpdate(req.user._id, [
+      {
+        $set: {
+          watchHistory: {
+            $slice: [
+              {
+                $concatArrays: [
+                  [video._id],
+                  {
+                    $filter: {
+                      input: "$watchHistory",
+                      as: "vid",
+                      cond: { $ne: ["$$vid", video._id] },
+                    },
                   },
-                },
-              ],
-            },
-            50,
-          ],
+                ],
+              },
+              50,
+            ],
+          },
         },
       },
-    },
-  ]);
+    ]);
+  }
 
   // Check if the authenticated user has liked the video
   let isLiked = false;

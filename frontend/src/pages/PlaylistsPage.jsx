@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { createPlaylist, getMyPlaylists } from "../api/playlist.api";
-import { FiFolder, FiPlus, FiFilm, FiFolderPlus } from "react-icons/fi";
+import { useAuthStore } from "../stores/auth.store";
+import { FiFolder, FiPlus, FiFilm, FiFolderPlus, FiLogIn } from "react-icons/fi";
 
 /**
  * PlaylistsPage Component (Obsidian & Sunset Amber Studio Edition)
@@ -12,6 +13,7 @@ import { FiFolder, FiPlus, FiFilm, FiFolderPlus } from "react-icons/fi";
  * 2. Visual card grid for each playlist showing video count and navigation link.
  */
 const PlaylistsPage = () => {
+  const user = useAuthStore((s) => s.user);
   const [name, setName] = useState("");
   const [playlists, setPlaylists] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -19,6 +21,10 @@ const PlaylistsPage = () => {
   const [creating, setCreating] = useState(false);
 
   const loadPlaylists = async () => {
+    if (!user) {
+      setLoading(false);
+      return;
+    }
     setLoading(true);
     setError("");
 
@@ -34,7 +40,36 @@ const PlaylistsPage = () => {
 
   useEffect(() => {
     loadPlaylists();
-  }, []);
+  }, [user]);
+
+  if (!user) {
+    return (
+      <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 py-8 flex flex-col gap-8">
+        <header className="pb-4 border-b border-white/[0.07]">
+          <h1 className="text-xl sm:text-2xl font-semibold text-zinc-100 tracking-tight m-0">Your Playlists</h1>
+          <p className="text-xs sm:text-sm text-zinc-400 mt-1 m-0">Organize and curate custom collections of creations.</p>
+        </header>
+
+        <div className="flex flex-col items-center justify-center py-20 bg-[#111317] rounded-3xl border border-white/[0.08] text-center px-4 max-w-md mx-auto my-6 shadow-xl">
+          <div className="w-14 h-14 rounded-2xl bg-amber-500/10 text-amber-400 flex items-center justify-center text-2xl mb-4 border border-amber-500/20">
+            <FiFolder />
+          </div>
+          <h2 className="text-xl font-bold text-white mb-2 tracking-tight">Keep collections organized</h2>
+          <p className="text-xs sm:text-sm text-zinc-400 mb-6 max-w-xs leading-relaxed">
+            Playlists are saved to registered accounts. Sign in to curate and view your video collections.
+          </p>
+          <Link
+            to="/login"
+            state={{ from: "/playlists" }}
+            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-zinc-950 font-bold text-sm shadow-md shadow-amber-500/25 transition-all no-underline tactile-btn"
+          >
+            <FiLogIn className="text-base stroke-[2.5]" />
+            <span>Sign In</span>
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   const onCreate = async (e) => {
     e.preventDefault();

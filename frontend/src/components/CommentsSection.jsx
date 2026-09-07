@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import {
   getVideoComments,
   addComment,
@@ -113,54 +114,74 @@ const CommentsSection = ({ videoId }) => {
         </h3>
       </div>
 
-      {/* Add New Comment Box */}
-      <form className="flex items-start gap-3.5" onSubmit={handleSubmit(submitHandler)}>
-        <div className="w-8 h-8 rounded-full overflow-hidden shrink-0 border border-white/[0.1] bg-[#181a20]">
-          {currentUser?.avatar ? (
-            <img className="w-full h-full object-cover" src={currentUser.avatar} alt="You" />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center text-zinc-300 text-xs font-medium">
+      {/* Add New Comment Box or Sign-in Prompt for Guest */}
+      {currentUser ? (
+        <form className="flex items-start gap-3.5" onSubmit={handleSubmit(submitHandler)}>
+          <div className="w-8 h-8 rounded-full overflow-hidden shrink-0 border border-white/[0.1] bg-[#181a20]">
+            {currentUser?.avatar ? (
+              <img className="w-full h-full object-cover" src={currentUser.avatar} alt="You" />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center text-zinc-300 text-xs font-medium">
+                <FiUser />
+              </div>
+            )}
+          </div>
+
+          <div className="flex-1 flex flex-col">
+            <textarea
+              className="w-full bg-[#111317] text-zinc-100 placeholder-zinc-500 px-4 py-2.5 rounded-xl border border-white/[0.08] focus:border-white/30 focus:ring-1 focus:ring-white/10 text-sm outline-none transition-all resize-none shadow-xs"
+              placeholder="Share your perspective on this creation..."
+              rows={isInputFocused || newCommentContent ? 3 : 1}
+              onFocus={() => setIsInputFocused(true)}
+              {...register("content", { required: true })}
+              disabled={submitting}
+            />
+
+            {(isInputFocused || newCommentContent) && (
+              <div className="flex justify-end gap-2 mt-2.5">
+                <button
+                  type="button"
+                  className="px-3.5 py-1.5 rounded-xl text-xs font-medium text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04] transition-colors cursor-pointer tactile-btn"
+                  onClick={() => {
+                    reset();
+                    setIsInputFocused(false);
+                  }}
+                  disabled={submitting}
+                >
+                  Cancel
+                </button>
+
+                <button
+                  type="submit"
+                  className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-xl text-xs font-medium bg-white hover:bg-zinc-200 text-zinc-950 shadow-xs transition-all disabled:opacity-50 cursor-pointer tactile-btn"
+                  disabled={!newCommentContent.trim() || submitting}
+                >
+                  <FiSend className="text-xs" />
+                  <span>{submitting ? "Posting..." : "Comment"}</span>
+                </button>
+              </div>
+            )}
+          </div>
+        </form>
+      ) : (
+        <div className="flex items-center justify-between gap-4 p-4 rounded-2xl bg-[#111317] border border-white/[0.08]">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-full bg-white/[0.06] flex items-center justify-center text-zinc-400 text-xs">
               <FiUser />
             </div>
-          )}
+            <p className="text-xs text-zinc-300 font-medium m-0">
+              Want to join the conversation? Sign in to leave a comment.
+            </p>
+          </div>
+          <Link
+            to="/login"
+            state={{ from: `/watch/${videoId}` }}
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-zinc-950 font-bold text-xs shadow-sm transition-all no-underline shrink-0 tactile-btn"
+          >
+            <span>Sign In</span>
+          </Link>
         </div>
-
-        <div className="flex-1 flex flex-col">
-          <textarea
-            className="w-full bg-[#111317] text-zinc-100 placeholder-zinc-500 px-4 py-2.5 rounded-xl border border-white/[0.08] focus:border-white/30 focus:ring-1 focus:ring-white/10 text-sm outline-none transition-all resize-none shadow-xs"
-            placeholder="Share your perspective on this creation..."
-            rows={isInputFocused || newCommentContent ? 3 : 1}
-            onFocus={() => setIsInputFocused(true)}
-            {...register("content", { required: true })}
-            disabled={submitting}
-          />
-
-          {(isInputFocused || newCommentContent) && (
-            <div className="flex justify-end gap-2 mt-2.5">
-              <button
-                type="button"
-                className="px-3.5 py-1.5 rounded-xl text-xs font-medium text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04] transition-colors cursor-pointer tactile-btn"
-                onClick={() => {
-                  reset();
-                  setIsInputFocused(false);
-                }}
-                disabled={submitting}
-              >
-                Cancel
-              </button>
-
-              <button
-                type="submit"
-                className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-xl text-xs font-medium bg-white hover:bg-zinc-200 text-zinc-950 shadow-xs transition-all disabled:opacity-50 cursor-pointer tactile-btn"
-                disabled={!newCommentContent.trim() || submitting}
-              >
-                <FiSend className="text-xs" />
-                <span>{submitting ? "Posting..." : "Comment"}</span>
-              </button>
-            </div>
-          )}
-        </div>
-      </form>
+      )}
 
       {/* Comments List */}
       <div className="flex flex-col gap-5 mt-1">

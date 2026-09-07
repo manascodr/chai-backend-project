@@ -67,10 +67,7 @@ const App = () => {
 
   return (
     <Routes>
-      {/* Redirect logic:
-      If user is logged in:
-      /login → redirects to /
-      */}
+      {/* Public auth routes: only for logged-out users */}
       <Route
         path="/login"
         element={user ? <Navigate to="/" replace /> : <Login />}
@@ -81,30 +78,65 @@ const App = () => {
         element={user ? <Navigate to="/" replace /> : <Register />}
       />
 
-      {/* Protected Layout 
-      If user is logged out:
-      Protected pages (/, /watch/..., /history) → redirect to /login
-      */}
-      <Route
-        element={
-          <ProtectedRoute>
-            <AppLayout />
-          </ProtectedRoute>
-        }
-      >
+      {/* Main Layout: Public & Guest routes, with ProtectedRoute wrapping member-only pages */}
+      <Route element={<AppLayout />}>
         <Route path="/" element={<Home />} />
         <Route path="/watch/:videoId" element={<VideoDetails />} />
         <Route path="/c/:username" element={<ChannelPage />} />
-        <Route path="/playlists" element={<PlaylistsPage />} />
-        <Route path="/playlist/:playlistId" element={<PlaylistDetails />} />
         <Route path="/tweets/feed" element={<TweetFeedPage />} />
-        <Route path="/tweets" element={<TweetsPage />} />
         <Route path="/history" element={<WatchHistory />} />
         <Route path="/liked-videos" element={<LikedVideos />} />
-        <Route path="/upload-video" element={<UploadVideo />} />
-        <Route path="/Dashboard" element={<Dashboard />} />
-        <Route path="/profile-settings" element={<ProfileSettings />} />
-        <Route path="/watch-party/:roomId" element={<WatchPartyPage />} />
+        <Route path="/playlists" element={<PlaylistsPage />} />
+
+        {/* Protected routes requiring authenticated user */}
+        <Route
+          path="/upload-video"
+          element={
+            <ProtectedRoute>
+              <UploadVideo />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/Dashboard"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profile-settings"
+          element={
+            <ProtectedRoute>
+              <ProfileSettings />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/playlist/:playlistId"
+          element={
+            <ProtectedRoute>
+              <PlaylistDetails />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/tweets"
+          element={
+            <ProtectedRoute>
+              <TweetsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/watch-party/:roomId"
+          element={
+            <ProtectedRoute>
+              <WatchPartyPage />
+            </ProtectedRoute>
+          }
+        />
       </Route>
 
       {/* Fallback if user enters random stuff in the url */}
